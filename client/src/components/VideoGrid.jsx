@@ -12,7 +12,7 @@ const SideMenuBtn = ({ icon, text }) => (
 
 function VideoGrid() {
     return (
-        <div className='flex dark:bg-[#0f0f0f] dark:text-white'>
+        <div className='flex flex-1 h-dvh overflow-y-auto dark:bg-[#0f0f0f] dark:text-white'>
             <div className='hidden md:flex flex-col gap-1 ml-1 items-center justify-start'>
                 <SideMenuBtn icon={<House />} text="Home" />
                 <SideMenuBtn icon={<Layers2 />} text="Shorts" />
@@ -23,7 +23,7 @@ function VideoGrid() {
                 <div className='sticky top-0 z-10'>
                     <Filters />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 py-4 w-full"> 
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8 px-4 py-4 pb-20 w-full"> 
                     <VideoCard />
                     <VideoCard />
                     <VideoCard />
