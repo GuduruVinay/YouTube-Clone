@@ -42,13 +42,13 @@ function Filters() {
     };
 
     return (
-        <div className='flex items-center relative py-2.5 pb-8 lg:ml-60 dark:bg-[#0F0F0F] dark:text-white'>
+        <div className='flex items-center relative py-2.5 dark:bg-[#0F0F0F] dark:text-white'>
             {showLeftBtn && (
                 <button onClick={() => handleScroll('left')} className='absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition' ><ChevronLeft /></button>
             )}
             <div ref={ scrollRef } className='mx-5 gap-2 flex flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar scroll-smooth'>
                 {["All", "Web Development", "Cricket", "Football", "Gaming", "Sports", "Music", "Animation", "Live", "Game Development", "Movies", "Technology", "Education", "Coding", "Vlogs", "News"].map((item) => (
-                    <button key={item} className='px-4 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
+                    <button key={item} className='px-4 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-[#3f3f3f] transition'>
                         {item}
                     </button>
                 ))}

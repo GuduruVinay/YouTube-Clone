@@ -1,20 +1,19 @@
 import { Menu, Search, Mic, Plus, CircleUserRound, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
 import Sidebar from './Sidebar';
-import Filters from './Filters';
 
 function Navbar() {
     const [menu, setMenu] = useState(false);
-    
+
     return (
-        <nav className='dark:bg-[#0F0F0F] dark:text-white'>
+        <nav className='dark:bg-[#0f0f0f] dark:text-white'>
             {menu && <Sidebar setMenu={setMenu} />}
-            <div className='flex justify-between items-center p-2 pl-4 pr-2 md:pl-6 md:pr-4 lg:pl-4'>
+            <div className='flex justify-between items-center p-2 md:pl-4.5 md:pr-4'>
                 <div className='flex gap-1'>
                     <button onClick={() => setMenu(true)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl'><Menu /></button>
                     <button>
-                        <img src="../public/youtube_logo.png" alt="YouTube Logo" width={120} className='block dark:hidden' />
-                        <img src="../public/youtube_logo_white.png" alt="YouTube White Logo" width={120} className='hidden dark:block'/>
+                        <img src="/youtube_logo.png" alt="YouTube Logo" width={120} className='block dark:hidden' />
+                        <img src="/youtube_logo_white.png" alt="YouTube White Logo" width={120} className='hidden dark:block'/>
                     </button>
                 </div>
                 <div className='flex gap-4'>
@@ -32,8 +31,7 @@ function Navbar() {
                         <span className='font-semibold'>Sign in</span>
                     </button>
                 </div>
-            </div>
-            <Filters />
+            </div>       
         </nav>
     );
 };
