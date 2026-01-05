@@ -1,6 +1,17 @@
 import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
+// Configure dotenv
+dotenv.config();
+
+// Express Instance
 const app = express();
+
+// Database Connection
+mongoose.connect(process.env.MONGO_URI)
+.then(() => { console.log("MongoDB Connected") })
+.catch((err) => { console.log("MongoDB Connection Error: ", err) })
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -11,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 // Local Host at PORT
-const PORT = 8080;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`SERVER RUNNING AT PORT: ${PORT}`);
 });
