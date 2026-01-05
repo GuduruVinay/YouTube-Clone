@@ -1,11 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.model";
+import User from "../models/User.model.js";
 
 // REGISTER
 export async function registerUser(req, res) {
     try {
-        const [ username, email, password ] = req.body;
+        const { username, email, password } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -24,7 +24,7 @@ export async function registerUser(req, res) {
         const savedUser = await newUser.save();
 
         // Respond (Exclude password from response)
-        const { password: userPassword, ...otherDetails } = savedUser._doc;
+        const { password: _, ...otherDetails } = savedUser._doc;
         return res.status(201).json(otherDetails);
     } catch(err) {
         return res.status(500).json({ error: err.message });
