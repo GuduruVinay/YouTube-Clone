@@ -5,7 +5,10 @@ const videoSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a video title']
     },
-    "thumbnailUrl": {
+    "desc": {
+        type: String,
+    },
+    "imgUrl": {
         type: String,
         required: [true, 'Please provide a thumbnail url']
     },
@@ -13,43 +16,33 @@ const videoSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a video url']
     },
-    "description": {
-        type: String,
+    "userId": {
+        type: mongooseSchema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'Please provide a user Id']
     },
     "channelId": {
         type: mongooseSchema.Types.ObjectId,
         ref: 'Channel',
         required: [true, 'Please provide a channel Id']
     },
-    "uploader": {
-        type: mongooseSchema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'Please provide a uploader']
-    },
     "views": {
         type: Number,
         default: 0
     },
+    "tags": {
+        type: [String],
+        default: []
+    },
     "likes": {
-        type: Number,
-        default: 0
+        type: [String],
+        default: []
     },
     "dislikes": {
-        type: Number,
-        default: 0
-    },
-    "category": {
-        type: String
-    },
-    "uploadDate": {
-        type: Date,
-        default: Date.now
-    },
-    "comments": [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment'
-    }]
-});
+        type: [String],
+        default: []
+    }
+}, { timestamps: true });
 
 const VideoModel = mongoose.Model('Videos', videoSchema);
 
