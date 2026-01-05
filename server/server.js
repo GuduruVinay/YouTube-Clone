@@ -1,28 +1,37 @@
 import express from "express";
-import mongoose from "mongoose";
+import mongoose, { connect } from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
 
-// Configure dotenv
+// Configuration
 dotenv.config();
 
 // Express Instance
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(express.json()); // Allows server to accept JSON data
+app.use(cors()); // Allows connection from React
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
-.then(() => { console.log("MongoDB Connected") })
-.catch((err) => { console.log("MongoDB Connection Error: ", err) })
+const connectDB = async () => { 
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB Connected Successfully");
+    } catch (err) {
+        console.error("MongoDB Connection Failed: ", err.message);
+        process.exit(1);
+    }
+};
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// Root Route
+// Basic Route
 app.get('/', (req, res) => {
-    res.json("Welcome To YouTube");
+    res.send("YouTube Clone API is running...");
 });
 
-// Local Host at PORT
-const PORT = process.env.PORT;
+// Start Server
 app.listen(PORT, () => {
-    console.log(`SERVER RUNNING AT PORT: ${PORT}`);
+    connectDB();
+    console.log(`SERVER RUNNING ON PORT: ${PORT}`);
 });
