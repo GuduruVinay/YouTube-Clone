@@ -45,7 +45,7 @@ function Filters() {
 
     // Helper Component for Filter Buttons
     const FilterBtn = ({ text }) => (
-        <button className='text-sm font-semibold px-4 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-[#3f3f3f] transition'>
+        <button className='text-sm font-semibold px-3 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-[#3f3f3f] transition'>
             {text}
         </button>
     );

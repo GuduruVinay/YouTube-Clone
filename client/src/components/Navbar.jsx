@@ -5,7 +5,7 @@ import Sidebar from './Sidebar';
 const THEME_KEY = "theme";
 
 function Navbar() {
-    const [menu, setMenu] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // State: Dark Mode
     const [isDark, setIsDark] = useState(() => {
@@ -25,10 +25,10 @@ function Navbar() {
 
     return (
         <nav className='dark:bg-[#0f0f0f] dark:text-white'>
-            {menu && <Sidebar setMenu={setMenu} />}
+            {isMenuOpen && <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
             <div className='flex justify-between items-center p-2 md:pl-4.5 md:pr-4'>
                 <div className='flex gap-1'>
-                    <button onClick={() => setMenu(true)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl'><Menu /></button>
+                    <button onClick={() => setIsMenuOpen(true)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl'><Menu /></button>
                     <button>
                         <img src="/youtube_logo.png" alt="YouTube Logo" width={120} className='block dark:hidden' />
                         <img src="/youtube_logo_white.png" alt="YouTube White Logo" width={120} className='hidden dark:block'/>
