@@ -54,79 +54,81 @@ function SignIn() {
     function handleCreateAccount() {
         if(createAccount){
             setCreateAccount(false);
-            setHeader("Create a YouTube Clone Account");
+            setHeader("Sign in");
         } else {
             setCreateAccount(true);
-            setHeader("Sign in");
+            setHeader("Create a YouTube Clone Account");
         }
     }
 
     return (
-        <div className="flex flex-col p-8 gap-4">
-            <div className="flex flex-col gap-4">
-                <Link to='/' className='w-full'>
-                    <img src="/youtube_favicon.png" alt="YouTube Logo" width={48} />
-                </Link>
-                <h1 className="text-3xl font-medium">{header}</h1>
-                <h2 className="font-light mb-5">to continue to YouTube Clone</h2>
+        <div className="flex md:justify-center md:items-center md:h-dvh bg-[#1e1f20]">
+            <div className="md:w-[60%] flex flex-col lg:items-center lg:w-[50%] lg:h-[50%] lg:flex-row lg:justify-between p-8 lg:p-12 gap-4 md:rounded-4xl bg-white dark:bg-[#0f0f0f] dark:text-white">
+                <div className="flex flex-col gap-4 lg:self-start">
+                    <Link to='/' className='w-full'>
+                        <img src="/youtube_favicon.png" alt="YouTube Logo" width={48} />
+                    </Link>
+                    <h1 className="text-3xl md:text-2xl lg:text-4xl font-medium">{header}</h1>
+                    <h2 className="font-light mb-5 md:mb-2.5 lg:text-lg">to continue to YouTube Clone</h2>
+                </div>
+                {createAccount ? (
+                    <div>
+                        <input 
+                            className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
+                            placeholder="Username"
+                            onChange={e => setUsername(e.target.value)}
+                        />
+                        <input
+                            className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
+                            type="email"
+                            placeholder="Email"
+                            onChange={e => setEmail(e.target.value)}
+                        />                        
+                        <input
+                            className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
+                            type="password"
+                            placeholder="Password"
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                        <div className="flex justify-between items-center">
+                            <button onClick={handleCreateAccount} className="cursor-pointer text-[#065fd4] dark:text-[#3ea6ff]">
+                                Already have an account
+                            </button>
+                            <button
+                                className="px-5 py-2.5 bg-[#3ea6ff] rounded-4xl cursor-pointer mt-2 hover:bg-[#3185cc] text-white"
+                                onClick={handleLogin}
+                            >
+                                Sign up
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        <input 
+                            className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
+                            placeholder="Username"
+                            onChange={e => setUsername(e.target.value)}
+                        />
+                        <input
+                            className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
+                            type="password"
+                            placeholder="Password"
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                        <div className="flex justify-between items-center">
+                            <button onClick={handleCreateAccount} className="cursor-pointer text-[#065fd4] dark:text-[#3ea6ff]">
+                                Create account
+                            </button>
+                            <button
+                                className="px-5 py-2.5 bg-[#3ea6ff] rounded-4xl cursor-pointer mt-2 hover:bg-[#3185cc] text-white"
+                                onClick={handleLogin}
+                            >
+                                Sign in
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
-            {createAccount ? (
-                <div>
-                    <input 
-                        className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
-                        placeholder="Username"
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                    <input
-                        className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
-                        type="email"
-                        placeholder="Email"
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                    <input
-                        className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
-                        type="password"
-                        placeholder="Password"
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                    <div className="flex justify-between items-center">
-                        <button onClick={handleCreateAccount} className="cursor-pointer text-[#065fd4]">
-                            Already have an account
-                        </button>
-                        <button
-                            className="px-5 py-2.5 bg-[#3ea6ff] rounded-4xl cursor-pointer mt-2 hover:bg-[#3185cc]"
-                            onClick={handleLogin}
-                        >
-                            Sign up
-                        </button>
-                    </div>
-                </div>
-            ) : (
-                <div>
-                    <input 
-                        className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
-                        placeholder="Username"
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                    <input
-                        className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
-                        type="password"
-                        placeholder="Password"
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                    <div className="flex justify-between items-center">
-                        <button onClick={handleCreateAccount} className="cursor-pointer text-[#065fd4]">
-                            Create account
-                        </button>
-                        <button
-                            className="px-5 py-2.5 bg-[#3ea6ff] rounded-4xl cursor-pointer mt-2 hover:bg-[#3185cc]"
-                            onClick={handleLogin}
-                        >
-                            Sign in
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     )
 }
