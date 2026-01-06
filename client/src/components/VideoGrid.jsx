@@ -27,8 +27,7 @@ function VideoGrid({ videos }) {
                 <div className='sticky top-0 z-10'>
                     <Filters />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8 px-4 py-4 pb-10 w-full"> 
-                {/* <div className="flex justify-between flex-wrap gap-2 gap-y-8"> */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8 px-4 py-4 pb-20 w-full">
                     {videos.map((video) => (
                         <VideoCard key={video._id} video={video} />
                     ))}

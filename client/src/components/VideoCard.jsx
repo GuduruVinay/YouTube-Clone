@@ -22,9 +22,6 @@ function VideoCard({ video }) {
                 </div>
             </div>
         </Link>
-
-        // <div className="flex flex-col gap-2 px-1">
-        // </div>
     )
 }
 

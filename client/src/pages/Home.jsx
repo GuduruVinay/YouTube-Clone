@@ -19,7 +19,7 @@ function Home() {
     }, []);
 
     return (
-        <div>
+        <div className="h-dvh overflow-hidden">
             <Navbar />
             <VideoGrid videos={videos} />
         </div>
