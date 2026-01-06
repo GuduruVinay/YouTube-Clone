@@ -17,14 +17,14 @@ const videoSchema = new mongoose.Schema({
         required: [true, 'Please provide a video url']
     },
     "userId": {
-        type: mongooseSchema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'Please provide a user Id']
+        // required: [true, 'Please provide a user Id']
     },
     "channelId": {
-        type: mongooseSchema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Channel',
-        required: [true, 'Please provide a channel Id']
+        // required: [true, 'Please provide a channel Id']
     },
     "views": {
         type: Number,
@@ -44,6 +44,6 @@ const videoSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const VideoModel = mongoose.Model('Videos', videoSchema);
+const VideoModel = mongoose.model('Videos', videoSchema);
 
 export default VideoModel;

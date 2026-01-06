@@ -10,7 +10,7 @@ const SideMenuBtn = ({ icon, text }) => (
     </button>
 );
 
-function VideoGrid() {
+function VideoGrid({ videos }) {
     return (
         <div className='flex flex-1 h-dvh overflow-y-auto dark:bg-[#0f0f0f] dark:text-white'>
             <div className='hidden md:flex flex-col gap-1 ml-1 items-center justify-start'>
@@ -24,21 +24,10 @@ function VideoGrid() {
                     <Filters />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8 px-4 py-4 pb-20 w-full"> 
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
+                {/* <div className="flex justify-between flex-wrap gap-2 gap-y-8"> */}
+                    {videos.map((video) => (
+                        <VideoCard key={video._id} video={video} />
+                    ))}
                 </div>
             </div>
         </div>

@@ -56,8 +56,8 @@ function Filters() {
                 <button onClick={() => handleScroll('left')} className='absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition' ><ChevronLeft /></button>
             )}
             <div ref={ scrollRef } className='mx-5 gap-3 flex flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar scroll-smooth'>
-                {dummyFilters.map((item) => (
-                    <FilterBtn text={item} />
+                {dummyFilters.map((item, index) => (
+                    <FilterBtn key={index} text={item} />
                 ))}
             </div>
             {showRightBtn && (
