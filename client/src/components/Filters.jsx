@@ -7,7 +7,7 @@ function Filters() {
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
 
-    const dummyFilters = ["All", "Web Development", "Cricket", "Football", "Gaming", "Sports", "Music", "Animation", "Live", "Game Development", "Movies", "Technology", "Education", "Coding", "Vlogs", "News"];
+    const dummyFilters = ["All", "Web Development", "Cricket", "Football", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Animation", "Live", "Game Development", "Movies", "Technology", "Education", "Coding", "Vlogs", "News"];
 
     // function to update button visibility of filter left & right buttons
     const updateBtnVisibility = () => {
@@ -45,7 +45,7 @@ function Filters() {
 
     // Helper Component for Filter Buttons
     const FilterBtn = ({ text }) => (
-        <button className='text-sm font-semibold px-3 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-[#3f3f3f] transition'>
+        <button className='cursor-pointer text-sm font-semibold px-3 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-[#3f3f3f] transition'>
             {text}
         </button>
     );
@@ -53,7 +53,7 @@ function Filters() {
     return (
         <div className='flex items-center relative pt-3 pb-4 dark:bg-[#0F0F0F] dark:text-white'>
             {showLeftBtn && (
-                <button onClick={() => handleScroll('left')} className='absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition' ><ChevronLeft /></button>
+                <button onClick={() => handleScroll('left')} className='cursor-pointer absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition' ><ChevronLeft /></button>
             )}
             <div ref={ scrollRef } className='mx-5 gap-3 flex flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar scroll-smooth'>
                 {dummyFilters.map((item, index) => (
@@ -61,7 +61,7 @@ function Filters() {
                 ))}
             </div>
             {showRightBtn && (
-                <button onClick={() => handleScroll('right')} className='absolute right-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition'><ChevronRight /></button>
+                <button onClick={() => handleScroll('right')} className='cursor-pointer absolute right-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition'><ChevronRight /></button>
             )}
         </div>
     );
