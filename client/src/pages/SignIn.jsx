@@ -46,6 +46,8 @@ function SignIn() {
                 password
             });
             alert("Account created! Please Sign In now.");
+            setCreateAccount(false);
+            handleCreateAccount();
         } catch(err) {
             console.error(err);
             alert("Registration failed!");
@@ -78,12 +80,14 @@ function SignIn() {
                         <input 
                             className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
                             placeholder="Username"
+                            value={username}
                             onChange={e => setUsername(e.target.value)}
                         />
                         <input
                             className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
                             type="email"
                             placeholder="Email"
+                            value={email}
                             onChange={e => setEmail(e.target.value)}
                         />                        
                         <div className="relative w-full mb-4">
@@ -119,6 +123,7 @@ function SignIn() {
                         <input 
                             className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
                             placeholder="Username"
+                            value={username}
                             onChange={e => setUsername(e.target.value)}
                         />
                         <div className="relative w-full mb-4">
