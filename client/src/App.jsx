@@ -6,14 +6,12 @@ import Navbar from "./components/Navbar";
 
 function Layout() {
   return (
-    <div className="flex bg-[#181818] min-h-screen">
+    <div>
       {/* Main Content Area */}
       <div className="h-dvh overflow-hidden">
         <Navbar />
         {/* The Outlet is where Home, Video, or SignIn will render */}
-        <div>
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </div>
   )
@@ -25,11 +23,12 @@ function App() {
       {/* Global Dark Mode Wrapper */}
         <div className="dark:bg-[#0f0f0f] dark:text-white">
           <Routes>
+            {/* Standlone Page (No Sidebar/Navbar) */}
+            <Route path="/signin" element={ <SignIn /> } />
             {/* Wrap routes inside the Layout */}
             <Route path="/" element={<Layout />}>
               {/* These are the children that get injected into <Outlet /> */}
               <Route index element={ <Home /> } />
-              <Route path="signin" element={ <SignIn /> } />
               <Route path="video/:videoId" element={ <Video /> } />
             </Route>
           </Routes>
