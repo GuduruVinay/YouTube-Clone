@@ -8,275 +8,64 @@ dotenv.config();
 const videos = [
     {
         "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
+        "desc": "A quick tutorial to get started with React.",
+        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
+        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+        "views": 15300,
+        "tags": ["react", "coding"],
         "likes": [],
         "dislikes": []
     },
     {
         "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
+        "desc": "A quick tutorial to get started with React.",
+        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
+        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+        "views": 15300,
+        "tags": ["react", "coding"],
         "likes": [],
         "dislikes": []
     },
     {
         "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
+        "desc": "A quick tutorial to get started with React.",
+        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
+        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+        "views": 15300,
+        "tags": ["react", "coding"],
         "likes": [],
         "dislikes": []
     },
     {
         "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
+        "desc": "A quick tutorial to get started with React.",
+        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
+        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+        "views": 15300,
+        "tags": ["react", "coding"],
         "likes": [],
         "dislikes": []
     },
     {
         "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
+        "desc": "A quick tutorial to get started with React.",
+        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
+        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+        "views": 15300,
+        "tags": ["react", "coding"],
         "likes": [],
         "dislikes": []
     },
     {
         "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
+        "desc": "A quick tutorial to get started with React.",
+        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
+        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+        "views": 15300,
+        "tags": ["react", "coding"],
         "likes": [],
         "dislikes": []
     },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial...",
-        "imgUrl": "...",
-        "videoUrl": "...",
-        "views": 15200,
-        "likes": [],
-        "dislikes": []
-    }
-
 ];
 
 // Connect and Seed

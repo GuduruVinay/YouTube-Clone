@@ -15,7 +15,7 @@ function Comments({ videoId }) {
                 const res = await axios.get(`http://localhost:5000/api/comments/${videoId}`);
                 setComments(res.data);
             } catch(err) {
-
+                console.error("Error:", err.message);
             }
         };
         fetchComments();
