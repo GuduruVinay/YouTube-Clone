@@ -1,10 +1,11 @@
 import { Menu, Search, Mic, Plus, CircleUserRound, EllipsisVertical, Bell, Sun, Moon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Navbar({ isDark, setIsDark, setIsMenuOpen, user, handleLogout }) {
+    const location = useLocation();
+
     return (
         <nav className='sticky top-0 z-50 h-14 dark:bg-[#0f0f0f] dark:text-white'>
-            {/* {isMenuOpen && <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />} */}
             <div className='flex justify-between items-center p-2.5 md:pl-4.5 md:pr-4'>
                 <div className='flex gap-1'>
                     <button onClick={() => setIsMenuOpen(true)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl cursor-pointer'><Menu /></button>
@@ -46,7 +47,7 @@ function Navbar({ isDark, setIsDark, setIsMenuOpen, user, handleLogout }) {
                     ) : (
                         <div className='flex items-center gap-2'>
                             <button className='hidden md:block cursor-pointer'><EllipsisVertical /></button>
-                            <Link to='/signin' >
+                            <Link to='/signin' state={{ from: location }} >
                                 <div className='flex w-fit items-center gap-2 text-[#065fd4] hover:bg-[#def1ff] dark:text-white py-1.5 px-2.5 border border-[#e5e5e5] dark:border-[#303030] dark:hover:bg-[#303030] rounded-4xl'>
                                     <CircleUserRound />
                                     <span className='text-sm font-medium'>Sign in</span>

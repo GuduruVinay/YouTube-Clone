@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { use, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeClosed } from "lucide-react";
 
 function SignIn() {
@@ -13,6 +13,10 @@ function SignIn() {
     const [header, setHeader] = useState("Sign in");
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Check if "from" state exists, otherwise default to Home ("/")
+    const from = location.state?.from?.pathname || "/";
 
     // Handle Login (Existing User)
     async function handleLogin(e) {
@@ -28,12 +32,11 @@ function SignIn() {
             localStorage.setItem("user", JSON.stringify(res.data.details));
 
             // Redirect to Home
-            navigate('/');
-            // Quick refresh to update Navbar state
-            window.location.reload();
+            // replace: true prevents the Back button from returning to the SignIn page
+            navigate(from, { replace: true });
         } catch(err) {
             console.error(err);
-            alert("Login Failed! Check credentials.");
+            alert("Login Failed!");
         }
     };
 

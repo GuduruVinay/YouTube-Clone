@@ -108,7 +108,6 @@ function Video() {
                         className="w-full h-full object-contain" 
                     />
                 </div>
-
                 {/* Scrollable Content */}
                 <div className="mt-2">
                     <h1 className="px-3 text-lg md:text-xl font-medium">{video.title}</h1>
@@ -160,7 +159,7 @@ function Video() {
                 <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
 
                 {/* Recommendation Sidebar */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 mb-4">
                     {videos.map((video) => (
                         <VideoCard key={video._id} video={video} />
                     ))}
