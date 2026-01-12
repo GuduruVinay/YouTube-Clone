@@ -41,8 +41,8 @@ function Comments({ videoId }) {
     return (
         <div>
             {/* Input Section */}
-            <div className="flex items-center gap-2.5 mb-6">
-                <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center">
+            <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center">
                     {currentUser ? currentUser.username[0] : "?"}
                 </div>
                 <input

@@ -13,46 +13,46 @@ const SidebarBtn = ({ path, icon, text }) => (
 
 function Sidebar({ isMenuOpen, setIsMenuOpen }) {
     return (
-        <>
-        <div 
-            className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden ${
-            isMenuOpen ? 'opacity-100 z-40' : 'opacity-0 pointer-events-none -z-10'}`}
-            onClick={() => setIsMenuOpen(false)}
-        />
-        <aside className={'flex flex-col gap-6 absolute inset-y-0 z-50 pl-1 mr-1 md:pl-3 md:mr-3 p-2 w-[60%] md:w-[30%] lg:w-[15%] bg-white dark:bg-[#0f0f0f] dark:text-white'}>
-            <div className='flex gap-1 ml-1'>
-                <button onClick={() => setIsMenuOpen(false)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl cursor-pointer'><Menu /></button>
-                <Link to='/' className='w-full'>
-                    <img src="/youtube_logo.png" alt="YouTube Logo" width={120} className='block dark:hidden' />
-                    <img src="/youtube_logo_white.png" alt="YouTube White Logo" width={120} className='hidden dark:block'/>
-                </Link>
-            </div>
-            <div className='flex flex-col pl-1 mr-4 gap-1'>
-                <SidebarBtn path='/' icon={<House />} text="Home" />
-                {/* Redirect the remaining buttons to home page only for now*/}
-                <SidebarBtn path='/' icon={<Layers2 />} text="Shorts" />
-                <SidebarBtn path='/' icon={<TvMinimalPlay />} text="Subscriptions" />
-                <SidebarBtn path='/' icon={<CircleUserRound />} text="You" />
-                <SidebarBtn path='/' icon={<History />} text="History" />
-                <hr className='my-2 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
-                <div className='px-4 py-2'>
-                    <p className='text-sm mb-3'>Sign in to like videos, comment, and subscribe.</p>
-                    <Link to='/signin' >                    
-                        <div className='flex w-fit items-center gap-2 text-[#065fd4] dark:text-[#3a9cf0] hover:bg-[#def1ff] py-1.5 px-2.5 border border-[#e5e5e5] dark:border-[#303030] dark:hover:bg-[#263850] dark:hover:border-[#263850] rounded-4xl'>
-                            <CircleUserRound />
-                            <span className='font-semibold text-sm'>Sign in</span>
-                        </div>
+        <div>
+            <div 
+                className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden ${
+                isMenuOpen ? 'opacity-100 z-40' : 'opacity-0 pointer-events-none -z-10'}`}
+                onClick={() => setIsMenuOpen(false)}
+            />
+            <aside className={'flex flex-col gap-6 absolute inset-y-0 z-50 pl-1 mr-1 md:pl-3 md:mr-3 p-2 w-[60%] md:w-[30%] lg:w-[15%] bg-white dark:bg-[#0f0f0f] dark:text-white'}>
+                <div className='flex gap-1 ml-1'>
+                    <button onClick={() => setIsMenuOpen(false)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl cursor-pointer'><Menu /></button>
+                    <Link to='/' className='w-full'>
+                        <img src="/youtube_logo.png" alt="YouTube Logo" width={120} className='block dark:hidden' />
+                        <img src="/youtube_logo_white.png" alt="YouTube White Logo" width={120} className='hidden dark:block'/>
                     </Link>
                 </div>
-                <hr className='my-2 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
-                <SidebarBtn path='/' icon={<Settings />} text="Settings" />
-                <SidebarBtn path='/' icon={<Flag />} text="Report history" />
-                <SidebarBtn path='/' icon={<CircleQuestionMark />} text="Help" />
-                <SidebarBtn path='/' icon={<MessageSquareWarning />} text="Send feedback" />
-                <hr className='my-2 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
-            </div>
-        </aside>
-        </>
+                <div className='flex flex-col pl-1 mr-4 gap-1'>
+                    <SidebarBtn path='/' icon={<House />} text="Home" />
+                    {/* Redirect the remaining buttons to home page only for now*/}
+                    <SidebarBtn path='/' icon={<Layers2 />} text="Shorts" />
+                    <SidebarBtn path='/' icon={<TvMinimalPlay />} text="Subscriptions" />
+                    <SidebarBtn path='/' icon={<CircleUserRound />} text="You" />
+                    <SidebarBtn path='/' icon={<History />} text="History" />
+                    <hr className='my-2 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
+                    <div className='px-4 py-2'>
+                        <p className='text-sm mb-3'>Sign in to like videos, comment, and subscribe.</p>
+                        <Link to='/signin' >                    
+                            <div className='flex w-fit items-center gap-2 text-[#065fd4] dark:text-[#3a9cf0] hover:bg-[#def1ff] py-1.5 px-2.5 border border-[#e5e5e5] dark:border-[#303030] dark:hover:bg-[#263850] dark:hover:border-[#263850] rounded-4xl'>
+                                <CircleUserRound />
+                                <span className='font-semibold text-sm'>Sign in</span>
+                            </div>
+                        </Link>
+                    </div>
+                    <hr className='my-2 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
+                    <SidebarBtn path='/' icon={<Settings />} text="Settings" />
+                    <SidebarBtn path='/' icon={<Flag />} text="Report history" />
+                    <SidebarBtn path='/' icon={<CircleQuestionMark />} text="Help" />
+                    <SidebarBtn path='/' icon={<MessageSquareWarning />} text="Send feedback" />
+                    <hr className='my-2 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
+                </div>
+            </aside>
+        </div>
     )
 }
 

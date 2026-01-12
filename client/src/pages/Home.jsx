@@ -1,22 +1,11 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Navbar from "../components/Navbar";
+import { ErrorHandler, LoadingHandler } from "../components/Handler";
 import VideoGrid from "../components/VideoGrid";
+import useFetch from "../hooks/useFetch";
 
 function Home() {
-    const [videos, setVideos] = useState([]);
-
-    useEffect(() => {
-        const fetchVideos = async () => {
-            try {
-                const res = await axios.get("http://localhost:5000/api/videos/random");
-                setVideos(res.data);
-            } catch(err) {
-                console.error("Error:", err.message);
-            }
-        };
-        fetchVideos();
-    }, []);
+    const { data: videos, loading, error } = useFetch("http://localhost:5000/api/videos/random");
+    if(loading) return <LoadingHandler />
+    if(error) return <ErrorHandler error={error}/>
 
     return (
         <div>

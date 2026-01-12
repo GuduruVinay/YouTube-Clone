@@ -1,13 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import ReactPlayer from "react-player";
-import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import Comments from "../components/Comments";
+import VideoCard from "../components/VideoCard";
+import useFetch from "../hooks/useFetch";
+import { LoadingHandler, ErrorHandler } from "../components/Handler";
 
 function Video() {
-    const [video, setVideo] = useState({});
-    
+    const [video, setVideo] = useState(null);
+
     // Get videoId from URL
     const path = useLocation().pathname.split("/")[2];
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -24,7 +26,7 @@ function Video() {
         };
         fetchData(); 
     }, [path]);
-
+    
     // Handle Like
     async function handleLike() {
         await axios.put(`http://localhost:5000/api/videos/like/${video._id}`, {}, {
@@ -32,83 +34,88 @@ function Video() {
         });
         window.location.reload();
     };
-
+    
+    // Handle Dislike
     async function handleDislike() {
         await axios.put(`http://localhost:5000/api/videos/dislike/${video._id}`, {}, {
             headers: { Authorization: `Bearer ${token}` }
         });
         window.location.reload();
     };
+    
+    const { data: videos, loading, error } = useFetch("http://localhost:5000/api/videos/random");
+    if(loading) return <LoadingHandler />
+    if(error) return <ErrorHandler error={error}/>
 
     return (
-        <div className="flex flex-1 h-dvh overflow-y-auto dark:bg-[#0f0f0f] dark:text-white">
+        <div className="flex flex-col">
             {/* Main Content (Video + Details) */}
-            <video src={video.videoUrl} />
+            <video 
+                src={video.videoUrl}
+                controls 
+                className="w-full" 
+            />
+
+            <div className="flex flex-col gap-3 pt-3">
+                <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1 px-3">
+                        <h1 className="font-medium">{video.title}</h1>
+                        <span className="text-xs font-extralight">{video.views} views • {video.createdAt}</span>
+                        {/* <p className="text-sm">{video.desc}</p> */}
+                    </div>
+
+                    {/* Channel Info */}
+                    <div className="flex justify-between px-3">
+                        <div className="flex gap-2 items-center">
+                            <div className="w-8 h-8 rounded-full bg-gray-500"></div>
+                            <span className="text-xs font-medium">LM3 Games</span>
+                            <span className="text-xs font-extralight">100K</span>
+                        </div>
+                        <button className="rounded-full px-3.5 text-xs font-medium bg-[#f1f1f1] text-black cursor-pointer">
+                            Subscribe
+                        </button>     
+                    </div>
+            
+                    <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
+                        <div className="flex rounded-full bg-[#272727] px-3 py-1 gap-2">
+                            <button onClick={handleLike} className="flex items-center gap-2 cursor-pointer bg-transparent border-none">
+                                <ThumbsUp size={16} /> <span className="text-sm mt-1">{video.likes?.length}</span>
+                            </button>
+                            <span>|</span>
+                            <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
+                                <ThumbsDown size={16} />
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                            <Share2 size={16} /> <span className="text-xs font-medium">Share</span>
+                        </div>
+                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                            <ArrowDownToLine size={16} /> <span className="text-xs font-medium">Download</span>
+                        </div>
+                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                            <Bookmark size={16} /> <span className="text-xs font-medium">Save</span>
+                        </div>
+                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                            <Flag size={16} /> <span className="text-xs font-medium">Report</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Comments Component */}
+                <div className="bg-[#272727] rounded-xl mx-3 px-2 py-2">
+                    <Comments videoId={video._id} />
+                </div>
+
+                <hr className='border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
+
+                {/* Recommendation Sidebar */}
+                <div className="flex flex-col">
+                    {videos.map((video) => (
+                        <VideoCard key={video._id} video={video} />
+                    ))}
+                </div>
+            </div>
         </div>
-        // <div className="flex gap-6 px-8 py-4">
-        //     {/* Main Content (Video + Details) */}
-        //     <div className="flex-5">
-        //         <div className="w-full h-125">
-        //             <video 
-        //                 src={video.videoUrl}
-        //                 controls
-        //                 // className="w-full h-125 object-cover bg-black"
-        //             />
-        //         </div>
-        //         <h1 className="text-lg font-normal mt-5 mb-2.5">{video.title}</h1>
-        //         <div className="flex items-center justify-between">
-        //             {/* Channel Info */}
-        //             <div className="flex justify-between gap-4">
-        //                 <div className="flex gap-2.5">
-        //                     <div className="w-12 h-12 rounded-full bg-gray-500"></div>
-        //                     <div className="flex flex-col">
-        //                         <span className="font-medium">LM3 Games</span>
-        //                         <span className="text-xs">100K subscribers</span>    
-        //                     </div>
-        //                 </div>
-        //                 <button className="bg-[#cc1a00] font-medium border-none rounded px-5 h-max py-2.5 cursor-pointer uppercase tracking-wide">
-        //                     Subscribe
-        //                 </button>
-        //             </div>
-                    
-        //             <div className="flex gap-5">
-        //                 <button onClick={handleLike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
-        //                     <ThumbsUp /> {video.likes?.length}
-        //                 </button>
-        //                 <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
-        //                     <ThumbsDown />
-        //                 </button>
-        //                 <div className="flex items-center gap-1 cursor-pointer">
-        //                     <Share2 /> Share
-        //                 </div>
-        //                 <div className="flex items-center gap-1 cursor-pointer">
-        //                     <ArrowDownToLine /> Download
-        //                 </div>
-        //                 <div className="flex items-center gap-1 cursor-pointer">
-        //                     <Bookmark /> Save
-        //                 </div>
-        //             </div>
-        //         </div>
-
-        //         <hr className="my-4" />
-
-        //         <span>{video.views} views • {video.createdAt}</span>
-        //         <p className="mt-2 text-sm">{video.desc}</p>
-
-        //         <hr className="my-4" />
-
-        //         {/* Comments Component */}
-        //         <Comments videoId={video._id} />
-        //     </div>
-
-        //     {/* Recommendation Sidebar */}
-        //     <div className="flex-2 hidden lg:block">
-        //         <h2 className="text-sm mb-3">Recommended</h2>
-        //         <div className="w-full h-24 mb-2 rounded bg-gray-500"></div>
-        //         <div className="w-full h-24 mb-2 rounded bg-gray-500"></div>
-        //         <div className="w-full h-24 mb-2 rounded bg-gray-500"></div>
-        //     </div>
-        // </div>
     );
 };
 
