@@ -6,6 +6,7 @@ import Comments from "../components/Comments";
 import VideoCard from "../components/VideoCard";
 import useFetch from "../hooks/useFetch";
 import { LoadingHandler, ErrorHandler } from "../components/Handler";
+import { format } from "timeago.js";
 
 function Video() {
     const [video, setVideo] = useState(null);
@@ -111,8 +112,8 @@ function Video() {
                 {/* Scrollable Content */}
                 <div className="mt-2">
                     <h1 className="px-3 text-lg md:text-xl font-medium">{video.title}</h1>
-                    <div className="flex flex-col gap-3 md:flex-row md:items-center justify-between">
-                        <span className="px-3 text-sm font-extralight">{video.views} views • {video.createdAt}</span>
+                    <div className="flex flex-col gap-3 justify-between">
+                        <span className="px-3 text-sm font-extralight">{video.views} views • {format(video.createdAt)}</span>
                         {/* Channel Info */}
                         <div className="flex justify-between px-3">
                             <div className="flex gap-2 items-center">
@@ -159,7 +160,7 @@ function Video() {
                 <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
 
                 {/* Recommendation Sidebar */}
-                <div className="flex flex-col gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
                     {videos.map((video) => (
                         <VideoCard key={video._id} video={video} />
                     ))}

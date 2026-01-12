@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Comment from "./Comment";
 
 function Comments({ videoId }) {
     const [comments, setComments] = useState([]);
@@ -53,32 +54,33 @@ function Comments({ videoId }) {
 
     return (
         <div>
-            {/* Input Section */}
-            <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center">
+            <div>
+                <p className="font-bold">Comments<span className="ml-2 font-extralight">{comments.length}</span></p>
+            </div>
+            <div className="flex items-start gap-2.5 w-full">
+                <div className="shrink-0 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center mt-1">
                     {currentUser ? currentUser.username[0] : "?"}
                 </div>
-                <input
-                    className="border-none border-b border-gray-500 bg-transparent outline-none p-1.5" 
-                    type="text"
+                {/* Input Section */}
+                <textarea
+                    className="w-full resize-none border rounded-lg border-gray-500 outline-none p-1.5 overflow-hidden" 
                     placeholder="Add a comment..."
+                    rows={3}
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)} 
+                    onChange={(e) => {
+                        setNewComment(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = e.target.scrollHeight + 'px';
+                    }} 
                 />
-                <button onClick={handleComment} className="text-[#3ea6ff] uppercase text-sm font-bold bg-transparent border-none cursor-pointer">Comment</button>
+                <button onClick={handleComment} className="shrink-0 bg-[#3ea6ff] rounded-full px-4 py-2 text-white dark:text-[#0f0f0f] font-bold text-sm cursor-pointer mt-0.5">Comment</button>
             </div>
+
+            <hr className='hidden mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
 
             {/* List of Comments */}
             {comments.map(comment => (
-                <div key={comment._id} className="flex gap-2.5 my-7">
-                    <div className="w-12 h-12 rounded-full bg-gray-500"></div>
-                    <div className="flex flex-col gap-2.5">
-                        <span className="text-sm font-medium">
-                            User <span className="text-xs ml-1">1 day ago</span>
-                        </span>
-                        <span className="text-sm">{comment.desc}</span>
-                    </div>
-                </div>
+                <Comment key={comment._id} comment={comment} />
             ))}
         </div>
     )

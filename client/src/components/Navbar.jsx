@@ -16,7 +16,7 @@ function Navbar({ isDark, setIsDark, setIsMenuOpen, user, handleLogout }) {
                 </div>
                 <div className='flex gap-2 md:gap-4'>
                     <div className='flex'>
-                        <input type="text" placeholder='Search' className='hidden md:block pt-1.5 pb-1.5 pl-3 border border-[#d3d3d3] dark:border-[#303030] rounded-l-4xl lg:w-xl' />
+                        <input type="text" placeholder='Search' className='outline-none hidden md:block pt-1.5 pb-1.5 pl-3 border border-[#d3d3d3] dark:border-[#303030] rounded-l-4xl lg:w-xl' />
                         <button className='cursor-pointer md:py-1.5 md:px-4 hover:bg-[#f0f0f0] dark:hover:bg-[#3d3d3d] md:border md:border-[#d3d3d3] dark:border-[#303030] dark:bg-[#212121] p-2 rounded-4xl md:rounded-l-none md:rounded-r-4xl md:border-l-0'><Search /></button>
                     </div>
                     <button className='hidden md:block p-2 cursor-pointer bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-4xl'><Mic /></button>
