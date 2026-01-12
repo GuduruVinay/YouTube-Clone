@@ -19,36 +19,60 @@ export async function getVideo(req, res) {
     } catch(err) {
         return res.status(500).json(err);
     }
-}
+};
 
 // PUT Like Video
-export async function likeVideo(req, res) {
+export async function likeVideo(req, res, next) {
     const id = req.user.id; // From JWT Token
     const videoId = req.params.videoId;
 
     try{
-        await Video.findByIdAndUpdate(videoId, {
-            $addToSet: { likes: id }, // Add user ID to likes
-            $pull: { dislikes: id }, // Remove from dislikes if present
-        });
-        return res.status(200).json("The video has been liked.");
+        // Fetch the video to check current state
+        const video = await Video.findById(videoId);
+
+        // If user already liked it : Remove Like
+        if(video.likes.includes(id)) {
+            await Video.findByIdAndUpdate(videoId, {
+                $pull: { likes: id }
+            });
+            return res.status(200).json("The like has been removed.");
+        } else {
+            await Video.findByIdAndUpdate(videoId, {
+                $addToSet: { likes: id }, // Add user ID to likes
+                $pull: { dislikes: id }, // Remove from dislikes if present
+            });
+            return res.status(200).json("The video has been liked.");
+        }
     } catch(err) {
-        return res.status(500).json(err);
+        next(err);
     }
-}
+};
 
 // PUT Dislike Video
-export async function dislikeVideo(req, res) {
+export async function dislikeVideo(req, res, next) {
     const id = req.user.id;
     const videoId = req.params.videoId;
     
     try {
-        await Video.findByIdAndUpdate(videoId, {
-            $addToSet: { dislikes: id },
-            $pull: { likes: id }
-        });
-        return res.status(200).json("The video has been disliked.");
+        // Fetch the video to check current state
+        const video = await Video.findById(videoId);
+
+        // If user already disliked it : Remove Dislike
+        if(video.dislikes.includes(id)) {
+            await Video.findByIdAndUpdate(videoId, {
+                $pull: { dislikes: id }
+            });
+            return res.status(200).json("The dislike has been removed.");
+        }
+        // If user hasn't disliked it : Add Dislike & Remove Like
+        else {
+            await Video.findByIdAndUpdate(videoId, {
+                $addToSet: { dislikes: id },
+                $pull: { likes: id }
+            });
+            return res.status(200).json("The video has been disliked.");
+        }
     } catch(err) {
-        return res.status(500).json(err);
+        next(err);
     }
-}
+};
