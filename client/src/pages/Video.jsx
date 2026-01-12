@@ -26,23 +26,77 @@ function Video() {
         };
         fetchData(); 
     }, [path]);
-    
+
     // Handle Like
     async function handleLike() {
-        await axios.put(`http://localhost:5000/api/videos/like/${video._id}`, {}, {
-            headers: { Authorization: `Bearer ${token}` }
+        // Check if user is logged in
+        if(!currentUser) return alert("Please sign in to like videos.");
+        
+        setVideo((prev) => {
+            // Check if already liked
+            const isLiked = prev.likes.includes(currentUser._id);
+
+            if(isLiked) {
+                // TOGGLE OFF : Remove user from likes
+                return {
+                    ...prev,
+                    likes: prev.likes.filter((id) => id !== currentUser._id)
+                };
+            } else {
+                // TOGGLE ON : Add user to likes, Remove from dislikes
+                return {
+                    ...prev,
+                    likes: [...prev.likes, currentUser._id],
+                    dislikes: prev.dislikes.filter((id) => id !== currentUser._id)
+                };
+            }
         });
-        window.location.reload();
+
+        try {
+            await axios.put(`http://localhost:5000/api/videos/like/${video._id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } catch(err) {
+            console.error(err);
+        }
     };
-    
+
     // Handle Dislike
     async function handleDislike() {
-        await axios.put(`http://localhost:5000/api/videos/dislike/${video._id}`, {}, {
-            headers: { Authorization: `Bearer ${token}` }
+        // Check if user is logged in
+        if(!currentUser) return alert("Please sign in to dislike videos.");
+        
+        setVideo((prev) => {
+            // Check if already liked
+            const isDisliked = prev.dislikes.includes(currentUser._id);
+
+            if(isDisliked) {
+                // TOGGLE OFF : Remove user from likes
+                return {
+                    ...prev,
+                    dislikes: prev.dislikes.filter((id) => id !== currentUser._id)
+                };
+            } else {
+                // TOGGLE ON : Add user to dislikes, Remove from likes
+                return {
+                    ...prev,
+                    dislikes: [...prev.dislikes, currentUser._id],
+                    likes: prev.likes.filter((id) => id !== currentUser._id)
+                };
+            }
+
         });
-        window.location.reload();
+
+        try {
+            await axios.put(`http://localhost:5000/api/videos/dislike/${video._id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } catch(err) {
+            console.error(err);
+        }
     };
-    
+
+    // Fetch random videos
     const { data: videos, loading, error } = useFetch("http://localhost:5000/api/videos/random");
     if(loading) return <LoadingHandler />
     if(error) return <ErrorHandler error={error}/>
@@ -53,7 +107,7 @@ function Video() {
             <video 
                 src={video.videoUrl}
                 controls 
-                className="w-full" 
+                className="w-full lg:w-125" 
             />
 
             <div className="flex flex-col gap-3 pt-3">
@@ -77,33 +131,33 @@ function Video() {
                     </div>
             
                     <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
-                        <div className="flex rounded-full bg-[#272727] px-3 py-1 gap-2">
+                        <div className="flex rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 gap-2">
                             <button onClick={handleLike} className="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                                <ThumbsUp size={16} /> <span className="text-sm mt-1">{video.likes?.length}</span>
+                                <ThumbsUp size={16} style={{ color: video.likes?.includes(currentUser?._id) ? "#3ea6ff" : "white"}} /> <span className="text-sm mt-1">{video.likes?.length}</span>
                             </button>
                             <span>|</span>
                             <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
-                                <ThumbsDown size={16} />
+                                <ThumbsDown size={16} style={{ color: video.dislikes?.includes(currentUser?._id) ? "#3ea6ff" : "white"}} />
                             </button>
                         </div>
-                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                        <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
                             <Share2 size={16} /> <span className="text-xs font-medium">Share</span>
                         </div>
-                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                        <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
                             <ArrowDownToLine size={16} /> <span className="text-xs font-medium">Download</span>
                         </div>
-                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                        <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
                             <Bookmark size={16} /> <span className="text-xs font-medium">Save</span>
                         </div>
-                        <div className="flex items-center gap-1 rounded-full bg-[#272727] px-3 py-1 cursor-pointer">
+                        <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
                             <Flag size={16} /> <span className="text-xs font-medium">Report</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Comments Component */}
-                <div className="bg-[#272727] rounded-xl mx-3 px-2 py-2">
-                    <Comments videoId={video._id} />
+                <div className="bg-[#f2f2f2] dark:bg-[#272727] rounded-xl mx-3 px-2 py-2">
+                     <Comments videoId={video._id} />
                 </div>
 
                 <hr className='border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
