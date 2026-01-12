@@ -2,14 +2,48 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import Video from "./pages/Video";
+import Sidebar from './components/Sidebar';
 import Navbar from "./components/Navbar";
+import { useState, useEffect } from "react";
+
+const THEME_KEY = "theme";
 
 function Layout() {
+  // State: Dark Mode
+  const [isDark, setIsDark] = useState(() => {
+      return localStorage.getItem(THEME_KEY) === "dark";
+  });
+
+  // Effect: Dark Mode
+  useEffect(() => {
+      if(isDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem(THEME_KEY, "dark");
+      } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem(THEME_KEY, "light");
+      }
+  }, [isDark]);
+
+  // Check if user is stored in Local Storage
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // Handle User Logout
+  function handleLogout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.reload();
+  };
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <div>
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       {/* Main Content Area */}
-      <div className="h-dvh overflow-hidden">
-        <Navbar />
+      <div className="flex-1 h-full overflow-y-auto">
+        <Navbar isDark={isDark} setIsDark={setIsDark} setIsMenuOpen={setIsMenuOpen} user={user} handleLogout={handleLogout}/>
         {/* The Outlet is where Home, Video, or SignIn will render */}
         <Outlet />
       </div>

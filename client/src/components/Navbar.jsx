@@ -1,42 +1,10 @@
 import { Menu, Search, Mic, Plus, CircleUserRound, EllipsisVertical, Bell, Sun, Moon } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
 
-const THEME_KEY = "theme";
-
-function Navbar() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    // Check if user is stored in Local Storage
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    // Handle User Logout
-    function handleLogout() {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.reload();
-    };
-
-    // State: Dark Mode
-    const [isDark, setIsDark] = useState(() => {
-        return localStorage.getItem(THEME_KEY) === "dark";
-    });
-
-    // Effect: Dark Mode
-    useEffect(() => {
-        if(isDark) {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem(THEME_KEY, "dark");
-        } else {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem(THEME_KEY, "light");
-        }
-    }, [isDark]);
-
+function Navbar({ isDark, setIsDark, setIsMenuOpen, user, handleLogout }) {
     return (
-        <nav className='dark:bg-[#0f0f0f] dark:text-white'>
-            {isMenuOpen && <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
+        <nav className='sticky top-0 z-50 h-14 dark:bg-[#0f0f0f] dark:text-white'>
+            {/* {isMenuOpen && <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />} */}
             <div className='flex justify-between items-center p-2.5 md:pl-4.5 md:pr-4'>
                 <div className='flex gap-1'>
                     <button onClick={() => setIsMenuOpen(true)} className='hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl cursor-pointer'><Menu /></button>
