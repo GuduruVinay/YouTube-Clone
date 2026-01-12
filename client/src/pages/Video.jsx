@@ -133,24 +133,24 @@ function Video() {
                     <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
                         <div className="flex rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 gap-2">
                             <button onClick={handleLike} className="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                                <ThumbsUp size={16} style={{ color: video.likes?.includes(currentUser?._id) ? "#3ea6ff" : "white"}} /> <span className="text-sm mt-1">{video.likes?.length}</span>
+                                <ThumbsUp className={`w-4 h-4 ${video.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black} dark:text-white"}`} /> <span className="text-sm mt-1">{video.likes?.length}</span>
                             </button>
                             <span>|</span>
                             <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
-                                <ThumbsDown size={16} style={{ color: video.dislikes?.includes(currentUser?._id) ? "#3ea6ff" : "white"}} />
+                                <ThumbsDown className={`w-4 h-4 ${video.dislikes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black dark:text-white"}`} />
                             </button>
                         </div>
                         <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
-                            <Share2 size={16} /> <span className="text-xs font-medium">Share</span>
+                            <Share2 className="w-4 h-4" /> <span className="text-xs font-medium">Share</span>
                         </div>
                         <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
-                            <ArrowDownToLine size={16} /> <span className="text-xs font-medium">Download</span>
+                            <ArrowDownToLine className="w-4 h-4" /> <span className="text-xs font-medium">Download</span>
                         </div>
                         <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
-                            <Bookmark size={16} /> <span className="text-xs font-medium">Save</span>
+                            <Bookmark className="w-4 h-4" /> <span className="text-xs font-medium">Save</span>
                         </div>
                         <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
-                            <Flag size={16} /> <span className="text-xs font-medium">Report</span>
+                            <Flag className="w-4 h-4" /> <span className="text-xs font-medium">Report</span>
                         </div>
                     </div>
                 </div>

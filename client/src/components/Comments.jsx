@@ -23,6 +23,18 @@ function Comments({ videoId }) {
 
     // Handle Comment
     async function handleComment() {
+        // Check if user is logged in first
+        if(!currentUser) {
+            alert("Please login to add a comment.");
+            return;
+        }
+
+        // Check if the input is empty
+        if(!newComment.trim()) {
+            alert("Comment cannot be empty!");
+            return;
+        }
+
         try {
             const res = await axios.post("http://localhost:5000/api/comments", {
                 desc: newComment,
@@ -34,7 +46,8 @@ function Comments({ videoId }) {
             setComments([res.data, ...comments]);
             setNewComment("");
         } catch(err) {
-            alert("Please login to comment");
+            console.error(err);
+            alert("Something went wrong while adding the comment.");
         }
     }
 
@@ -46,7 +59,7 @@ function Comments({ videoId }) {
                     {currentUser ? currentUser.username[0] : "?"}
                 </div>
                 <input
-                    className="border-none border-b border-gray-500 bg-transparent outline-none p-1.5 w-full" 
+                    className="border-none border-b border-gray-500 bg-transparent outline-none p-1.5" 
                     type="text"
                     placeholder="Add a comment..."
                     value={newComment}
