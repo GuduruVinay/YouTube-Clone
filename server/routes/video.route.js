@@ -5,6 +5,10 @@ import { verifyToken } from "../middleware/verifyToken.js";
 const router = express.Router();
 
 // Endpoints
+router.get('/search', search);
+
+router.get('/tags', getByTag);
+
 router.get('/random', randomVideos);
 
 router.get('/find/:id', getVideo);
@@ -15,8 +19,6 @@ router.put('/dislike/:videoId', verifyToken , dislikeVideo);
 
 router.get('/user/:userId', getByUser);
 
-router.get('/tags', getByTag);
 
-router.get('/search', search);
 
 export default router;

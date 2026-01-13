@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import Navbar from "./components/Navbar";
 import { useState, useEffect } from "react";
 import Channel from "./pages/Channel";
+import Search from "./pages/Search";
 
 const THEME_KEY = "theme";
 
@@ -66,6 +67,7 @@ function App() {
               <Route index element={ <Home /> } />
               <Route path="video/:videoId" element={ <Video /> } />
               <Route path="channel/:id" element={ <Channel /> } />
+              <Route path="search" element={<Search />} />
             </Route>
           </Routes>
         </div>

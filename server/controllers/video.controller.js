@@ -106,7 +106,9 @@ export async function search(req, res, next) {
     try {
         // $regex: Finds partial matches
         // $options: "i" makes it case-sensitive 
-        const videos = await Video.find({ title: { $regex: query, $options: "i" } }).limit(40);
+        const videos = await Video.find({ 
+            title: { $regex: query, $options: "i" }, 
+        }).limit(40);
         res.status(200).json(videos);
     } catch(err) {
         next(err);
