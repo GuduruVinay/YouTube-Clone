@@ -1,0 +1,82 @@
+import Channel from "../models/Channel.model.js";
+import User from "../models/User.model.js";
+import Video from "../models/Video.model.js";
+import { createError } from "../utils/error.js";
+
+// Create a new Channel
+export const createChannel = async (req, res, next) => {
+    const newChannel = new Channel({
+        ...req.body,
+        owner: req.user.id
+    });
+    try {
+        // Save the Channel to the DB
+        const savedChannel = await newChannel.save();
+        // Add this Channel ID to the User's "channels" list
+        await User.findByIdAndUpdate(req.user.id, {
+            $push: { channels: savedChannel._id }
+        });
+        return res.status(200).json(savedChannel);
+    } catch(err) {
+        next(err);
+    }
+};
+
+// GET Channel details
+export const getChannel = async (req, res, next) => {
+    try {
+        const channel = await Channel.findById(req.params.id);
+        if(!channel) return next(createError(404, "Channel not found!"));
+        return res.status(200).json(channel);
+    } catch(err) {
+        next(err);
+    }
+};
+
+// Update Channel
+export const updateChannel = async (req, res, next) => {
+    try {
+        const channel = await Channel.findById(req.params.id);
+        if(!channel) return next(createError(404, "Channel not found!"));
+        // Only the Owner (User) can edit this Channel
+        if(req.user.id === channel.owner.toString()) {
+            const updatedChannel = await Channel.findByIdAndUpdate(
+                req.params.id,
+                { $set: req.body },
+                { new: true }
+            );
+            return res.status(200).json(updateChannel);
+        } else {
+            return next(createError(403, "You can update only your channel!"));
+        }
+    } catch(err) {
+        next(err);
+    }
+};
+
+// Delete Channel
+export const deleteChannel = async (req, res, next) => {
+    try {
+        const channel = await Channel.findById(req.params.id);
+        if(!channel) return next(createError(404, "Channel not found!"));
+
+        if(req.user.id === channel.owner.toString()) {
+            // Delete the Channel
+            await Channel.findByIdAndDelete(req.params.id);
+
+            // Remove Channel ID from User's list
+            await User.findByIdAndUpdate(req.user.id, {
+                $pull: { channels: req.params.id }
+            });
+
+            // Delete all videos uploaded to this channel
+            await Video.deleteMany({ channelId: req.params.id });
+
+            return res.status(200).json("Channel has been deleted.");
+        } else {
+            return next(createError(403, "You can delete only your channel!"));
+        }
+    } catch(err) {
+        next(err);
+    }
+};
