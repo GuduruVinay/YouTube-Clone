@@ -52,6 +52,10 @@ function Comments({ videoId }) {
         }
     }
 
+    function handleDeleteFromList(id) {
+        setComments(comments.filter(comment => comment._id !== id));
+    }
+
     return (
         <div>
             <div>
@@ -80,10 +84,14 @@ function Comments({ videoId }) {
 
             {/* List of Comments */}
             {comments.map(comment => (
-                <Comment key={comment._id} comment={comment} />
+                <Comment 
+                    key={comment._id} 
+                    comment={comment}
+                    onDelete={handleDeleteFromList} 
+                />
             ))}
         </div>
-    )
-}
+    );
+};
 
 export default Comments;

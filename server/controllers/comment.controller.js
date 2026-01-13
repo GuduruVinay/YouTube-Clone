@@ -27,14 +27,16 @@ export async function getComments(req, res, next) {
 export async function updateComment(req, res, next) {
     try {
         const comment = await Comment.findById(req.params.id);
+        if(!comment) return next(createError(404, "Comment not found!"));
+
         // Only the comment author can edit
-        if(req.user.id === comment.userId) {
+        if(req.user.id === comment.userId.toString()) {
             const updatedComment = await Comment.findByIdAndUpdate(
                 req.params.id,
                 { $set: req.body },
                 { new: true }
             );
-            return res.status(200).json(updateComment);
+            return res.status(200).json(updatedComment);
         } else {
             return next(createError(403, "You can update only your comment!"));
         }
@@ -47,10 +49,14 @@ export async function updateComment(req, res, next) {
 export async function deleteComment(req, res, next) {
     try {
         const comment = await Comment.findById(req.params.id);
-        const video = await Video.findById(req.params.id);
+        const video = await Video.findById(comment.videoId);
+
+        // Ensure both comment and video exist
+        if(!comment) return next(createError(404, "Comment not found!"));
+        if(!video) return next(createError(404, "Video not found!"));
 
         // Allow delete if User is the Comment Owner OR the Video Owner
-        if(req.user.id === comment.userId || req.user.id === video?.userId) {
+        if(req.user.id === comment.userId.toString() || req.user.id === video.userId.toString()) {
             await Comment.findByIdAndDelete(req.params.id);
             return res.status(200).json("The comment has been deleted.");
         } else {
