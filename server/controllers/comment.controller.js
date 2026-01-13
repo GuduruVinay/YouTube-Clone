@@ -1,6 +1,6 @@
 import Comment from "../models/Comment.model.js";
 
-
+// POST Add Comment
 export async function addComment(req, res) {
     const newComment = new Comment({ ...req.body, userId: req.user.id });
     try {
@@ -11,6 +11,7 @@ export async function addComment(req, res) {
     };
 }
 
+// GET comments
 export async function getComments(req, res) {
     try {
         const comments = await Comment.find({ videoId: req.params.videoId });
