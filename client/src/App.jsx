@@ -5,6 +5,7 @@ import Video from "./pages/Video";
 import Sidebar from './components/Sidebar';
 import Navbar from "./components/Navbar";
 import { useState, useEffect } from "react";
+import Channel from "./pages/Channel";
 
 const THEME_KEY = "theme";
 
@@ -64,6 +65,7 @@ function App() {
               {/* These are the children that get injected into <Outlet /> */}
               <Route index element={ <Home /> } />
               <Route path="video/:videoId" element={ <Video /> } />
+              <Route path="channel/:id" element={ <Channel /> } />
             </Route>
           </Routes>
         </div>
