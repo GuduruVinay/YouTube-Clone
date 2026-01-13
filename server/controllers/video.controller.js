@@ -76,3 +76,12 @@ export async function dislikeVideo(req, res, next) {
         next(err);
     }
 };
+
+export async function getByUser(req, res, next) {
+    try {
+        const videos = await Video.find({ userId: req.params.userId });
+        res.status(200).json(videos);
+    } catch(errr) {
+        next(err);
+    }
+};
