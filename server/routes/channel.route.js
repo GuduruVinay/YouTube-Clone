@@ -4,6 +4,7 @@ import { createChannel, updateChannel, deleteChannel, getChannel } from "../cont
 
 const router = express.Router();
 
+// Endpoints
 // CREATE: POST /api/channels
 router.post("/", verifyToken, createChannel);
 
