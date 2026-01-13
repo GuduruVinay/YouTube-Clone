@@ -5,33 +5,31 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a username'],
         unique: true,
-        trim: true,
     },
     email: {
         type: String,
         required: [true, 'Please provide an email'],
         unique: true,
-        trim: true
     },
     password: {
         type: String,
         required: [true, 'Please provide a password'],
         minlength: [6, 'Password must be atleast 6 characters']
     },
-    img: {
+    avatar: {
         type: String,
     },
-    subscribers: {
-        type: Number,
-        default: 0
-    },
-    subscribedUsers: {
-        type: [String],
-        default: []
-    }
+    channels: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Channel"
+    }],
+    subscribedChannels: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Channel"
+    }],
 }, { timestamps: true });
 
-const UserModel = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
-export default UserModel;
+export default User;
 

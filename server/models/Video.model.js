@@ -1,44 +1,49 @@
 import mongoose from "mongoose";
 
 const videoSchema = new mongoose.Schema({
-    "userId": {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'Please provide a user Id']
-    },
-    "title": {
+    title: {
         type: String,
         required: [true, 'Please provide a video title']
     },
-    "desc": {
+    description: {
         type: String,
     },
-    "imgUrl": {
+    thumbnailUrl: {
         type: String,
         required: [true, 'Please provide a thumbnail url']
     },
-    "videoUrl": {
+    videoUrl: {
         type: String,
         required: [true, 'Please provide a video url']
     },
-    "views": {
+    channelId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Channel",
+        required: true
+    },
+    uploader: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    views: {
         type: Number,
         default: 0
     },
-    "tags": {
+    likes: {
         type: [String],
         default: []
     },
-    "likes": {
+    dislikes: {
         type: [String],
         default: []
     },
-    "dislikes": {
+    tags: {
         type: [String],
         default: []
     }
 }, { timestamps: true });
 
-const VideoModel = mongoose.model('Videos', videoSchema);
+const Video = mongoose.model('Video', videoSchema);
 
-export default VideoModel;
+export default Video;
