@@ -9,10 +9,10 @@ const router = express.Router();
 router.post("/", verifyToken, addComment);
 
 // DELETE /api/comments/12345
-router.delete('/:id', verifyToken, deleteComment);
+router.delete("/:id", verifyToken, deleteComment);
 
 // PUT /api/comments/12345
-router.put('/:id', verifyToken, updateComment);
+router.put("/:id", verifyToken, updateComment);
 
 // GET /api/comments/54321
 router.get("/:videoId", getComments);

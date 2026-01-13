@@ -9,12 +9,12 @@ const router = express.Router();
 router.post("/", verifyToken, createChannel);
 
 // READ: GET /api/channels/find/12345
-router.post("/find/:id", getChannel);
+router.get("/find/:id", getChannel);
 
 // UPDATE: PUT /api/channels/12345
-router.post("/:id", verifyToken, updateChannel);
+router.put("/:id", verifyToken, updateChannel);
 
-// DELTE: DELETE /api/channels/12345
-router.post("/:id", verifyToken, deleteChannel);
+// DELETE: DELETE /api/channels/12345
+router.delete("/:id", verifyToken, deleteChannel);
 
 export default router;

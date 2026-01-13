@@ -4,7 +4,7 @@ import Channel from "../models/Channel.model.js";
 import { createError } from "../utils/error.js";
 
 // Update User (Profile)
-export const update = async (req, res, next) => {
+export const updateUser = async (req, res, next) => {
     if(req.params.id === req.user.id) {
         try {
             const updatedUser = await User.findByIdAndUpdate(
