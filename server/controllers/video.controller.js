@@ -56,7 +56,6 @@ export async function dislikeVideo(req, res, next) {
     try {
         // Fetch the video to check current state
         const video = await Video.findById(videoId);
-
         // If user already disliked it : Remove Dislike
         if(video.dislikes.includes(id)) {
             await Video.findByIdAndUpdate(videoId, {
@@ -73,15 +72,6 @@ export async function dislikeVideo(req, res, next) {
             return res.status(200).json("The video has been disliked.");
         }
     } catch(err) {
-        next(err);
-    }
-};
-
-export async function getByUser(req, res, next) {
-    try {
-        const videos = await Video.find({ userId: req.params.userId });
-        res.status(200).json(videos);
-    } catch(errr) {
         next(err);
     }
 };

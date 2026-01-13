@@ -6,6 +6,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.route.js";
 import videoRoutes from "./routes/video.route.js";
 import commentRoutes from "./routes/comments.route.js";
+import userRoutes from "./routes/user.route.js";
 
 // Configuration
 dotenv.config();
@@ -33,6 +34,7 @@ const connectDB = async () => {
 app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/users', userRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
