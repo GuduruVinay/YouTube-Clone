@@ -88,7 +88,7 @@ export const deleteVideo = async (req, res, next) => {
     }
 };
 
-// GET Single Video
+// Get Single Video
 export const getVideo = async (req, res, next) => {
     try {
         const video = await Video.findById(req.params.id);
@@ -111,7 +111,7 @@ export const addView = async (req, res, next) => {
 };
 
 
-// GET Random Videos for Home Page
+// Get Random Videos for Home Page
 export const randomVideos = async (req, res, next) => {
     try {
         // Fetch 40 random videos
@@ -122,7 +122,7 @@ export const randomVideos = async (req, res, next) => {
     }
 };
 
-// GET Trending Videos
+// Get Trending Videos
 export const getTrend = async (req, res, next) => {
     try {
         const videos = await Video.find().sort({ views: -1 });
@@ -132,7 +132,7 @@ export const getTrend = async (req, res, next) => {
     }
 };
 
-// GET Subscribed Videos
+// Get Subscribed Videos
 export const sub = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
@@ -153,7 +153,7 @@ export const sub = async (req, res, next) => {
     }
 };
 
-// GET Videos by Tags
+// Get Videos by Tags
 export const getByTag = async (req, res, next) => {
     // Split query string into array
     const tags = req.query.tags.split(",");
@@ -166,7 +166,7 @@ export const getByTag = async (req, res, next) => {
     }
 };
 
-// GET Search Videos
+// Get Search Videos
 export const search = async (req, res, next) => {
     // Get the "q" parameter from URL
     const query = req.query.q;
@@ -182,7 +182,7 @@ export const search = async (req, res, next) => {
     }
 };
 
-// GET Videos by Channel (For Channel Page)
+// Get Videos by Channel (For Channel Page)
 export const getByChannel = async (req, res, next) => {
     try {
         const videos = await Video.find({ channelId: req.params.channelId });

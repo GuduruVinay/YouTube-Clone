@@ -1,9 +1,11 @@
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
+import { createError } from "../utils/error.js";
 
-// REGISTER
-export const registerUser = async (req, res) => {
+// Sign Up
+export const signup = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
 
@@ -21,18 +23,20 @@ export const registerUser = async (req, res) => {
             email,
             password: hashedPassword
         });
+
         const savedUser = await newUser.save();
 
         // Respond (Exclude password from response)
-        const { password: _, ...otherDetails } = savedUser._doc;
-        return res.status(201).json(otherDetails);
+        const { password: _, ...others } = savedUser._doc;
+
+        return res.status(201).json(others);
     } catch(err) {
-        return res.status(500).json({ error: err.message });
+        next(err);
     }
 };
 
-// LOGIN
-export const loginUser = async (req, res) => {
+// Sign In
+export const signin = async (req, res, next) => {
     try {
         // Find User
         const user = await User.findOne({ username: req.body.username });
@@ -40,15 +44,21 @@ export const loginUser = async (req, res) => {
     
         // Validate Password
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
-        if(!isPasswordCorrect) return res.status(400).json({ message: "Incorrect Password!" });
+        if(!isPasswordCorrect) return next(createError(400, "Incorrect Password!" ));
 
         // Generate JWT Token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-        // Send Token and User Data to Frontend
-        const { password, ...otherDetails } = user._doc;
-        return res.status(200).json({ details: { ...otherDetails }, token });
+        // Remove password from response
+        const { password, ...others } = user._doc;
+
+        return res
+            .cookie("access_token", token, {
+                httpOnly: true,
+            })
+            .status(200)
+            .json(others);
     } catch(err) {
-        return res.status(500).json({ error: err.message });
+        next(err);
     }
 };

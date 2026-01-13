@@ -22,7 +22,7 @@ export const createChannel = async (req, res, next) => {
     }
 };
 
-// GET Channel details
+// Get Channel details
 export const getChannel = async (req, res, next) => {
     try {
         const channel = await Channel.findById(req.params.id);
