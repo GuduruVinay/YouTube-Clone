@@ -164,7 +164,8 @@ function Video() {
                 <div className="mt-2">
                     <h1 className="px-3 text-lg md:text-xl font-medium">{video.title}</h1>
                     <div className="flex flex-col gap-3 justify-between">
-                        <span className="px-3 text-sm font-extralight">{video.views} views • {format(video.createdAt)}</span>
+                        <span className="px-3 text-sm font-semibold">{video.views} views • {format(video.createdAt)}</span>
+                        <span className="px-3 text-sm font-light">{video.desc}</span>
                         {/* Channel Info */}
                         <div className="flex justify-between px-3">
                             <div className="flex gap-2 items-center">

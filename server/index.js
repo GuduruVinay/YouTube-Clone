@@ -1,5 +1,5 @@
 import express from "express";
-import mongoose, { connect } from "mongoose";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -35,6 +35,17 @@ app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/users', userRoutes);
+
+// Error Handler Middleware
+app.use((err, req, res, next) => {
+    const status = err.status || 500;
+    const message = err.message || "Something went wrong!";
+    return res.status(status).json({
+        success: false,
+        status,
+        message
+    });
+});
 
 // Basic Route
 app.get('/', (req, res) => {
