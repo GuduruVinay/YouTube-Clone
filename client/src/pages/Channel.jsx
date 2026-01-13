@@ -22,7 +22,7 @@ function Channel() {
 
                 // Fetch Channel Videos
                 const videoRes = await axios.get(`http://localhost:5000/api/videos/user/${id}`);
-                setVideos(videoRes.data); 
+                setVideos(videoRes.data);
             } catch(err) {
                 console.error(err);
             }

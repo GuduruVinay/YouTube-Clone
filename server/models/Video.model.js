@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const videoSchema = new mongoose.Schema({
+    "userId": {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'Please provide a user Id']
+    },
     "title": {
         type: String,
         required: [true, 'Please provide a video title']
@@ -15,16 +20,6 @@ const videoSchema = new mongoose.Schema({
     "videoUrl": {
         type: String,
         required: [true, 'Please provide a video url']
-    },
-    "userId": {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        // required: [true, 'Please provide a user Id']
-    },
-    "channelId": {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Channel',
-        // required: [true, 'Please provide a channel Id']
     },
     "views": {
         type: Number,
