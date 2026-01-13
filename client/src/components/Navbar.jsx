@@ -1,8 +1,14 @@
 import { Menu, Search, Mic, Plus, CircleUserRound, EllipsisVertical, Bell, Sun, Moon } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function Navbar({ isDark, setIsDark, setIsMenuOpen, user, handleLogout }) {
+    // State for search query
+    const [q, setQ] = useState("");
+
     const location = useLocation();
+
+    const navigate = useNavigate();
 
     return (
         <nav className='sticky top-0 z-50 h-14 dark:bg-[#0f0f0f] dark:text-white'>
@@ -16,8 +22,19 @@ function Navbar({ isDark, setIsDark, setIsMenuOpen, user, handleLogout }) {
                 </div>
                 <div className='flex gap-2 md:gap-4'>
                     <div className='flex'>
-                        <input type="text" placeholder='Search' className='outline-none hidden md:block pt-1.5 pb-1.5 pl-3 border border-[#d3d3d3] dark:border-[#303030] rounded-l-4xl lg:w-xl' />
-                        <button className='cursor-pointer md:py-1.5 md:px-4 hover:bg-[#f0f0f0] dark:hover:bg-[#3d3d3d] md:border md:border-[#d3d3d3] dark:border-[#303030] dark:bg-[#212121] p-2 rounded-4xl md:rounded-l-none md:rounded-r-4xl md:border-l-0'><Search /></button>
+                        <input 
+                            type="text" 
+                            placeholder='Search' 
+                            className='outline-none hidden md:block pt-1.5 pb-1.5 pl-3 border border-[#d3d3d3] dark:border-[#303030] rounded-l-4xl lg:w-xl' 
+                            onChange={(e) => setQ(e.target.value)} // Update state on type
+                            onKeyDown={(e) => e.key === "Enter" && navigate(`/search?q=${q}`) } // Search on Enter key
+                        />
+                        <button 
+                            className='cursor-pointer md:py-1.5 md:px-4 hover:bg-[#f0f0f0] dark:hover:bg-[#3d3d3d] md:border md:border-[#d3d3d3] dark:border-[#303030] dark:bg-[#212121] p-2 rounded-4xl md:rounded-l-none md:rounded-r-4xl md:border-l-0'
+                            onClick={() => navigate(`/search?q=${q}`)} // Search on Click
+                        >
+                            <Search />
+                        </button>
                     </div>
                     <button className='hidden md:block p-2 cursor-pointer bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-4xl'><Mic /></button>
                     <button onClick={() => setIsDark(!isDark)} className='p-2 cursor-pointer bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-4xl'>
