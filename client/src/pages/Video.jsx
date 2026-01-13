@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import Comments from "../components/Comments";
-import VideoCard from "../components/VideoCard";
+import Card from "../components/Card";
 import useFetch from "../hooks/useFetch";
 import { LoadingHandler, ErrorHandler } from "../components/Handler";
 import { format } from "timeago.js";
@@ -228,7 +228,7 @@ function Video() {
                 {/* Recommendation Sidebar */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
                     {videos.map((video) => (
-                        <VideoCard key={video._id} video={video} />
+                        <Card key={video._id} video={video} />
                     ))}
                 </div>
             </div>

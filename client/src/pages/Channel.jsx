@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import VideoCard from "../components/VideoCard";
+import Card from "../components/Card";
 
 function Channel() {
     const [channel, setChannel] = useState({});
@@ -64,7 +64,7 @@ function Channel() {
                 <h2 className="text-lg font-bold mb-4 dark:text-white">Videos</h2>
                 <div className="flex flex-wrap gap-y-10 gap-x-3">
                     {videos.map((video) => (
-                        <VideoCard key={video._id} video={video} />
+                        <Card key={video._id} video={video} />
                     ))}
                     {videos.length === 0 && (
                         <p className="text-gray-500">This channel has no videos yet.</p>

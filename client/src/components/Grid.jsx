@@ -1,6 +1,6 @@
 import { House, Layers2, TvMinimalPlay, CircleUserRound } from 'lucide-react';
 import Filters from './Filters';
-import VideoCard from './VideoCard';
+import Card from './Card';
 import { Link } from 'react-router-dom';
 
 // Helper Component for Side Menu Buttons
@@ -13,7 +13,7 @@ const SideMenuBtn = ({ path, icon, text }) => (
     </Link>
 );
 
-function VideoGrid({ videos }) {
+function Grid({ videos }) {
     return (
         <div className="flex flex-1 h-dvh overflow-y-auto dark:bg-[#0f0f0f] dark:text-white">
             <div className="hidden md:flex flex-col gap-1 ml-1 items-center justify-start">
@@ -29,7 +29,7 @@ function VideoGrid({ videos }) {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8 px-4 py-4 pb-20 w-full">
                     {videos.map((video) => (
-                        <VideoCard key={video._id} video={video} />
+                        <Card key={video._id} video={video} />
                     ))}
                 </div>
             </div>
@@ -37,4 +37,4 @@ function VideoGrid({ videos }) {
     )
 }
 
-export default VideoGrid;
+export default Grid;
