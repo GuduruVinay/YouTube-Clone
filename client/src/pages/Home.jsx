@@ -1,5 +1,5 @@
 import { ErrorHandler, LoadingHandler } from "../components/Handler";
-import VideoGrid from "../components/VideoGrid";
+import Grid from "../components/Grid";
 import useFetch from "../hooks/useFetch";
 
 function Home() {
@@ -9,7 +9,7 @@ function Home() {
 
     return (
         <div>
-            <VideoGrid videos={videos} />
+            <Grid videos={videos} />
         </div>
     );
 }
