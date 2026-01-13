@@ -1,7 +1,7 @@
 import Video from "../models/Video.model.js";
 
 // GET Random Videos for Home Page
-export async function randomVideos(req, res) {
+export const randomVideos = async (req, res) => {
     try {
         // Fetch 30 random videos
         const videos = await Video.aggregate([{ $sample: { size: 30 } }]);
@@ -12,7 +12,7 @@ export async function randomVideos(req, res) {
 };
 
 // GET Single Video
-export async function getVideo(req, res) {
+export const getVideo = async (req, res) => {
     try {
         const video = await Video.findById(req.params.id);
         return res.status(200).json(video);
@@ -22,7 +22,7 @@ export async function getVideo(req, res) {
 };
 
 // PUT Like Video
-export async function likeVideo(req, res, next) {
+export const likeVideo = async (req, res, next) => {
     const id = req.user.id; // From JWT Token
     const videoId = req.params.videoId;
 
@@ -49,7 +49,7 @@ export async function likeVideo(req, res, next) {
 };
 
 // PUT Dislike Video
-export async function dislikeVideo(req, res, next) {
+export const dislikeVideo = async (req, res, next) => {
     const id = req.user.id;
     const videoId = req.params.videoId;
     
@@ -77,7 +77,7 @@ export async function dislikeVideo(req, res, next) {
 };
 
 // GET By User
-export async function getByUser(req, res, next) {
+export const getByUser = async (req, res, next) => {
     try {
         const videos = await Video.find({ userId: req.params.userId });
         res.status(200).json(videos);
@@ -87,7 +87,7 @@ export async function getByUser(req, res, next) {
 };
 
 // GET videos by tags
-export async function getByTag(req, res, next) {
+export const getByTag = async (req, res, next) => {
     // Split query string into array
     const tags = req.query.tags.split(",");
     try {
@@ -100,7 +100,7 @@ export async function getByTag(req, res, next) {
 };
 
 // GET search videos
-export async function search(req, res, next) {
+export const search = async (req, res, next) => {
     // Get the "q" parameter from URL
     const query = req.query.q;
     try {

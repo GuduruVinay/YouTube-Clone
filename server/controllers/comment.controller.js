@@ -3,7 +3,7 @@ import Comment from "../models/Comment.model.js";
 import { createError } from "../utils/error.js";
 
 // POST Add comment
-export async function addComment(req, res, next) {
+export const addComment = async (req, res, next) => {
     const newComment = new Comment({ ...req.body, userId: req.user.id });
     try {
         const savedComment = await newComment.save();
@@ -11,20 +11,20 @@ export async function addComment(req, res, next) {
     } catch(err) {
         next(err);
     };
-}
+};
 
 // GET all comments
-export async function getComments(req, res, next) {
+export const getComments = async (req, res, next) => {
     try {
         const comments = await Comment.find({ videoId: req.params.videoId });
         return res.status(200).json(comments);
     } catch(err) {
         next(err);
     };
-}
+};
 
 // PUT Update comment
-export async function updateComment(req, res, next) {
+export const updateComment = async (req, res, next) => {
     try {
         const comment = await Comment.findById(req.params.id);
         if(!comment) return next(createError(404, "Comment not found!"));
@@ -43,10 +43,10 @@ export async function updateComment(req, res, next) {
     } catch(err) {
         next(err);
     };
-}
+};
 
 // DELETE comment
-export async function deleteComment(req, res, next) {
+export const deleteComment = async (req, res, next) => {
     try {
         const comment = await Comment.findById(req.params.id);
         const video = await Video.findById(comment.videoId);
@@ -65,4 +65,4 @@ export async function deleteComment(req, res, next) {
     } catch(err) {
         next(err);
     };
-}
+};

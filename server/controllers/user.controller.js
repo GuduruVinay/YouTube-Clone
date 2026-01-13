@@ -1,7 +1,7 @@
 import User from "../models/User.model.js";
 
 // GET User
-export async function getUser(req, res, next) {
+export const getUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
         res.status(200).json(user);
@@ -11,7 +11,7 @@ export async function getUser(req, res, next) {
 };
 
 // PUT Subscribe
-export async function subscribe(req, res, next) {
+export const subscribe = async (req, res, next) => {
     try {
         // Add channelId to the current user's 'subscribedUsers' array
         await User.findByIdAndUpdate(req.user.id, {
@@ -29,7 +29,7 @@ export async function subscribe(req, res, next) {
 };
 
 // PUT Unsubscribe
-export async function unsubscribe(req, res, next) {
+export const unsubscribe = async (req, res, next) => {
     try {
         // Remove channelId from the current user's list
         await User.findByIdAndUpdate(req.user.id, {
