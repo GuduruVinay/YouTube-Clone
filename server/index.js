@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.route.js";
 import videoRoutes from "./routes/video.route.js";
 import commentRoutes from "./routes/comments.route.js";
 import userRoutes from "./routes/user.route.js";
+import channelRoutes from "./routes/channel.route.js";
 
 // Configuration
 dotenv.config();
@@ -31,10 +32,11 @@ const connectDB = async () => {
 };
 
 // Use Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/videos', videoRoutes);
-app.use('/api/comments', commentRoutes);
-app.use('/api/users', userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/videos", videoRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/channels", channelRoutes);
 
 // Error Handler Middleware
 app.use((err, req, res, next) => {
