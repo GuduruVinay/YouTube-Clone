@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { format } from "timeago.js";
 
 function VideoCard({ video }) {
     return (
@@ -16,7 +17,7 @@ function VideoCard({ video }) {
                         <h1 className="text-base font-medium">{video.title}</h1>
                         <h2 className="text-sm my-1">LM3 Games</h2>
                         <div className="text-sm">
-                            {video.views} views • 1 day ago
+                            {video.views} views • {format(video.createdAt)}
                         </div>
                     </div>
                 </div>

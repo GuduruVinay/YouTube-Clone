@@ -42,8 +42,8 @@ function Channel() {
                 />
 
                 <div className="flex flex-col gap-1">
-                    <h1 className="text-2xl md:text-3xl font-bold">{channel.name}</h1>
-                    <span>@{channel.name} • {channel.subscribers} subscribers</span>
+                    <h1 className="text-2xl md:text-3xl font-bold">{channel.username}</h1>
+                    <span>@{channel.username} • {channel.subscribers} subscribers</span>
                     <p className="text-sm text-gray-500 max-w-125">{channel.email} • This is the channel description area.</p>
                     {currentUser?._id === channel._id ? (
                         <button className="mt-3 px-4 py-2 bg-[#f2f2f2] dark:bg-[#272727] text-black dark:text-white font-bold rounded-full text-sm w-fit hover:bg-[#d9d9d9] dark:hover:bg-[#3f3f3f]">

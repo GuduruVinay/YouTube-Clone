@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import Comments from "../components/Comments";
 import VideoCard from "../components/VideoCard";
@@ -9,18 +9,28 @@ import { LoadingHandler, ErrorHandler } from "../components/Handler";
 import { format } from "timeago.js";
 
 function Video() {
-    const [video, setVideo] = useState(null);
+    const [video, setVideo] = useState({});
+    const [channel, setChannel] = useState({});
 
     // Get videoId from URL
     const path = useLocation().pathname.split("/")[2];
-    const currentUser = JSON.parse(localStorage.getItem("user"));
+
+    // User State
+    const [currentUser, setCurrentUser] = useState(
+        JSON.parse(localStorage.getItem("user"))
+    );
     const token = localStorage.getItem("token");
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await axios.get(`http://localhost:5000/api/videos/find/${path}`);
-                setVideo(res.data);
+                // Fetch Video Data
+                const videoRes = await axios.get(`http://localhost:5000/api/videos/find/${path}`);
+                setVideo(videoRes.data);
+
+                // Fetch Channel Data
+                const channelRes = await axios.get(`http://localhost:5000/api/users/find/${videoRes.data.userId}`);
+                setChannel(channelRes.data);
             } catch(err) {
                 console.error("Error:", err.message);
             }
@@ -92,6 +102,44 @@ function Video() {
         }
     };
 
+    async function handleSub() {
+      try {
+        if(currentUser.subscribedUsers.includes(channel._id)) {
+            // Unsubscribe
+            await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            // Update Local State & Storage
+            const updatedUser = {
+                ...currentUser,
+                subscribedUsers: currentUser.subscribedUsers.filter((id) => id !== channel._id)
+            };
+            setCurrentUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            // Update Channel Subscriber Count ( Visual only)
+            setChannel((prev) => ({ ...prev, subscribers: prev.subscribers - 1 }));
+        } else {
+            // Subscribe
+            await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const updatedUser = {
+                ...currentUser,
+                subscribedUsers: [...currentUser.subscribedUsers, channel._id]
+            };
+            setCurrentUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            setChannel((prev) => ({ ...prev, subscribers: prev.subscribers + 1 }));
+        }
+      } catch(err) {
+        console.log(err);
+      } 
+    };
+
     // Fetch random videos
     const { data: videos, loading, error } = useFetch("http://localhost:5000/api/videos/random");
     if(loading) return <LoadingHandler />
@@ -106,8 +154,10 @@ function Video() {
                     <video 
                         src={video.videoUrl}
                         controls 
-                        className="w-full h-full object-contain" 
+                        className="w-full h-full object-contain"
+                        poster={video.imgUrl} 
                     />
+                    {/* <iframe width="100%" height="100%" src={video.videoUrl} frameborder="0" allowFullScreen title="video" /> */}
                 </div>
                 {/* Scrollable Content */}
                 <div className="mt-2">
@@ -117,13 +167,29 @@ function Video() {
                         {/* Channel Info */}
                         <div className="flex justify-between px-3">
                             <div className="flex gap-2 items-center">
-                                <div className="w-8 h-8 rounded-full bg-gray-500"></div>
-                                <span className="text-xs font-medium">LM3 Games</span>
-                                <span className="text-xs font-extralight">100K</span>
+                                <Link to={`/channel/${channel._id}`}>
+                                    <div className="flex items-center gap-3">
+                                        <img 
+                                            src={channel.img || "/default_profile_pic.jpg"} 
+                                            alt="Channel Avatar"
+                                            className="w-12 h-12 rounded-full object-cover bg-gray-500 cursor-pointer" 
+                                            />
+                                        <span className="text-xs font-medium cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">{channel.username}</span>
+                                    </div>
+                                </Link>
+                                <span className="text-xs font-extralight">{channel.subscribers}</span>
                             </div>
-                            <button className="rounded-full px-3.5 text-xs font-medium bg-[#f1f1f1] text-black cursor-pointer">
-                                Subscribe
-                            </button>     
+                            {currentUser?._id !== channel._id && (
+                                <button
+                                    onClick={handleSub} 
+                                    className={`rounded-full px-3.5 text-xs font-medium bg-[#f1f1f1] cursor-pointer transition-colors
+                                        ${currentUser?.subscribedUsers?.includes(channel._id)
+                                        ? "bg-[#f2f2f2] text-black hover:bg-gray-800 dark:bg-white dark:text-white"
+                                        : "bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black"
+                                        }`}>
+                                    {currentUser?.subscribedUsers?.includes(channel._id) ? "Subscribed" : "Subscribe"}
+                                </button>     
+                            )}
                         </div>
                         <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
                             <div className="flex rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 gap-2">
