@@ -1,254 +1,17 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Video from "./models/Video.model.js";
 import User from "./models/User.model.js";
+import Channel from "./models/Channel.model.js";
+import Video from "./models/Video.model.js";
+import Comment from "./models/Comment.model.js";
 import bcrypt from "bcryptjs";
 
 dotenv.config();
 
-// Dummy Data
-const videos = [
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    },
-    {
-        "title": "Learn React in 30 Minutes",
-        "desc": "A quick tutorial to get started with React.",
-        "imgUrl": "https://i.ytimg.com/vi/hQAHSlTtcmY/maxresdefault.jpg",
-        "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "views": 15300,
-        "tags": ["react", "coding"],
-        "likes": [],
-        "dislikes": []
-    }
-];
+// Data Configuration
+const USER_COUNT = 5;
+const CHANNELS_PER_USER = 1;
+const VIDEOS_PER_CHANNEL = 4;
 
 // Connect and Seed
 const seedDB = async () => {
@@ -256,93 +19,94 @@ const seedDB = async () => {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('MongoDB Connected for Seeding...');
 
-        // Remove old data to avoid duplicates
-        await User.deleteMany({});
-        await Video.deleteMany({});
+        // Clear Existing Data
+        await User.deleteMany();
+        await Channel.deleteMany();
+        await Video.deleteMany();
+        await Comment.deleteMany();
         console.log('Old data cleared.');
 
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync("123456", salt);
+        // Create Users
+        const users = [];
+        for(let i = 0; i < USER_COUNT; i++) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync("123456", salt);
 
-        const users = [
-            {
-                username: "CodeMaster",
-                email: "code@test.com",
-                password: hashedPassword,
-                img: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600",
-                subscribers: 1250,
-                subscribedUsers: [],
-            },
-            {
-                username: "TravelVlogs",
-                email: "travel@test.com",
-                password: hashedPassword,
-                img: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600",
-                subscribers: 50,
-                subscribedUsers: [],
-            },
-            {
-                username: "TechReviewer",
-                email: "tech@test.com",
-                password: hashedPassword,
-                img: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600",
-                subscribers: 89000,
-                subscribedUsers: [],
+            const user = new User({
+                username: `User_${i + 1}`,
+                email: `user${i + 1}@example.com`,
+                password: hash,
+                avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=User_${i}`,
+                channels: [],
+                subscribedChannels: []
+            });
+            const savedUser = await user.save();
+            users.push(savedUser);
+        }
+        console.log(`${users.length} Users Created`);
+
+        // Create Channels & Link to Users
+        const channels = [];
+        for(const user of users) {
+            for(let j = 0; j < CHANNELS_PER_USER; j++) {
+                const channel = new Channel({
+                    channelName: `${user.username}'s Channel`,
+                    owner: user._id,
+                    description: `This is the official channel for ${user.username}. We post tech and gaming content!`,
+                    channelBanner: "https://picsum.photos/1200/300",
+                    subscribers: Math.floor(Math.random() * 5000),
+                    videos: []
+                });
+
+                const savedChannel = await channel.save();
+                channels.push(savedChannel);
+
+                // Update User with this Channel ID
+                await User.findByIdAndUpdate(user._id, {
+                    $push: { channels: savedChannel._id }
+                });
             }
+        }
+        console.log(`${channels.length} Channels Created`);
+
+        // Create Videos & Link to Channels
+        const videos = [];
+        const sampleTags = ["coding", "react", "gaming", "music", "vlog", "tech"];
+        const thumbnails = [
+            "https://img.youtube.com/vi/y881t8ilMyc/maxresdefault.jpg",
+            "https://img.youtube.com/vi/k3Vfj-e1Ma4/maxresdefault.jpg",
+            "https://img.youtube.com/vi/bMknfKXIFA8/maxresdefault.jpg",
+            "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg"
         ];
 
-        const savedUsers = await User.insertMany(users);
-        console.log(`${savedUsers.length} users created.`);
+        for (const channel of channels) {
+        for (let k = 0; k < VIDEOS_PER_CHANNEL; k++) {
+            const randomThumb = thumbnails[Math.floor(Math.random() * thumbnails.length)];
+            const randomTag = sampleTags[Math.floor(Math.random() * sampleTags.length)];
 
-        const videos = [
-            {
-                userId: savedUsers[0]._id, // CodeMaster
-                title: "React JS Crash Course 2026",
-                desc: "Learn React from scratch in this comprehensive tutorial.",
-                imgUrl: "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-screen-close-up-1728-large.mp4",
-                views: 1500,
-                tags: ["react", "coding", "webdev"],
-                likes: [],
-                dislikes: [],
-            },
-            {
-                userId: savedUsers[0]._id, // CodeMaster
-                title: "Build a YouTube Clone",
-                desc: "Step by step guide to full stack development.",
-                imgUrl: "https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hacker-typing-on-a-keyboard-seen-from-behind-3094-large.mp4",
-                views: 840,
-                tags: ["mern", "tutorial", "clone"],
-                likes: [],
-                dislikes: [],
-            },
-            {
-                userId: savedUsers[1]._id, // TravelVlogs
-                title: "Exploring Tokyo at Night",
-                desc: "The neon lights of Tokyo are unmatched.",
-                imgUrl: "https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4",
-                views: 5300,
-                tags: ["travel", "japan", "vlog"],
-                likes: [],
-                dislikes: [],
-            },
-            {
-                userId: savedUsers[2]._id, // TechReviewer
-                title: "iPhone 16 Review - Worth it?",
-                desc: "Unboxing and full review of the new iPhone.",
-                imgUrl: "https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-holding-a-smartphone-in-vertical-orientation-4034-large.mp4",
-                views: 200000,
-                tags: ["tech", "review", "iphone"],
-                likes: [],
-                dislikes: [],
-            }
-        ];
+            const video = new Video({
+            uploader: channel.owner,
+            channelId: channel._id,
+            title: `Amazing Video #${k + 1} by ${channel.channelName}`,
+            description: "In this video, we explore advanced concepts and have fun. Don't forget to like and subscribe!",
+            thumbnailUrl: randomThumb,
+            videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            views: Math.floor(Math.random() * 100000),
+            tags: [randomTag, "viral"],
+            likes: [],
+            dislikes: []
+            });
 
-        await Video.insertMany(videos);
-        console.log(`${videos.length} videos created.`);
+            const savedVideo = await video.save();
+            videos.push(savedVideo);
+
+            // Update Channel with this Video ID
+            await Channel.findByIdAndUpdate(channel._id, {
+            $push: { videos: savedVideo._id }
+            });
+        }
+        }
+        console.log(`${videos.length} Videos Created`);
 
         console.log("Seeding Complete!");
         process.exit();

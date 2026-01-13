@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.route.js";
 import videoRoutes from "./routes/video.route.js";
@@ -17,6 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+app.use(cookieParser());
 app.use(express.json()); // Allows server to accept JSON data
 app.use(cors()); // Allows connection from React
 
@@ -45,7 +47,7 @@ app.use((err, req, res, next) => {
     return res.status(status).json({
         success: false,
         status,
-        message
+        message,
     });
 });
 
