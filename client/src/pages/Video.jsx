@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import useFetch from "../hooks/useFetch";
 import { LoadingHandler, ErrorHandler } from "../components/Handler";
 import { format } from "timeago.js";
+import Recommendation from "../components/Recommendation";
 
 function Video() {
     const [video, setVideo] = useState({});
@@ -225,11 +226,14 @@ function Video() {
 
                 <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
 
-                {/* Recommendation Sidebar */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
+                {/* Recommendation */}
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
                     {videos.map((video) => (
                         <Card key={video._id} video={video} />
                     ))}
+                </div> */}
+                <div className="flex-2 hidden lg:block w-87.5">
+                    <Recommendation tags={video.tags} />
                 </div>
             </div>
 
