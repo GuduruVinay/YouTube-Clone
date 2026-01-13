@@ -1,5 +1,5 @@
 import express from "express";
-import { dislikeVideo, getByTag, getByUser, getVideo, likeVideo, randomVideos } from "../controllers/video.controller.js";
+import { dislikeVideo, getByTag, getByUser, getVideo, likeVideo, randomVideos, search } from "../controllers/video.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -16,5 +16,7 @@ router.put('/dislike/:videoId', verifyToken , dislikeVideo);
 router.get('/user/:userId', getByUser);
 
 router.get('/tags', getByTag);
+
+router.get('/search', search);
 
 export default router;

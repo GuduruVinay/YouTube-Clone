@@ -89,10 +89,24 @@ export async function getByUser(req, res, next) {
 // GET videos by tags
 export async function getByTag(req, res, next) {
     // Split query string into array
-    const tags = req.query.tags.split(",")
+    const tags = req.query.tags.split(",");
     try {
-        // FInd videos where the 'tags' array contains any of the tags in out list 
+        // Find videos where the 'tags' array contains any of the tags in out list 
         const videos = await Video.find({ tags: { $in: tags } }).limit(20);
+        res.status(200).json(videos);
+    } catch(err) {
+        next(err);
+    }
+};
+
+// GET search videos
+export async function search(req, res, next) {
+    // Get the "q" parameter from URL
+    const query = req.query.q;
+    try {
+        // $regex: Finds partial matches
+        // $options: "i" makes it case-sensitive 
+        const videos = await Video.find({ title: { $regex: query, $options: "i" } }).limit(40);
         res.status(200).json(videos);
     } catch(err) {
         next(err);
