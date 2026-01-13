@@ -16,7 +16,7 @@ function Sidebar({ isMenuOpen, setIsMenuOpen }) {
         <div>
             {/* Backdrop Overlay */}
             <div 
-                className={`fixed inset-0 bg-black/50 z-90 transition-opacity duration-300 lg:hidden ${
+                className={`fixed inset-0 bg-black/50 z-90 transition-opacity duration-300 ${
                 isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
                 onClick={() => setIsMenuOpen(false)}
             />

@@ -28,7 +28,7 @@ function Search() {
             ))}
 
             {videos.length === 0 && (
-                <h2 className="text-xl teaxt-gray-500 mt-10 w-full text-center">
+                <h2 className="text-xl text-gray-500 mt-10 w-full text-center">
                     No videos found matching your search.
                 </h2>
             )}

@@ -1,13 +1,13 @@
 import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-function Filters() {
+function Filters({ filter, setFilter }) {
     const scrollRef = useRef(null);
 
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
 
-    const dummyFilters = ["All", "Web Development", "Cricket", "Football", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Animation", "Live", "Game Development", "Movies", "Technology", "Education", "Coding", "Vlogs", "News"];
+    const categories = ["All", "Web Development", "Cricket", "Football", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Animation", "Live", "Game Development", "Movies", "Technology", "Education", "Coding", "Vlogs", "News"];
 
     // function to update button visibility of filter left & right buttons
     const updateBtnVisibility = () => {
@@ -44,9 +44,18 @@ function Filters() {
     };
 
     // Helper Component for Filter Buttons
-    const FilterBtn = ({ text }) => (
-        <button className='cursor-pointer text-sm font-semibold px-3 py-1.5 flex-none rounded-lg bg-[#f2f2f2] dark:bg-[#272727] dark:text-white hover:bg-gray-200 dark:hover:bg-[#3f3f3f] transition'>
-            {text}
+    const FilterBtn = ({ category }) => (
+        <button
+            onClick={() => setFilter(category)}
+            className={`
+                px-3 py-1.5 rounded-lg text-sm cursor-pointer font-semibold whitespace-nowrap transition-colors
+                ${filter === category
+                    ? "bg-black text-white dark:bg-white dark:text-black"
+                    : "bg-[#e5e5e5] hover:bg-[#d9d9d9] dark:bg-[#272727] dark:hover:bg-[#3f3f3f] dark:text-white"
+                }
+            `} 
+        >
+            {category}
         </button>
     );
 
@@ -56,8 +65,8 @@ function Filters() {
                 <button onClick={() => handleScroll('left')} className='cursor-pointer absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition' ><ChevronLeft /></button>
             )}
             <div ref={ scrollRef } className='mx-5 gap-3 flex flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar scroll-smooth'>
-                {dummyFilters.map((item, index) => (
-                    <FilterBtn key={index} text={item} />
+                {categories.map((item, index) => (
+                    <FilterBtn key={index} category={item} />
                 ))}
             </div>
             {showRightBtn && (
