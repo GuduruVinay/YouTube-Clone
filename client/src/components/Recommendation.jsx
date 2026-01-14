@@ -2,13 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Card from "./Card";
 
-function Recommendation({ tags }){
+const Recommendation = ({ tags }) => {
     const [videos, setVideos] = useState([]);
 
     useEffect(() => {
-        async function fetchVideos() {
+        const fetchVideos = async () => {
+            const query = tags && tags.length > 0 ? `tags?tags=${tags}` : "random";
             // API call to get videos by tags
-            const res = await axios.get(`https://localhost:5000/api/videos/tags?tags=${tags}`);
+            const res = await axios.get(`https://localhost:5000/api/videos/${query}`);
             setVideos(res.data);
         };
         if(tags) fetchVideos();

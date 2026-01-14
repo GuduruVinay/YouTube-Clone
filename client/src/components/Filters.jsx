@@ -1,13 +1,13 @@
-import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-function Filters({ filter, setFilter }) {
+const Filters = ({ filter, setFilter }) => {
     const scrollRef = useRef(null);
 
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
 
-    const categories = ["All", "Web Development", "Cricket", "Football", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Animation", "Live", "Game Development", "Movies", "Technology", "Education", "Coding", "Vlogs", "News"];
+    const categories = ["All", "Web Development", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Cricket", "Football", "Animation", "Live", "Game Development", "Movies", "Tech", "Education", "Coding", "Vlogs", "News", "Sports"];
 
     // function to update button visibility of filter left & right buttons
     const updateBtnVisibility = () => {
@@ -27,9 +27,9 @@ function Filters({ filter, setFilter }) {
             // Check visibility on mount
             updateBtnVisibility();
             // Add scroll listener
-            current.addEventListener('scroll', updateBtnVisibility);
+            current.addEventListener("scroll", updateBtnVisibility);
         }
-        return () => current?.removeEventListener('scroll', updateBtnVisibility);
+        return () => current?.removeEventListener("scroll", updateBtnVisibility);
     }, []);
 
     // function to handle scroll 
@@ -38,7 +38,7 @@ function Filters({ filter, setFilter }) {
         if(current) {
             const scrollAmount = 250;
             current.scrollBy({
-               left: direction === 'left' ? -scrollAmount : scrollAmount
+               left: direction === "left" ? -scrollAmount : scrollAmount
             });
         }
     };
@@ -60,20 +60,20 @@ function Filters({ filter, setFilter }) {
     );
 
     return (
-        <div className='flex items-center relative pt-3 pb-4 dark:bg-[#0F0F0F] dark:text-white'>
+        <div className="flex items-center relative pt-3 pb-4 dark:bg-[#0F0F0F] dark:text-white">
             {showLeftBtn && (
-                <button onClick={() => handleScroll('left')} className='cursor-pointer absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition' ><ChevronLeft /></button>
+                <button onClick={() => handleScroll("left")} className="cursor-pointer absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition" ><ChevronLeft /></button>
             )}
-            <div ref={ scrollRef } className='mx-5 gap-3 flex flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar scroll-smooth'>
+            <div ref={ scrollRef } className="mx-5 gap-3 flex flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar scroll-smooth">
                 {categories.map((item, index) => (
                     <FilterBtn key={index} category={item} />
                 ))}
             </div>
             {showRightBtn && (
-                <button onClick={() => handleScroll('right')} className='cursor-pointer absolute right-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition'><ChevronRight /></button>
+                <button onClick={() => handleScroll("right")} className="cursor-pointer absolute right-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition"><ChevronRight /></button>
             )}
         </div>
     );
-}
+};
 
 export default Filters;

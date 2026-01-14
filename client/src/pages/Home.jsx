@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { LoadingHandler } from '../components/Handler';
 import { useEffect, useState } from 'react';
 
-
 // Helper Component for Side Menu Buttons
 const SideMenuBtn = ({ path, icon, text }) => (
     <Link to={path} className='w-full'>

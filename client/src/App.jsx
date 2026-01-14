@@ -28,7 +28,7 @@ function Layout() {
   }, [isDark]);
 
   // Check if user is stored in Local Storage
-  const user = JSON.parse(localStorage.getItem("user"));
+  const currentUser = JSON.parse(localStorage.getItem("user"));
 
   // Handle User Logout
   function handleLogout() {
@@ -45,7 +45,7 @@ function Layout() {
       <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       {/* Main Content Area */}
       <div className="flex-1 h-full overflow-y-auto">
-        <Navbar isDark={isDark} setIsDark={setIsDark} setIsMenuOpen={setIsMenuOpen} user={user} handleLogout={handleLogout}/>
+        <Navbar isDark={isDark} setIsDark={setIsDark} setIsMenuOpen={setIsMenuOpen} />
         {/* The Outlet is where Home, Video, or SignIn will render */}
         <Outlet />
       </div>

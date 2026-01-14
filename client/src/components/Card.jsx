@@ -3,21 +3,21 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 
-function Card({ video, type }) {
+const Card = ({ type, video }) => {
     const [channel, setChannel] = useState({});
 
     useEffect(() => {
-        async function fetchChannel() {
+        const fetchChannel = async () => {
             try{
-                // Ftch the channel data
-                const res = await axios.get(`http://localhost:5000/api/users/find/${video.userId}`);
+                // Fetch Channel Data using channelId from the video object
+                const res = await axios.get(`http://localhost:5000/api/channels/find/${video.channelId}`);
                 setChannel(res.data);
             } catch(err) {
                 console.log(err);
             }
         }; 
         fetchChannel(); 
-    }, [video.userId]);
+    }, [video.channelId]);
 
     // Check if type is "sm"
     const isSmall = type === "sm";
@@ -34,13 +34,13 @@ function Card({ video, type }) {
                         className="w-full h-full object-cover rounded-xl bg-gray-800"
                     />
                 </div>
-                {/* Details Section */}
+                {/* Details */}
                 <div className={`flex gap-3 mt-1 ${isSmall ? "flex-1" : ""}`}>
                     {/* Channel Avatar */}
                     {!isSmall && (
                         <img 
-                            src={channel.img || "/default_profile_pic.jpg"} 
-                            alt={channel.username + "channel"}
+                            src={channel.channelBanner || channel.img || "/default_profile_pic.jpg"} 
+                            alt={channel.username + "avatar"}
                             className="h-9 w-9 rounded-full object-cover bg-gray-500" 
                         />
                     )}
@@ -50,7 +50,7 @@ function Card({ video, type }) {
                         {/* Channel Name */}
                         <h2 className="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">{channel.username}</h2>
                         {/* Views • Date */}
-                        <div className="text-sm">
+                        <div className="text-xs text-gray-500">
                             {video.views} views • {format(video.createdAt)}
                         </div>
                     </div>

@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import Comments from "../components/Comments";
 import Card from "../components/Card";
-import useFetch from "../hooks/useFetch";
 import { LoadingHandler, ErrorHandler } from "../components/Handler";
 import { format } from "timeago.js";
 import Recommendation from "../components/Recommendation";
@@ -140,11 +139,6 @@ function Video() {
         console.log(err);
       } 
     };
-
-    // Fetch random videos
-    const { data: videos, loading, error } = useFetch("http://localhost:5000/api/videos/random");
-    if(loading) return <LoadingHandler />
-    if(error) return <ErrorHandler error={error}/>
 
     return (
         <div className="flex flex-col lg:flex-row gap-6">
