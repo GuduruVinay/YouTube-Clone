@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
         ref: 'Video',
         required: [true, 'Please provide a video Id']
     },
-    desc: {
+    description: {
         type: String,
         required: [true, 'Please provide a description']
     }
