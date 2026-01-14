@@ -2,6 +2,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { Eye, EyeClosed } from "lucide-react";
 
 function SignIn() {
@@ -12,43 +14,40 @@ function SignIn() {
     const [createAccount, setCreateAccount] = useState(false);
     const [header, setHeader] = useState("Sign in");
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
 
     // Check if "from" state exists, otherwise default to Home ("/")
     const from = location.state?.from?.pathname || "/";
 
-    // Handle Login (Existing User)
-    async function handleLogin(e) {
+    // Handle Sign In (Existing User)
+    const handleSignin = async (e) => {
         e.preventDefault();
+        dispatch(loginStart());
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/login", {
-                username: username,
-                password
-            });
-
+            const res = await axios.post("http://localhost:5000/api/auth/signin", { username, password });
             // Save user & token to LocalStorage
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.details));
+            dispatch(loginSuccess(res.data));
 
             // Redirect to Home
             // replace: true prevents the Back button from returning to the SignIn page
             navigate(from, { replace: true });
         } catch(err) {
             console.error(err);
-            alert("Login Failed!");
+            dispatch(loginFailure());
+            alert("Login failed!");
         }
     };
 
-    async function handleRegister(e) {
+    // Handle Sign Up (New User)
+    const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/auth/register", {
-                username: username,
-                email,
-                password
-            });
-            alert("Account created! Please Sign In now.");
+            await axios.post("http://localhost:5000/api/auth/signup", { username, email, password });
+            alert("Account created! Please Sign in.");
             setCreateAccount(false);
             handleCreateAccount();
         } catch(err) {
@@ -115,7 +114,7 @@ function SignIn() {
                             </button>
                             <button
                                 className="px-5 py-2.5 bg-[#3ea6ff] rounded-4xl cursor-pointer mt-2 hover:bg-[#3185cc] text-white"
-                                onClick={handleRegister}
+                                onClick={handleSignup}
                             >
                                 Sign up
                             </button>
@@ -151,7 +150,7 @@ function SignIn() {
                             </button>
                             <button
                                 className="px-5 py-2.5 bg-[#3ea6ff] rounded-4xl cursor-pointer mt-2 hover:bg-[#3185cc] text-white"
-                                onClick={handleLogin}
+                                onClick={handleSignin}
                             >
                                 Sign in
                             </button>

@@ -3,146 +3,79 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import Comments from "../components/Comments";
-import Card from "../components/Card";
-import { LoadingHandler, ErrorHandler } from "../components/Handler";
 import { format } from "timeago.js";
 import Recommendation from "../components/Recommendation";
+import { useDispatch, useSelector } from "react-redux";
+import { subscription, like, dislike } from "../redux/userSlice";
 
-function Video() {
-    const [video, setVideo] = useState({});
-    const [channel, setChannel] = useState({});
+const Video = () => {
+    const { currentUser } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     // Get videoId from URL
     const path = useLocation().pathname.split("/")[2];
+    const [video, setVideo] = useState({});
+    const [channel, setChannel] = useState({});
 
-    // User State
-    const [currentUser, setCurrentUser] = useState(
-        JSON.parse(localStorage.getItem("user"))
-    );
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
             try {
                 // Fetch Video Data
                 const videoRes = await axios.get(`http://localhost:5000/api/videos/find/${path}`);
+
+                // Increment View
+                await axios.put(`http://localhost:5000/api/videos/view/${path}`);
+
                 setVideo(videoRes.data);
 
-                // Fetch Channel Data
-                const channelRes = await axios.get(`http://localhost:5000/api/users/find/${videoRes.data.userId}`);
+                // Get Channel Data (using channelId from video)
+                const channelRes = await axios.get(`http://localhost:5000/api/channels/find/${videoRes.data.channelId}`);
                 setChannel(channelRes.data);
             } catch(err) {
-                console.error("Error:", err.message);
+                console.error(err);
             }
         };
         fetchData(); 
     }, [path]);
 
     // Handle Like
-    async function handleLike() {
-        // Check if user is logged in
-        if(!currentUser) return alert("Please sign in to like videos.");
-
-        setVideo((prev) => {
-            // Check if already liked
-            const isLiked = prev.likes.includes(currentUser._id);
-            if(isLiked) {
-                // Toggle OFF : Remove user from likes
-                return {
-                    ...prev,
-                    likes: prev.likes.filter((id) => id !== currentUser._id)
-                };
-            } else {
-                // Toggle ON : Add user to likes, Remove from dislikes
-                return {
-                    ...prev,
-                    likes: [...prev.likes, currentUser._id],
-                    dislikes: prev.dislikes.filter((id) => id !== currentUser._id)
-                };
-            }
-        });
-        try {
-            await axios.put(`http://localhost:5000/api/videos/like/${video._id}`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-        } catch(err) {
-            console.error(err);
-        }
+    const handleLike = async () => {
+        await axios.put(`http://localhost:5000/api/users/like/${video._id}`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        dispatch(like(currentUser._id));
+        setVideo(prev => ({ ...prev, likes: [...prev.likes, currentUser._id], dislikes: prev.dislikes.filter(id => id !== currentUser._id)}));
     };
 
     // Handle Dislike
-    async function handleDislike() {
-        // Check if user is logged in
-        if(!currentUser) return alert("Please sign in to dislike videos.");
-        
-        setVideo((prev) => {
-            // Check if already liked
-            const isDisliked = prev.dislikes.includes(currentUser._id);
-            if(isDisliked) {
-                // Toggle OFF : Remove user from likes
-                return {
-                    ...prev,
-                    dislikes: prev.dislikes.filter((id) => id !== currentUser._id)
-                };
-            } else {
-                // Toggle ON : Add user to dislikes, Remove from likes
-                return {
-                    ...prev,
-                    dislikes: [...prev.dislikes, currentUser._id],
-                    likes: prev.likes.filter((id) => id !== currentUser._id)
-                };
-            }
-        });
-        try {
-            await axios.put(`http://localhost:5000/api/videos/dislike/${video._id}`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-        } catch(err) {
-            console.error(err);
-        }
+    const handleDislike = async () => {
+        await axios.put(`http://localhost:5000/api/users/dislike/${video._id}`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        dispatch(dislike(currentUser._id));
+        setVideo(prev => ({ ...prev, dislikes: [...prev.dislikes, currentUser._id], likes: prev.likes.filter(id => id !== currentUser._id)}));
     };
 
-    async function handleSub() {
-      try {
-        if(currentUser.subscribedUsers.includes(channel._id)) {
-            // Unsubscribe
-            await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+    // Handle Subsription
+    const handleSub = async () => {
+        currentUser.subscribedChannels.includes(channel._id)
+            ? await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
+            : await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
+    
+        dispatch(subscription(channel._id));
 
-            // Update Local State & Storage
-            const updatedUser = {
-                ...currentUser,
-                subscribedUsers: currentUser.subscribedUsers.filter((id) => id !== channel._id)
-            };
-            setCurrentUser(updatedUser);
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-
-            // Update Channel Subscriber Count ( Visual only)
-            setChannel((prev) => ({ ...prev, subscribers: prev.subscribers - 1 }));
-        } else {
-            // Subscribe
-            await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            const updatedUser = {
-                ...currentUser,
-                subscribedUsers: [...currentUser.subscribedUsers, channel._id]
-            };
-            setCurrentUser(updatedUser);
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-
-            setChannel((prev) => ({ ...prev, subscribers: prev.subscribers + 1 }));
-        }
-      } catch(err) {
-        console.log(err);
-      } 
+        // Update local subscriber count visual
+        setChannel(prev => ({
+            ...prev,
+            subscribers: currentUser.subscribedChannels.includes(channel._id) ? prev.subscribers - 1 : prev.subscribers + 1
+        }));
     };
 
     return (
         <div className="flex flex-col lg:flex-row gap-6">
-            {/* Main Content */}
+            {/* Left : Main Content */}
             <div className="flex-1">
                 {/* Video Player */}
                 <div className="sticky top-14 z-40 w-full bg-black aspect-video lg:max-h-137.5 shadow-lg">
@@ -219,15 +152,15 @@ function Video() {
                     
                 </div>
 
-                <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' />
+                {/* <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' /> */}
 
-                {/* Recommendation */}
+                {/* Right : Recommendations */}
                 {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
                     {videos.map((video) => (
                         <Card key={video._id} video={video} />
                     ))}
                 </div> */}
-                <div className="flex-2 hidden lg:block w-87.5">
+                <div className="w-full lg:w-87.5">
                     <Recommendation tags={video.tags} />
                 </div>
             </div>
