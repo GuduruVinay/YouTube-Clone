@@ -6,15 +6,19 @@ import Comments from "../components/Comments";
 import { format } from "timeago.js";
 import Recommendation from "../components/Recommendation";
 import { useDispatch, useSelector } from "react-redux";
-import { subscription, like, dislike } from "../redux/userSlice";
+import { subscription } from "../redux/userSlice";
+import { like, dislike, fetchSuccess } from "../redux/videoSlice";
+import { LoadingHandler } from "../components/Handler";
 
 const Video = () => {
     const { currentUser } = useSelector((state) => state.user);
+    const { currentVideo } = useSelector((state) => state.video);
+
     const dispatch = useDispatch();
 
     // Get videoId from URL
     const path = useLocation().pathname.split("/")[2];
-    const [video, setVideo] = useState({});
+
     const [channel, setChannel] = useState({});
 
     const token = localStorage.getItem("token");
@@ -24,75 +28,96 @@ const Video = () => {
             try {
                 // Fetch Video Data
                 const videoRes = await axios.get(`http://localhost:5000/api/videos/find/${path}`);
-
-                // Increment View
-                await axios.put(`http://localhost:5000/api/videos/view/${path}`);
-
-                setVideo(videoRes.data);
-
+                
                 // Get Channel Data (using channelId from video)
                 const channelRes = await axios.get(`http://localhost:5000/api/channels/find/${videoRes.data.channelId}`);
+                
+                // Update Redux(Video) & Local State (Channel)
+                dispatch(fetchSuccess(videoRes.data));
                 setChannel(channelRes.data);
+                
+                // Increment View Count
+                await axios.put(`http://localhost:5000/api/videos/view/${path}`);
             } catch(err) {
                 console.error(err);
             }
         };
         fetchData(); 
-    }, [path]);
+    }, [path, dispatch]);
 
     // Handle Like
     const handleLike = async () => {
-        await axios.put(`http://localhost:5000/api/users/like/${video._id}`, {}, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        dispatch(like(currentUser._id));
-        setVideo(prev => ({ ...prev, likes: [...prev.likes, currentUser._id], dislikes: prev.dislikes.filter(id => id !== currentUser._id)}));
+        if(!currentUser) return alert("Please sign in to like videos!");
+        try {
+            await axios.put(`http://localhost:5000/api/users/like/${video._id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            dispatch(like(currentUser._id));
+        } catch(err) {
+            console.log(err);
+        }
     };
 
     // Handle Dislike
     const handleDislike = async () => {
-        await axios.put(`http://localhost:5000/api/users/dislike/${video._id}`, {}, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        dispatch(dislike(currentUser._id));
-        setVideo(prev => ({ ...prev, dislikes: [...prev.dislikes, currentUser._id], likes: prev.likes.filter(id => id !== currentUser._id)}));
+        if(!currentUser) return alert("Please sign in to dislike videos!");
+        try {
+            await axios.put(`http://localhost:5000/api/users/dislike/${video._id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            dispatch(dislike(currentUser._id));
+        } catch(err) {
+            console.log(err);
+        }
     };
 
     // Handle Subsription
     const handleSub = async () => {
-        currentUser.subscribedChannels.includes(channel._id)
-            ? await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
-            : await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
-    
-        dispatch(subscription(channel._id));
-
-        // Update local subscriber count visual
-        setChannel(prev => ({
-            ...prev,
-            subscribers: currentUser.subscribedChannels.includes(channel._id) ? prev.subscribers - 1 : prev.subscribers + 1
-        }));
+        if(!currentUser) return alert("Please sign in to subscribe!");
+        try {
+            if(currentUser.subscribedChannels.includes(channel._id)) {
+                await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, { 
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setChannel((prev) => ({ ...prev, subscribers: prev.subscribers - 1 }));
+            } else {
+                await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, { 
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setChannel((prev) => ({ ...prev, subscribers: prev.subscribers + 1 }));
+            }
+            
+            // Update User Redux State
+            dispatch(subscription(channel._id));
+        } catch(err) {
+            console.log(err);
+        }
     };
 
+    // Prevent crash if data hasn't loaded yet
+    if(!currentVideo || !channel._id) return <LoadingHandler />
+
     return (
-        <div className="flex flex-col lg:flex-row gap-6">
-            {/* Left : Main Content */}
-            <div className="flex-1">
-                {/* Video Player */}
+        <div className="flex flex-col lg:flex-row gap-6 p-5 justify-center">
+            {/* Left Section: Video Player & Details */}
+            <div className="flex-1 w-full lg:max-w-225">
+                {/* Video Player Wrapper */}
                 <div className="sticky top-14 z-40 w-full bg-black aspect-video lg:max-h-137.5 shadow-lg">
                     <video 
-                        src={video.videoUrl}
+                        src={currentVideo.videoUrl}
+                        poster={currentVideo.imgUrl} 
                         controls 
                         className="w-full h-full object-contain"
-                        poster={video.imgUrl} 
                     />
                     {/* <iframe width="100%" height="100%" src={video.videoUrl} frameborder="0" allowFullScreen title="video" /> */}
                 </div>
                 {/* Scrollable Content */}
                 <div className="mt-2">
-                    <h1 className="px-3 text-lg md:text-xl font-medium">{video.title}</h1>
+                    {/* Title */}
+                    <h1 className="px-3 text-lg md:text-xl font-medium">{currentVideo.title}</h1>
                     <div className="flex flex-col gap-3 justify-between">
-                        <span className="px-3 text-sm font-semibold">{video.views} views • {format(video.createdAt)}</span>
-                        <span className="px-3 text-sm font-light">{video.desc}</span>
+                        <span className="px-3 text-sm font-semibold">{currentVideo.views} views • {format(currentVideo.createdAt)}</span>
+                        <span className="px-3 text-sm font-light">{currentVideo.description}</span>
                         {/* Channel Info */}
                         <div className="flex justify-between px-3">
                             <div className="flex gap-2 items-center">
@@ -123,11 +148,11 @@ const Video = () => {
                         <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
                             <div className="flex rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 gap-2">
                                 <button onClick={handleLike} className="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                                    <ThumbsUp className={`w-4 h-4 ${video.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black} dark:text-white"}`} /> <span className="text-sm mt-1">{video.likes?.length}</span>
+                                    <ThumbsUp className={`w-4 h-4 ${currentVideo.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black} dark:text-white"}`} /> <span className="text-sm mt-1">{currentVideo.likes?.length}</span>
                                 </button>
                                 <span>|</span>
                                 <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
-                                    <ThumbsDown className={`w-4 h-4 ${video.dislikes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black dark:text-white"}`} />
+                                    <ThumbsDown className={`w-4 h-4 ${currentVideo.dislikes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black dark:text-white"}`} />
                                 </button>
                             </div>
                             <div className="flex items-center gap-1 rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 cursor-pointer">
@@ -146,7 +171,7 @@ const Video = () => {
 
                         {/* Comments Component */}
                         <div className="bg-[#f2f2f2] dark:bg-[#272727] rounded-xl mx-3 px-2 py-2">
-                            <Comments videoId={video._id} />
+                            <Comments videoId={currentVideo._id} />
                         </div>
                     </div>
                     
@@ -161,7 +186,7 @@ const Video = () => {
                     ))}
                 </div> */}
                 <div className="w-full lg:w-87.5">
-                    <Recommendation tags={video.tags} />
+                    <Recommendation tags={currentVideo.tags} />
                 </div>
             </div>
 

@@ -1,16 +1,20 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import Video from "./pages/Video";
-import Sidebar from './components/Sidebar';
-import Navbar from "./components/Navbar";
 import { useState, useEffect } from "react";
-import Channel from "./pages/Channel";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+
+// Pages
+import Home from "./pages/Home";
+import Video from "./pages/Video";
+import SignIn from "./pages/SignIn";
 import Search from "./pages/Search";
+import Channel from "./pages/Channel";
+
+// Componets
+import Navbar from "./components/Navbar";
+import Sidebar from './components/Sidebar';
 
 const THEME_KEY = "theme";
 
-function Layout() {
+const Layout = () => {
   // State: Dark Mode
   const [isDark, setIsDark] = useState(() => {
       return localStorage.getItem(THEME_KEY) === "dark";
@@ -27,20 +31,11 @@ function Layout() {
       }
   }, [isDark]);
 
-  // Check if user is stored in Local Storage
-  const currentUser = JSON.parse(localStorage.getItem("user"));
-
-  // Handle User Logout
-  function handleLogout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.reload();
-  };
-
+  // State: Sidebar Toggle 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden dark:bg-[#0f0f0f] dark:text-white">
       {/* Sidebar */}
       <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       {/* Main Content Area */}
@@ -56,21 +51,22 @@ function Layout() {
 function App() {
     return (
       <BrowserRouter>
-      {/* Global Dark Mode Wrapper */}
-        <div className="dark:bg-[#0f0f0f] dark:text-white">
-          <Routes>
-            {/* Standlone Page (No Sidebar/Navbar) */}
-            <Route path="/signin" element={ <SignIn /> } />
-            {/* Wrap routes inside the Layout */}
-            <Route path="/" element={<Layout />}>
-              {/* These are the children that get injected into <Outlet /> */}
-              <Route index element={ <Home /> } />
-              <Route path="video/:videoId" element={ <Video /> } />
-              <Route path="channel/:id" element={ <Channel /> } />
-              <Route path="search" element={<Search />} />
-            </Route>
-          </Routes>
-        </div>
+        <Routes>
+          {/* Standlone Page (No Sidebar/Navbar) */}
+          <Route path="/signin" element={ <SignIn /> } />
+          {/* Main Application Layout */}
+          <Route path="/" element={<Layout />}>
+            {/* These are the children that get injected into <Outlet /> */}
+            {/* Home page */}
+            <Route index element={ <Home /> } />
+            {/* Search Results */}
+            <Route path="search" element={<Search />} />
+            {/* Video Player Page */}
+            <Route path="video/:videoId" element={ <Video /> } />
+            {/* Channel Page */}
+            <Route path="channel/:id" element={ <Channel /> } />
+          </Route>
+        </Routes>
       </BrowserRouter>
     );
 }
