@@ -21,7 +21,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
                 onClick={() => setIsMenuOpen(false)}
             />
             {/* Siderbar Drawer */}
-            <aside className={`fixed top-0 left-0 bottom-0 z-100 w-[60%] md:w-[30%] lg:w-[15%] flex flex-col gap-6 inset-y-0 pl-1 mr-1 md:pl-3 md:mr-3 p-2 bg-white dark:bg-[#0f0f0f] dark:text-white transition-transform duration-300 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>    
+            <aside className={`fixed top-0 left-0 bottom-0 z-100 w-[60%] md:w-[30%] lg:w-[15%] flex flex-col gap-6 inset-y-0 pl-1 mr-1 md:pl-3 md:mr-3 p-2 pt-3 bg-white dark:bg-[#0f0f0f] dark:text-white transition-transform duration-300 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>    
                 <div className="flex gap-1 ml-1">
                     <button onClick={() => setIsMenuOpen(false)} className="hover:bg-[#e5e5e5] dark:hover:bg-[#212121] p-2 rounded-4xl cursor-pointer"><Menu /></button>
                     <Link to="/" className="w-full">

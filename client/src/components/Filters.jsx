@@ -7,7 +7,7 @@ const Filters = ({ filter, setFilter }) => {
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
 
-    const categories = ["All", "Web Development", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Cricket", "Football", "Animation", "Live", "Game Development", "Movies", "Tech", "Education", "Coding", "Vlogs", "News", "Sports"];
+    const categories = ["All", "Web Development", "Gaming", "Sports", "Music","React", "MongoDB","Funny", "Cricket", "Football", "Animation", "Live", "Game Development", "Movies", "Tech", "Education", "Coding", "Vlogs", "News"];
 
     // function to update button visibility of filter left & right buttons
     const updateBtnVisibility = () => {
@@ -60,7 +60,7 @@ const Filters = ({ filter, setFilter }) => {
     );
 
     return (
-        <div className="flex items-center relative pt-3 pb-4 dark:bg-[#0F0F0F] dark:text-white">
+        <div className="flex items-center relative pt-3 pb-4 bg-white dark:bg-[#0F0F0F] dark:text-white">
             {showLeftBtn && (
                 <button onClick={() => handleScroll("left")} className="cursor-pointer absolute left-2 z-10 rounded-full p-1.5 bg-white hover:bg-[#e5e5e5] dark:bg-[#0f0f0f] dark:hover:bg-[#3f3f3f] hover:scale-105 transition" ><ChevronLeft /></button>
             )}
