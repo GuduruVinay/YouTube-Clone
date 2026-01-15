@@ -74,7 +74,7 @@ const Channel = () => {
                 <div className="flex flex-col items-center md:items-start flex-1 gap-2">
                     <h1 className="text-2xl font-bold">{channel.channelName}</h1>
                     <div className="text-gray-500 text-sm flex gap-3">
-                        <span>@{channel.channelName.replace(/\s+/g, '').toLowerCase()}</span>
+                        <span>@{channel.handle}</span>
                         <span> • {channel.subscribers} subscribers</span>
                         <span> • {videos.length} videos</span>
                     </div>

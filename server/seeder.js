@@ -8,112 +8,114 @@ import bcrypt from "bcryptjs";
 
 dotenv.config();
 
-// Data Configuration
-const USER_COUNT = 5;
-const CHANNELS_PER_USER = 1;
-const VIDEOS_PER_CHANNEL = 4;
-
-// Connect and Seed
-const seedDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log('MongoDB Connected for Seeding...');
-
-        // Clear Existing Data
-        await User.deleteMany();
-        await Channel.deleteMany();
-        await Video.deleteMany();
-        await Comment.deleteMany();
-        console.log('Old data cleared.');
-
-        // Create Users
-        const users = [];
-        for(let i = 0; i < USER_COUNT; i++) {
-            const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync("123456", salt);
-
-            const user = new User({
-                username: `User_${i + 1}`,
-                email: `user${i + 1}@example.com`,
-                password: hash,
-                avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=User_${i}`,
-                channels: [],
-                subscribedChannels: []
-            });
-            const savedUser = await user.save();
-            users.push(savedUser);
-        }
-        console.log(`${users.length} Users Created`);
-
-        // Create Channels & Link to Users
-        const channels = [];
-        for(const user of users) {
-            for(let j = 0; j < CHANNELS_PER_USER; j++) {
-                const channel = new Channel({
-                    channelName: `${user.username}'s Channel`,
-                    owner: user._id,
-                    description: `This is the official channel for ${user.username}. We post tech and gaming content!`,
-                    channelBanner: "https://picsum.photos/1200/300",
-                    subscribers: Math.floor(Math.random() * 5000),
-                    videos: []
-                });
-
-                const savedChannel = await channel.save();
-                channels.push(savedChannel);
-
-                // Update User with this Channel ID
-                await User.findByIdAndUpdate(user._id, {
-                    $push: { channels: savedChannel._id }
-                });
-            }
-        }
-        console.log(`${channels.length} Channels Created`);
-
-        // Create Videos & Link to Channels
-        const videos = [];
-        const sampleTags = ["coding", "react", "gaming", "music", "vlog", "tech"];
-        const thumbnails = [
-            "https://img.youtube.com/vi/y881t8ilMyc/maxresdefault.jpg",
-            "https://img.youtube.com/vi/k3Vfj-e1Ma4/maxresdefault.jpg",
-            "https://img.youtube.com/vi/bMknfKXIFA8/maxresdefault.jpg",
-            "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg"
-        ];
-
-        for (const channel of channels) {
-        for (let k = 0; k < VIDEOS_PER_CHANNEL; k++) {
-            const randomThumb = thumbnails[Math.floor(Math.random() * thumbnails.length)];
-            const randomTag = sampleTags[Math.floor(Math.random() * sampleTags.length)];
-
-            const video = new Video({
-            uploader: channel.owner,
-            channelId: channel._id,
-            title: `Amazing Video #${k + 1} by ${channel.channelName}`,
-            description: "In this video, we explore advanced concepts and have fun. Don't forget to like and subscribe!",
-            thumbnailUrl: randomThumb,
-            videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            views: Math.floor(Math.random() * 100000),
-            tags: [randomTag, "viral"],
-            likes: [],
-            dislikes: []
-            });
-
-            const savedVideo = await video.save();
-            videos.push(savedVideo);
-
-            // Update Channel with this Video ID
-            await Channel.findByIdAndUpdate(channel._id, {
-            $push: { videos: savedVideo._id }
-            });
-        }
-        }
-        console.log(`${videos.length} Videos Created`);
-
-        console.log("Seeding Complete!");
-        process.exit();
-    } catch(err) {
-        console.error('Error seeding database:', err);
-        process.exit(1);
-    }
+const connect = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to DB for Seeding...");
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-seedDB();
+const CATEGORIES = [
+  "Web Development", "Gaming", "Sports", "Music", "React", "MongoDB", 
+  "Funny", "Cricket", "Football", "Animation", "Live", "Game Development", 
+  "Movies", "Tech", "Education", "Coding", "Vlogs", "News"
+];
+
+// Real YouTube Video IDs
+const REAL_VIDEOS = [
+  { id: "bMknfKXIFA8", title: "React Course - Beginner's Tutorial", tags: ["React", "Web Development", "Coding"] },
+  { id: "pWbMrx5rVBE", title: "MongoDB in 100 Seconds", tags: ["MongoDB", "Tech", "Education"] },
+  { id: "SqcY0GlETPk", title: "React Tutorial for Beginners", tags: ["React", "Coding", "Web Development"] },
+  { id: "AmC9SmCBUj4", title: "Game Development for Beginners", tags: ["Game Development", "Coding", "Tech"] },
+  { id: "jNQXAC9IVRw", title: "Me at the zoo", tags: ["Vlogs", "Funny"] },
+  { id: "jfKfPfyJRdk", title: "Lofi Hip Hop Radio", tags: ["Music", "Live"] },
+  { id: "60ItHLz5WEA", title: "Lionel Messi - All Goals", tags: ["Football", "Sports"] },
+  { id: "u2pOpS_C6y4", title: "IPL 2026 Highlights", tags: ["Cricket", "Sports"] },
+  { id: "9Auq9mYxFEE", title: "Sky News Live", tags: ["News", "Live"] },
+  { id: "jjl9J0S4wWk", title: "Minecraft Survival Guide", tags: ["Gaming", "Funny"] },
+];
+
+const seedData = async () => {
+  await connect();
+
+  try {
+    // 1. CLEAR ALL DATA
+    await User.deleteMany({});
+    await Video.deleteMany({});
+    await Channel.deleteMany({}); // <--- Clear Channels too
+    console.log("Deleted old data.");
+
+    // 2. CREATE USERS & CHANNELS
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync("123456", salt);
+
+    const createdChannels = [];
+    const createdUsers = [];
+
+    for (let i = 1; i <= 5; i++) {
+      // A. Create User
+      const newUser = new User({
+        username: `User${i}`,
+        email: `user${i}@gmail.com`,
+        password: hash,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=User${i}`,
+        subscribers: 0, // Subs tracked in Channel now usually, but keeping for User schema compatibility
+      });
+      const savedUser = await newUser.save();
+      createdUsers.push(savedUser);
+
+      // B. Create Channel for this User
+      const newChannel = new Channel({
+        channelName: `Channel ${i}`,
+        handle: `@user${i}_handle`,
+        channelAvatar: savedUser.avatar,
+        channelBanner: "https://via.placeholder.com/1500x400",
+        description: `This is the official channel of User ${i}. We post videos about ${CATEGORIES[i % CATEGORIES.length]}.`,
+        owner: savedUser._id, // Link to User
+        subscribers: Math.floor(Math.random() * 5000),
+      });
+      const savedChannel = await newChannel.save();
+      createdChannels.push(savedChannel);
+    }
+    
+    console.log(`Created ${createdUsers.length} users and ${createdChannels.length} channels.`);
+
+    // 3. CREATE VIDEOS LINKED TO CHANNELS
+    const videos = [];
+    
+    // We will loop through REAL_VIDEOS and assign them to random CHANNELS
+    // We create multiple copies to fill up the DB
+    for(let k = 0; k < 3; k++) { 
+        REAL_VIDEOS.forEach((vid) => {
+            const randomChannel = createdChannels[Math.floor(Math.random() * createdChannels.length)];
+            
+            videos.push(new Video({
+                userId: randomChannel.owner, // The User ID of the channel owner
+                channelId: randomChannel._id, // <--- CRITICAL: The Real Channel ID
+                title: vid.title,
+                description: `Description for ${vid.title}. Tags: ${vid.tags.join(", ")}`,
+                thumbnailUrl: `https://img.youtube.com/vi/${vid.id}/maxresdefault.jpg`,
+                videoUrl: `https://www.youtube.com/watch?v=${vid.id}`,
+                views: Math.floor(Math.random() * 500000),
+                tags: vid.tags,
+                likes: [],
+                dislikes: []
+            }));
+        });
+    }
+
+    await Video.insertMany(videos);
+    console.log(`Created ${videos.length} videos.`);
+
+    console.log("SUCCESS! Database seeded with Users, Channels, and Videos.");
+    process.exit();
+
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
+
+seedData();

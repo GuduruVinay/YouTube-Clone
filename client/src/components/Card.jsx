@@ -13,7 +13,7 @@ const Card = ({ type, video }) => {
                 const res = await axios.get(`http://localhost:5000/api/channels/find/${video.channelId}`);
                 setChannel(res.data);
             } catch(err) {
-                console.log(err);
+                // console.log(err);
             }
         }; 
         fetchChannel(); 
@@ -29,7 +29,7 @@ const Card = ({ type, video }) => {
                 {/* Thumbnail */}
                 <div className={`relative ${isSmall ? "flex-1 min-w-40 h-25" : "w-full h-50"}`}>
                     <img 
-                        src={video.imgUrl} 
+                        src={video.thumbnailUrl} 
                         alt={video.title + "thumbnail"}
                         className="w-full h-full object-cover rounded-xl bg-gray-800"
                     />

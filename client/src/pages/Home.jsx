@@ -20,7 +20,7 @@ const Home = () => {
                 const res = await axios.get(`http://localhost:5000/api/videos/${query}`);
                 setVideos(res.data);
             } catch(err) {
-                console.error(err);
+                console.log(err);
             }
             setLoading(false);
         };

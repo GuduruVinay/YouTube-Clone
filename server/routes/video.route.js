@@ -24,7 +24,7 @@ router.get("/channel/:channelId", getByChannel);
 router.get("/find/:id", getVideo);
 
 // PUT /api/videos/view/54321
-router.put("/view/:id", verifyToken , addView);
+router.put("/view/:id", addView);
 
 // POST /api/videos
 router.post("/", verifyToken , addVideo);

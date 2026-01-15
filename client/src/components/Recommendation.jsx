@@ -9,7 +9,7 @@ const Recommendation = ({ tags }) => {
         const fetchVideos = async () => {
             const query = tags && tags.length > 0 ? `tags?tags=${tags}` : "random";
             // API call to get videos by tags
-            const res = await axios.get(`https://localhost:5000/api/videos/${query}`);
+            const res = await axios.get(`http://localhost:5000/api/videos/${query}`);
             setVideos(res.data);
         };
         if(tags) fetchVideos();

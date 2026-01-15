@@ -21,7 +21,7 @@ const videoSchema = new mongoose.Schema({
         ref: "Channel",
         required: true
     },
-    uploader: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true

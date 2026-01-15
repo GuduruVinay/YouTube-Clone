@@ -125,8 +125,6 @@ const Video = () => {
                         height="100%" 
                         src={getYouTubeEmbedUrl(currentVideo.videoUrl)}
                         title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                         allowFullScreen
                         className="w-full h-full object-cover"
                     />
@@ -151,13 +149,13 @@ const Video = () => {
                                         <span className="text-xs font-medium cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">{channel.username}</span>
                                     </div>
                                 </Link>
-                                <span className="text-xs font-extralight">{channel.subscribers}</span>
+                                <span className="text-xs font-extralight">{channel.subscribers} subscribers</span>
                             </div>
                             {currentUser?._id !== channel._id && (
                                 <button
                                     onClick={handleSub} 
                                     className={`rounded-full px-3.5 text-xs font-medium bg-[#f1f1f1] cursor-pointer transition-colors
-                                        ${currentUser?.subscribedUsers?.includes(channel._id)
+                                        ${currentUser?.subscribedChannels?.includes(channel._id)
                                         ? "bg-[#f2f2f2] text-black hover:bg-gray-800 dark:bg-white dark:text-white"
                                         : "bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black"
                                         }`}>
@@ -168,7 +166,7 @@ const Video = () => {
                         <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
                             <div className="flex rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 gap-2">
                                 <button onClick={handleLike} className="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                                    <ThumbsUp className={`w-4 h-4 ${currentVideo.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black} dark:text-white"}`} /> <span className="text-sm mt-1">{currentVideo.likes?.length}</span>
+                                    <ThumbsUp className={`w-4 h-4 ${currentVideo.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black dark:text-white"}`} /> <span className="text-sm mt-1">{currentVideo.likes?.length}</span>
                                 </button>
                                 <span>|</span>
                                 <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
@@ -197,19 +195,18 @@ const Video = () => {
                     
                 </div>
 
-                {/* <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' /> */}
-
-                {/* Right : Recommendations */}
-                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
-                    {videos.map((video) => (
-                        <Card key={video._id} video={video} />
-                    ))}
-                </div> */}
-                <div className="w-full lg:w-87.5">
-                    <Recommendation tags={currentVideo.tags} />
-                </div>
             </div>
+            {/* <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' /> */}
 
+            {/* Right : Recommendations */}
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
+                {videos.map((video) => (
+                    <Card key={video._id} video={video} />
+                ))}
+            </div> */}
+            <div className="w-full lg:w-87.5">
+                <Recommendation tags={currentVideo.tags} />
+            </div>
         </div>
     );
 };
