@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import { format } from "timeago.js";
 import { useDispatch, useSelector } from "react-redux";
+import { formatNumber } from "../utils";
 
 // Redux Actions
 import { subscription } from "../redux/userSlice";
@@ -134,7 +135,10 @@ const Video = () => {
                     {/* Title */}
                     <h1 className="px-3 text-lg md:text-xl font-medium">{currentVideo.title}</h1>
                     <div className="flex flex-col gap-3 justify-between">
-                        <span className="px-3 text-sm font-semibold">{currentVideo.views} views • {format(currentVideo.createdAt)}</span>
+                        <div>
+                            <span className="px-3 text-sm font-semibold">{formatNumber(currentVideo.views)} views • {format(currentVideo.createdAt)}</span>
+                            <span className="text-sm font-light">{currentVideo.tags.map(tag => "#"+tag.toLowerCase()+" ")}</span>
+                        </div>
                         <span className="px-3 text-sm font-light">{currentVideo.description}</span>
                         {/* Channel Info */}
                         <div className="flex justify-between px-3">
@@ -149,7 +153,7 @@ const Video = () => {
                                         <span className="text-xs font-medium cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">{channel.username}</span>
                                     </div>
                                 </Link>
-                                <span className="text-xs font-extralight">{channel.subscribers} subscribers</span>
+                                <span className="text-xs font-extralight">{formatNumber(channel.subscribers)} subscribers</span>
                             </div>
                             {currentUser?._id !== channel._id && (
                                 <button
@@ -166,7 +170,7 @@ const Video = () => {
                         <div className="flex gap-2 px-3 flex-nowrap overflow-x-auto no-scrollbar">
                             <div className="flex rounded-full bg-[#f2f2f2] dark:bg-[#272727] px-3 py-1 gap-2">
                                 <button onClick={handleLike} className="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                                    <ThumbsUp className={`w-4 h-4 ${currentVideo.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black dark:text-white"}`} /> <span className="text-sm mt-1">{currentVideo.likes?.length}</span>
+                                    <ThumbsUp className={`w-4 h-4 ${currentVideo.likes?.includes(currentUser?._id) ? "text-[#3ea6ff]" : "text-black dark:text-white"}`} /> <span className="text-sm mt-1">{formatNumber(currentVideo.likes?.length)}</span>
                                 </button>
                                 <span>|</span>
                                 <button onClick={handleDislike} className="flex items-center gap-1 cursor-pointer bg-transparent border-none">
