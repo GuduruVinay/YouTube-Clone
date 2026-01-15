@@ -67,9 +67,22 @@ export const videoSlice = createSlice({
                 }
             }
         },
+        uploadStart: (state) => {
+            state.loading = true;
+            state.error = false;
+        },
+        uploadSuccess: (state, action) => {
+            state.loading = false;
+            state.error = false;
+            state.currentVideo = action.payload;
+        },
+        uploadFailure: (state) => {
+            state.loading = false;
+            state.error = true;
+        }
     },
 });
 
-export const { fetchStart, fetchSuccess, fetchFailure, like, dislike } = videoSlice.actions;
+export const { fetchStart, fetchSuccess, fetchFailure, like, dislike, uploadStart, uploadSuccess, uploadFailure } = videoSlice.actions;
 
 export default videoSlice.reducer;
