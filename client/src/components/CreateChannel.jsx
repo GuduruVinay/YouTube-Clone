@@ -81,8 +81,19 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
                     />
                     <input
                         type="text"
-                        placeholder="Handle"
-                        // value={"@"}
+                        placeholder="@Handle"
+                        onChange={handleChange}
+                        className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
+                    />
+                    <input
+                        type="text"
+                        placeholder="Avatar URL"
+                        onChange={handleChange}
+                        className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
+                    />
+                    <input
+                        type="text"
+                        placeholder="Banner URL"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />

@@ -5,19 +5,30 @@ import { createError } from "../utils/error.js";
 
 // Create a new Channel
 export const createChannel = async (req, res, next) => {
-    const newChannel = new Channel({
-        ...req.body,
-        owner: req.user.id
-    });
     try {
+        // Basic Validation
+        if(!req.body.handle) return next(createError(400, "Handle is required!"));
+
+        // Create the Channel
+        const newChannel = new Channel({
+            owner: req.user.id,
+            ...req.body
+        });
+
         // Save the Channel to the DB
         const savedChannel = await newChannel.save();
+
         // Add this Channel ID to the User's "channels" list
         await User.findByIdAndUpdate(req.user.id, {
             $push: { channels: savedChannel._id }
         });
+
         return res.status(200).json(savedChannel);
     } catch(err) {
+        // Handle Duplicate Key Error (if handle already exists)
+        if(err.code === 11000) {
+            return res.status(409).json({ message: "Handle already taken!" });
+        }
         next(err);
     }
 };
