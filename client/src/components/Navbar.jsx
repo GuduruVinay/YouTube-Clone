@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateChannel from "./CreateChannel";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
+import UploadVideo from "./UploadVideo";
 
 const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const { currentUser } = useSelector(state => state.user);
@@ -16,6 +17,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const [openUserMenu, setOpenUserMenu] = useState(false);
     const [openChannelMenu, setOpenChannelMenu] = useState(false);
     const [openCreateChannel, setOpenCreateChannel] = useState(false);
+    const [openUploadVideo, setOpenUploadVideo] = useState(false);
 
     // Refs for Click Outside
     const userMenuRef = useRef(null);
@@ -65,11 +67,13 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     // Handle Create Channel
     const handleCreateChannel = () => {
         setOpenCreateChannel(true);
+        setOpenChannelMenu(false);
     }
 
-    // Handle Create Video
-    const handleCreateVideo = () => {
-
+    // Handle Upload Video
+    const handleUploadVideo = () => {
+        setOpenUploadVideo(true);
+        setOpenChannelMenu(false);
     }
 
     return (
@@ -164,11 +168,11 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                                 <span className="font-medium">Create Channel</span>
                                             </button>
                                             <button
-                                                onClick={handleCreateVideo}
+                                                onClick={handleUploadVideo}
                                                 className="flex items-center gap-3 w-full rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
                                             >
                                                 <Video /> 
-                                                <span className="font-medium">Create Video</span>
+                                                <span className="font-medium">Upload Video</span>
                                             </button>
                                         </div>
                                     )}
@@ -215,8 +219,10 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                 </div>       
             </nav>
 
-            {/* Render Modal conditionally */}
+            {/* Render conditionally */}
             {openCreateChannel && <CreateChannel openCreateChannel={openCreateChannel} setOpenCreateChannel={setOpenCreateChannel} />}
+
+            {openUploadVideo && <UploadVideo openUploadVideo={openUploadVideo} setOpenUploadVideo={setOpenUploadVideo} />}       
         </>
     );
 };

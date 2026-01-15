@@ -5,10 +5,10 @@ import axios from "axios";
 import { addChannel } from "../redux/userSlice";
 import { X } from "lucide-react";
 
-const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
+const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
     const [inputs, setInputs] = useState({});
 
-    const createChannelRef = useRef();
+    const uploadVideoRef = useRef();
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -19,22 +19,22 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
         setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleCreate = async (e) => {
+    const handleUpload = async (e) => {
         e.preventDefault();
         try {
-            // Call API to create channel
-            const res = await axios.post("http://localhost:5000/api/channels", inputs, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            // Call API to Upload Video
+            // const res = await axios.post("http://localhost:5000/api/channels", inputs, {
+            //     headers: { Authorization: `Bearer ${token}` }
+            // });
 
             // Update Redux State (Add new channel ID to user's list)
-            dispatch(addChannel(res.data._id));
+            // dispatch(addChannel(res.data._id));
 
             // Close
-            setOpenCreateChannel(false);
+            setOpenUploadVideo(false);
 
             // Redirect to new channel page
-            navigate(`/channel/${res.data._id}`);
+            // navigate(`/channel/${res.data._id}`);
         } catch(err) {
             console.error(err);
         }
@@ -43,9 +43,9 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
     // Handle Click Outside
     useEffect(() => {
         const handler = (e) => {
-            // Check Create Channel
-            if(openCreateChannel && createChannelRef.current && !createChannelRef.current.contains(e.target)) {
-                setOpenCreateChannel(false);
+            // Check Upload Video
+            if(openUploadVideo && uploadVideoRef.current && !uploadVideoRef.current.contains(e.target)) {
+                setOpenUploadVideo(false);
             }
         };
 
@@ -54,35 +54,41 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
         return () => {
             document.removeEventListener("mousedown", handler);
         };
-    }, [openCreateChannel]);
+    }, [openUploadVideo]);
 
     return (
         <div className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
-            <div ref={createChannelRef} className="bg-white dark:bg-[$202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
+            <div ref={uploadVideoRef} className="bg-white dark:bg-[$202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
                 {/* Close Button */}
                 <button
                     className="absolute top-3 right-3 cursor-pointer p-1 hover:bg-gray-200 dark:hover:bg-[#303030] rounded-full"
-                    onClick={() => setOpenCreateChannel(false)}
+                    onClick={() => setOpenUploadVideo(false)}
                 >
                     <X />
                 </button>
-                <h1 className="text-xl font-bold text-center">Create Channel</h1>
+                <h1 className="text-xl font-bold text-center">Upload Video</h1>
                 <div className="flex flex-col w-full justify-center gap-3">
-                    <img 
-                        src={"/default_profile_pic.jpg"} 
-                        alt="User Avatar"
-                        className="w-32 h-32 rounded-full self-center"
-                    />
                     <input
                         type="text"
-                        placeholder="Channel Name"
+                        placeholder="Video Title"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
                     <input
                         type="text"
-                        placeholder="Handle"
-                        // value={"@"}
+                        placeholder="Video URL"
+                        onChange={handleChange}
+                        className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
+                    />
+                    <input
+                        type="text"
+                        placeholder="Thumbnail URL"
+                        onChange={handleChange}
+                        className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
+                    />
+                    <input
+                        type="text"
+                        placeholder="Category"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
@@ -94,9 +100,9 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
                     />
                     <button
                         className="self-center bg-[#3ea6ff] text-white w-fit font-bold px-4 py-2 rounded hover:bg-[#3ea6ff]/90 transistion-colors mt-2"
-                        onClick={handleCreate}
+                        onClick={handleUpload}
                     >
-                        Create Channel
+                        Upload Video
                     </button>
                 </div>
             </div>
@@ -104,4 +110,4 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
     );
 };
 
-export default CreateChannel;
+export default UploadVideo;
