@@ -1,7 +1,7 @@
 import { Menu, Search, Mic, Plus, CircleUserRound, Bell, Sun, Moon, ArrowLeft, LogOut, Video, TvMinimal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import CreateChannelModal from "./CreateChannelModal";
+import CreateChannel from "./CreateChannel";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 
@@ -13,9 +13,9 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
 
     // State for Mobile Search Overlay
     const [showMobileSearch, setShowMobileSearch] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
     const [openUserMenu, setOpenUserMenu] = useState(false);
     const [openChannelMenu, setOpenChannelMenu] = useState(false);
+    const [openCreateChannel, setOpenCreateChannel] = useState(false);
 
     // Refs for Click Outside
     const userMenuRef = useRef(null);
@@ -64,12 +64,12 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
 
     // Handle Create Channel
     const handleCreateChannel = () => {
-
+        setOpenCreateChannel(true);
     }
 
     // Handle Create Video
     const handleCreateVideo = () => {
-        
+
     }
 
     return (
@@ -155,7 +155,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                         <span className="font-medium">Create</span>
                                     </button>
                                     {openChannelMenu && (
-                                        <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border dark:border-[#333] rounded-xl shadow-xl py-2 z-10">
+                                        <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-xl py-2 z-10">
                                             <button
                                                 onClick={handleCreateChannel}
                                                 className="flex items-center gap-3 w-full rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
@@ -182,8 +182,8 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                         className="w-8 h-8 rounded-full cursor-pointer" 
                                     />
                                     {openUserMenu && (
-                                        <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border dark:border-[#333] rounded-xl shadow-xl pt-2 z-10">
-                                            <div className="flex flex-col gap-2 items-center justify-center px-4 pt-2 pb-3 border-b dark:border-[#333]">
+                                        <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-xl pt-2 z-10">
+                                            <div className="flex flex-col gap-2 items-center justify-center px-4 pt-2 pb-3 border-b border-[#f2f2f2] dark:border-[#333]">
                                                 <img 
                                                     src={currentUser.avatar || "/default_profile_pic.jpg"} 
                                                     alt="User Avatar"
@@ -216,7 +216,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             </nav>
 
             {/* Render Modal conditionally */}
-            {openModal && <CreateChannelModal setOpen={setOpenModal} />}
+            {openCreateChannel && <CreateChannel openCreateChannel={openCreateChannel} setOpenCreateChannel={setOpenCreateChannel} />}
         </>
     );
 };

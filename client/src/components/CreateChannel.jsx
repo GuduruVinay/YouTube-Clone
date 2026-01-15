@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate}  from "react-router-dom";
 import axios from "axios";
 import { addChannel } from "../redux/userSlice";
 import { X } from "lucide-react";
 
-const CreateChannelModal = ({ setOpen }) => {
+const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
     const [inputs, setInputs] = useState({});
+
+    const createChannelRef = useRef();
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -38,48 +40,68 @@ const CreateChannelModal = ({ setOpen }) => {
         }
     };
 
+    // Handle Click Outside
+    useEffect(() => {
+        const handler = (e) => {
+            // Check Create Channel
+            if(openCreateChannel && createChannelRef.current && !createChannelRef.current.contains(e.target)) {
+                setOpenCreateChannel(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handler);
+
+        return () => {
+            document.removeEventListener("mousedown", handler);
+        };
+    }, [openCreateChannel]);
+
     return (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-enter z-50">
-            <div className="bg-white dark:bg-[$202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
+        <div className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+            <div ref={createChannelRef} className="bg-white dark:bg-[$202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
                 {/* Close Button */}
                 <button
                     className="absolute top-3 right-3 cursor-pointer p-1 hover:bg-gray-200 dark:hover:bg-[#303030] rounded-full"
-                    onClick={() => setOpen(false)}
+                    onClick={() => setOpenCreateChannel(false)}
                 >
-                    <X size={20} />
+                    <X />
                 </button>
-
                 <h1 className="text-xl font-bold text-center">Create Channel</h1>
-            
-                <div className="flex flex-col gap-3">
-                    <label className="text-sm font-semibold">Channel Name</label>
+                <div className="flex flex-col w-full justify-center gap-3">
+                    <img 
+                        src={"/default_profile_pic.jpg"} 
+                        alt="User Avatar"
+                        className="w-32 h-32 rounded-full self-center"
+                    />
                     <input
-                        name="channelName" 
                         type="text"
-                        placeholder="e.g. Code with LM3"
+                        placeholder="Channel Name"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
-
-                    <label className="text-sm font-semibold">Description</label>
-                    <textarea
-                        name="description" 
+                    <input
+                        type="text"
+                        placeholder="Handle"
+                        // value={"@"}
+                        onChange={handleChange}
+                        className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
+                    />
+                    <textarea 
                         rows={4}
                         placeholder="Tell viewers about your channel..."
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500 resize-none" 
                     />
+                    <button
+                        className="self-center bg-[#3ea6ff] text-white w-fit font-bold px-4 py-2 rounded hover:bg-[#3ea6ff]/90 transistion-colors mt-2"
+                        onClick={handleCreate}
+                    >
+                        Create Channel
+                    </button>
                 </div>
-
-                <button
-                    className="bg-[#3ea6ff] text-black font-bold py-2 rounded hover:bg-[#3ea6ff]/90 transistion-colors mt-2"
-                    onClick={handleCreate}
-                >
-                    Create Channel
-                </button>
             </div>
         </div>
     );
 };
 
-export default CreateChannelModal;
+export default CreateChannel;
