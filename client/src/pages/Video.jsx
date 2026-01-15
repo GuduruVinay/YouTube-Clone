@@ -2,12 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
-import Comments from "../components/Comments";
 import { format } from "timeago.js";
-import Recommendation from "../components/Recommendation";
 import { useDispatch, useSelector } from "react-redux";
+
+// Redux Actions
 import { subscription } from "../redux/userSlice";
 import { like, dislike, fetchSuccess } from "../redux/videoSlice";
+
+// Components
+import Comments from "../components/Comments";
+import Recommendation from "../components/Recommendation";
 import { LoadingHandler } from "../components/Handler";
 
 const Video = () => {
@@ -32,14 +36,14 @@ const Video = () => {
                 // Get Channel Data (using channelId from video)
                 const channelRes = await axios.get(`http://localhost:5000/api/channels/find/${videoRes.data.channelId}`);
                 
-                // Update Redux(Video) & Local State (Channel)
-                dispatch(fetchSuccess(videoRes.data));
+                // Update Local State (Channel) & Redux(Video)
                 setChannel(channelRes.data);
+                dispatch(fetchSuccess(videoRes.data));
                 
                 // Increment View Count
                 await axios.put(`http://localhost:5000/api/videos/view/${path}`);
             } catch(err) {
-                console.error(err);
+                console.error("Error fetching video data: ", err);
             }
         };
         fetchData(); 
@@ -49,7 +53,7 @@ const Video = () => {
     const handleLike = async () => {
         if(!currentUser) return alert("Please sign in to like videos!");
         try {
-            await axios.put(`http://localhost:5000/api/users/like/${video._id}`, {}, {
+            await axios.put(`http://localhost:5000/api/users/like/${currentVideo._id}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             dispatch(like(currentUser._id));
@@ -62,7 +66,7 @@ const Video = () => {
     const handleDislike = async () => {
         if(!currentUser) return alert("Please sign in to dislike videos!");
         try {
-            await axios.put(`http://localhost:5000/api/users/dislike/${video._id}`, {}, {
+            await axios.put(`http://localhost:5000/api/users/dislike/${currentVideo._id}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             dispatch(dislike(currentUser._id));
@@ -94,6 +98,19 @@ const Video = () => {
         }
     };
 
+    const getYouTubeEmbedUrl = (url) => {
+        if(!url) return "";
+        // Regex to find video ID from various YouTube URL formats
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+
+        if(match && match[2].length === 11) {
+            return `https://www.youtube.com/embed/${match[2]}?autoplay=1`
+        }
+
+        return url;
+    }
+
     // Prevent crash if data hasn't loaded yet
     if(!currentVideo || !channel._id) return <LoadingHandler />
 
@@ -103,13 +120,16 @@ const Video = () => {
             <div className="flex-1 w-full lg:max-w-225">
                 {/* Video Player Wrapper */}
                 <div className="sticky top-14 z-40 w-full bg-black aspect-video lg:max-h-137.5 shadow-lg">
-                    <video 
-                        src={currentVideo.videoUrl}
-                        poster={currentVideo.imgUrl} 
-                        controls 
-                        className="w-full h-full object-contain"
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src={getYouTubeEmbedUrl(currentVideo.videoUrl)}
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowFullScreen
+                        className="w-full h-full object-cover"
                     />
-                    {/* <iframe width="100%" height="100%" src={video.videoUrl} frameborder="0" allowFullScreen title="video" /> */}
                 </div>
                 {/* Scrollable Content */}
                 <div className="mt-2">
@@ -141,7 +161,7 @@ const Video = () => {
                                         ? "bg-[#f2f2f2] text-black hover:bg-gray-800 dark:bg-white dark:text-white"
                                         : "bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black"
                                         }`}>
-                                    {currentUser?.subscribedUsers?.includes(channel._id) ? "Subscribed" : "Subscribe"}
+                                    {currentUser.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
                                 </button>     
                             )}
                         </div>

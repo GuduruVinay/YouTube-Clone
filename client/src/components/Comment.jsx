@@ -1,14 +1,16 @@
 import axios from "axios";
 import { Check, Edit2, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 
 const Comment = ({ comment, onDelete }) => {
-    const [user, setUser] = useState({});
+    const { currentUser } = useSelector((state) => state.user);
+
+    const [channel, setChannel] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(comment.description);
 
-    const currentUser = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
 
     useEffect(() => {
@@ -17,7 +19,7 @@ const Comment = ({ comment, onDelete }) => {
                 const res = await axios.get(`http://localhost:5000/api/users/find/${comment.userId}`);
                 setChannel(res.data);
             } catch(err) {
-                console.error(err);
+                console.log(err);
             }
         };
         fetchCommentUser();
@@ -54,14 +56,14 @@ const Comment = ({ comment, onDelete }) => {
     return (
         <div className="flex gap-2.5 my-6 group">
             <img 
-                src={user?.avatar || "/default_profile_pic.jpg"} 
+                src={channel?.avatar || "/default_profile_pic.jpg"} 
                 alt="User Avatar"
                 className="w-10 h-10 rounded-full object-cover"
             />
             <div className="flex flex-col gap-1 w-full">
                 <div className="flex justify-between items-center">
                     <span className="text-xs font-bold dark:text-white">
-                        {user?.username || "Deleted User"} 
+                        {channel?.username || "Unknown User"} 
                         <span className="text-gray-500 font-normal ml-1">{format(comment.createdAt)}</span>
                     </span>
                     {/* CRUD Acitons */}

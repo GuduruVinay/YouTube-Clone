@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Card from "../components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingHandler } from "../components/Handler";
+import { subscription } from "../redux/userSlice";
 
 const Channel = () => {
     // Get the ID from the URL (channel/:id)

@@ -22,22 +22,7 @@ export const videoSlice = createSlice({
             state.error = true;
         },
         like: (state, action) => {
-            // If user is in dislikes, remove them
-            if(state.currentVideo.dislikes.includes(action.payload)) {
-                state.currentVideo.dislikes.splice(
-                    state.currentVideo.dislikes.findIndex(
-                        (userId) => userId === action.payload
-                    ),
-                    1
-                );
-            }
-            // Add user to likes
-            if(!state.currentVideo.likes.includes(action.payload)) {
-                state.currentVideo.likes.push(action.payload);
-            }
-        },
-        dislike: (state, action) => {
-            // If user is in likes, remove them
+            // If user is already is likes, REMOVE them (Toggle Off)
             if(state.currentVideo.likes.includes(action.payload)) {
                 state.currentVideo.likes.splice(
                     state.currentVideo.likes.findIndex(
@@ -45,10 +30,41 @@ export const videoSlice = createSlice({
                     ),
                     1
                 );
+            } else {
+                // If not in likes, ADD them (Toggle On)
+                state.currentVideo.likes.push(action.payload);
+                // And ensure they are REMOVED from dislikes if they were there
+                if(state.currentVideo.dislikes.includes(action.payload)) {
+                    state.currentVideo.dislikes.splice(
+                        state.currentVideo.dislikes.findIndex(
+                            (userId) => userId === action.payload
+                        ),
+                        1
+                    );
+                }
             }
-            // Add user to dislikes
-            if(!state.currentVideo.dislikes.includes(action.payload)) {
+        },
+        dislike: (state, action) => {
+            // If user is already is dislikes, REMOVE them (Toggle Off)
+            if(state.currentVideo.dislikes.includes(action.payload)) {
+                    state.currentVideo.dislikes.splice(
+                        state.currentVideo.dislikes.findIndex(
+                            (userId) => userId === action.payload
+                        ),
+                        1
+                    );
+            } else {
+                // If not in dislikes, ADD them (Toggle On)
                 state.currentVideo.dislikes.push(action.payload);
+                // And ensure they are REMOVED from dislikes if they were there
+                if(state.currentVideo.likes.includes(action.payload)) {
+                    state.currentVideo.likes.splice(
+                        state.currentVideo.likes.findIndex(
+                            (userId) => userId === action.payload
+                        ),
+                        1
+                    );
+                }
             }
         },
     },
