@@ -1,8 +1,9 @@
-import { Menu, Search, Mic, Plus, CircleUserRound, EllipsisVertical, Bell, Sun, Moon, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { Menu, Search, Mic, Plus, CircleUserRound, Bell, Sun, Moon, ArrowLeft, LogOut, Video, TvMinimal } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateChannelModal from "./CreateChannelModal";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/userSlice";
 
 const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const { currentUser } = useSelector(state => state.user);
@@ -10,21 +11,48 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     // State for search query
     const [q, setQ] = useState("");
 
-    const [openModal, setOpenModal] = useState(false);
-
     // State for Mobile Search Overlay
     const [showMobileSearch, setShowMobileSearch] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [openUserMenu, setOpenUserMenu] = useState(false);
+    const [openChannelMenu, setOpenChannelMenu] = useState(false);
+
+    // Refs for Click Outside
+    const userMenuRef = useRef(null);
+    const channelMenuRef = useRef(null);
 
     const location = useLocation();
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Handle Click Outside
+    useEffect(() => {
+        const handler = (e) => {
+            // Check User Menu
+            if(openUserMenu && userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+                setOpenUserMenu(false);
+            }
+            // Check Channel Menu 
+            if(openChannelMenu && channelMenuRef.current && !channelMenuRef.current.contains(e.target)) {
+                setOpenChannelMenu(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handler);
+
+        return () => {
+            document.removeEventListener("mousedown", handler);
+        };
+    }, [openUserMenu, openChannelMenu]);
+
+    // Handle Logout
     const handleLogout = () => {
         dispatch(logout());
+        setOpenUserMenu(false);
         navigate("/");
     };
 
+    // Handle Search
     const handleSearch = () => {
         // Prevent empty searches or spaces-only searches
         if(!q || q.trim() === "" ) return;
@@ -33,6 +61,16 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
         // Close mobile search after searching
         setShowMobileSearch(false);
     };
+
+    // Handle Create Channel
+    const handleCreateChannel = () => {
+
+    }
+
+    // Handle Create Video
+    const handleCreateVideo = () => {
+        
+    }
 
     return (
         <>
@@ -55,11 +93,11 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                 placeholder="Search"
                                 onChange={(e) => setQ(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-[#303030] rounded-l-full dark:bg-[#121212] dark:text-white outline-none focus:border-blue-500" 
+                                className="w-full px-4 py-2 border border-[#d3d3d3] dark:border-[#303030] rounded-l-full dark:bg-[#121212] dark:text-white outline-none focus:border-blue-500" 
                             />
                             <button
                                 onClick={handleSearch}
-                                className="px-5 bg-gray-100 dark:bg-[#222] border border-l-0 border-gary-300 dark:border-[#303030] rounded-r-full hover:bg-gray-200 dark:hover:bg-[#303030] dark:text-white"
+                                className="px-5 bg-gray-100 dark:bg-[#222] md:border-[#d3d3d3] dark:border-[#303030] border-l-0 border-gary-300 rounded-r-full hover:bg-gray-200 dark:hover:bg-[#303030] dark:text-white"
                             >
                                 <Search />
                             </button>
@@ -80,8 +118,8 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                         <div className="flex">
                             <input 
                                 type="text" 
-                                placeholder="Search" 
-                                className="hidden outline-none focus:border-blue-500 md:block pt-1.5 pb-1.5 pl-3 border border-[#d3d3d3] dark:border-[#303030] rounded-l-4xl lg:w-xl" 
+                                placeholder="Search"
+                                className="hidden md:block outline-none focus:border-blue-500 pt-1.5 pb-1.5 pl-3 border border-[#d3d3d3] dark:border-[#303030] rounded-l-full lg:w-xl" 
                                 onChange={(e) => setQ(e.target.value)} // Update state on type
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch() } // Search on Enter key
                             />
@@ -101,49 +139,77 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                     </button>
                     {/* User Actions */}
                     <div className="flex gap-2 md:gap-4">
-                        <button onClick={() => setIsDark(!isDark)} className="p-2 cursor-pointer bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-4xl">
+                        <button onClick={() => setIsDark(!isDark)} className="p-2 cursor-pointer bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-full">
                             {isDark ? <Sun /> : <Moon />}
                         </button>
+                        {/* <button className="hidden md:block p-2 cursor-pointer bg-[#f2f2f2] dark:bg-[#212121] hover:bg-[#d9d9d9] dark:hover:bg-[#3d3d3d] rounded-4xl"><Bell /></button> */}
                         {currentUser ? (
-                            <div className="flex items-center gap-4">
-                                <div>
+                            <div className="relative flex items-center gap-4">
+                                {/* Channel Dropdown */}
+                                <div ref={channelMenuRef}>
                                     <button 
                                         className="cursor-pointer flex w-fit items-center gap-1 py-2 px-2 lg:px-4 bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-4xl"
-                                        onClick={() => setOpenModal(true)}    
+                                        onClick={() => setOpenChannelMenu(!openChannelMenu)}    
                                     >
                                         <Plus />
-                                        <span className="hidden lg:block font-medium">Create Channel</span>
+                                        <span className="font-medium">Create</span>
                                     </button>
-                                    {/* Avatar Dropdown Simulator */}
-                                    <div className="relative group">
-                                        <img 
-                                            src={currentUser.avatar || "/default_profile_pic.jpg"} 
-                                            alt="User Avatar"
-                                            className="w-8 h-8 rounded-full cursor-pointer bg-purple-500" 
-                                        />
-                                        {/* Simple Dropdown on Hover */}
-                                        <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-[#222] border dark:border-[#333] rounded shadow-lg hidden group-hover:block p-2">
+                                    {openChannelMenu && (
+                                        <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border dark:border-[#333] rounded-xl shadow-xl py-2 z-10">
                                             <button
-                                                onClick={handleLogout}
-                                                className="w-full text-left px-2 py-1 text-sm hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white"
+                                                onClick={handleCreateChannel}
+                                                className="flex items-center gap-3 w-full rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
                                             >
-                                                Sign Out
+                                                <TvMinimal /> 
+                                                <span className="font-medium">Create Channel</span>
+                                            </button>
+                                            <button
+                                                onClick={handleCreateVideo}
+                                                className="flex items-center gap-3 w-full rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
+                                            >
+                                                <Video /> 
+                                                <span className="font-medium">Create Video</span>
                                             </button>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                                <button className="hidden md:block cursor-pointer"><Bell /></button>
+                                {/* Avatar Dropdown */}
+                                <div ref={userMenuRef}>
+                                    <img 
+                                        src={currentUser.avatar || "/default_profile_pic.jpg"} 
+                                        alt="User Avatar"
+                                        onClick={() => setOpenUserMenu(!openUserMenu)}
+                                        className="w-8 h-8 rounded-full cursor-pointer" 
+                                    />
+                                    {openUserMenu && (
+                                        <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border dark:border-[#333] rounded-xl shadow-xl pt-2 z-10">
+                                            <div className="flex flex-col gap-2 items-center justify-center px-4 pt-2 pb-3 border-b dark:border-[#333]">
+                                                <img 
+                                                    src={currentUser.avatar || "/default_profile_pic.jpg"} 
+                                                    alt="User Avatar"
+                                                    className="w-16 h-16 rounded-full"
+                                                />
+                                                <p className="text-sm font-medium dark:text-white truncate">{currentUser.username}</p>
+                                                <p className="text-sm font-medium dark:text-white truncate">{currentUser.email}</p>
+                                            </div>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="flex justify-center items-center gap-3 w-full rounded-lg py-3 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
+                                            >
+                                               <LogOut /> 
+                                               <span className="text-sm font-medium">Sign out</span>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-2">
-                                <button className="hidden md:block cursor-pointer"><EllipsisVertical /></button>
-                                <Link to="/signin" state={{ from: location }} >
-                                    <div className="flex w-fit items-center gap-2 text-[#065fd4] hover:bg-[#def1ff] dark:text-white py-1.5 px-2.5 border border-[#e5e5e5] dark:border-[#303030] dark:hover:bg-[#303030] rounded-4xl">
-                                        <CircleUserRound />
-                                        <span className="text-sm font-medium">Sign in</span>
-                                    </div>
-                                </Link>
-                            </div>
+                            <Link to="/signin" state={{ from: location }} >
+                                <div className="flex w-fit items-center gap-2 text-[#065fd4] hover:bg-[#def1ff] dark:text-white py-1.5 px-2.5 border border-[#e5e5e5] dark:border-[#303030] dark:hover:bg-[#303030] rounded-4xl">
+                                    <CircleUserRound />
+                                    <span className="text-sm font-medium">Sign in</span>
+                                </div>
+                            </Link>
                         )}
                     </div>
                 </div>       
