@@ -39,7 +39,7 @@ const Card = ({ type, video }) => {
                     {/* Channel Avatar */}
                     {!isSmall && (
                         <img 
-                            src={channel.channelBanner || channel.img || "/default_profile_pic.jpg"} 
+                            src={channel.channelAvatar || "/default_profile_pic.jpg"} 
                             alt={channel.username + "avatar"}
                             className="h-9 w-9 rounded-full object-cover bg-gray-500" 
                         />

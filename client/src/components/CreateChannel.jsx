@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 
 const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
     const [inputs, setInputs] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const createChannelRef = useRef();
 
@@ -21,22 +22,28 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
 
     const handleCreate = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             // Call API to create channel
             const res = await axios.post("http://localhost:5000/api/channels", inputs, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
+            console.log(inputs);
             // Update Redux State (Add new channel ID to user's list)
             dispatch(addChannel(res.data._id));
-
             // Close
             setOpenCreateChannel(false);
-
             // Redirect to new channel page
             navigate(`/channel/${res.data._id}`);
         } catch(err) {
             console.error(err);
+            if(err.response?.status === 409) {
+                alert("Handle already taken! Please choose another one.");
+            } else {
+                alert("Failed to create channel. Please try again.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -74,40 +81,45 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
                         className="w-32 h-32 rounded-full self-center"
                     />
                     <input
+                        name="channelName"
                         type="text"
                         placeholder="Channel Name"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
                     <input
+                        name="handle"
                         type="text"
                         placeholder="@Handle"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
                     <input
+                        name="channelAvatar"
                         type="text"
                         placeholder="Avatar URL"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
                     <input
+                        name="channelBanner"
                         type="text"
                         placeholder="Banner URL"
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
-                    <textarea 
+                    <textarea
+                        name="description" 
                         rows={4}
                         placeholder="Tell viewers about your channel..."
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500 resize-none" 
                     />
                     <button
-                        className="self-center bg-[#3ea6ff] text-white w-fit font-bold px-4 py-2 rounded hover:bg-[#3ea6ff]/90 transistion-colors mt-2"
-                        onClick={handleCreate}
+                    className="self-center bg-[#3ea6ff] text-white w-fit font-bold px-4 py-2 rounded hover:bg-[#3ea6ff]/90 transistion-colors mt-2"
+                    onClick={handleCreate}
                     >
-                        Create Channel
+                        {loading ? "Creating..." : "Create Channel"}
                     </button>
                 </div>
             </div>

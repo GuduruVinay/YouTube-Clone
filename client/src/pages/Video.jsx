@@ -124,7 +124,7 @@ const Video = () => {
                                 <Link to={`/channel/${channel._id}`}>
                                     <div className="flex items-center gap-3">
                                         <img 
-                                            src={channel.img || "/default_profile_pic.jpg"} 
+                                            src={channel.channelAvatar || "/default_profile_pic.jpg"} 
                                             alt="Channel Avatar"
                                             className="w-12 h-12 rounded-full object-cover bg-gray-500 cursor-pointer" 
                                             />

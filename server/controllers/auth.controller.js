@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
@@ -40,7 +39,7 @@ export const signin = async (req, res, next) => {
     try {
         // Find User
         const user = await User.findOne({ username: req.body.username });
-        if(!user) return res.status(404).json({ message: "User not found!" });
+        if(!user) return next(createError(404, "User not found!"));
     
         // Validate Password
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
@@ -52,12 +51,7 @@ export const signin = async (req, res, next) => {
         // Remove password from response
         const { password, ...others } = user._doc;
 
-        return res
-            .cookie("access_token", token, {
-                httpOnly: true,
-            })
-            .status(200)
-            .json(others);
+        return res.status(200).json({ token, details: others});
     } catch(err) {
         next(err);
     }
