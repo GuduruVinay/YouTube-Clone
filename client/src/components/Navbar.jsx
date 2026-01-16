@@ -5,6 +5,7 @@ import CreateChannel from "./CreateChannel";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 import UploadVideo from "./UploadVideo";
+import axios from "axios";
 
 const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const { currentUser } = useSelector(state => state.user);
@@ -18,6 +19,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const [openChannelMenu, setOpenChannelMenu] = useState(false);
     const [openCreateChannel, setOpenCreateChannel] = useState(false);
     const [openUploadVideo, setOpenUploadVideo] = useState(false);
+    const [userChannels, setUserChannels] = useState([]);
 
     // Refs for Click Outside
     const userMenuRef = useRef(null);
@@ -26,6 +28,28 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    // Fetch Channel Details
+    useEffect(() => {
+        const fetchChannels = async () => {
+            if(currentUser?.channels && currentUser.channels.length > 0) {
+                try {
+                    // Create an array of API calls for each channel ID
+                    const channelPromises = currentUser.channels.map(id => 
+                        axios.get(`http://localhost:5000/api/channels/find/${id}`)
+                    );
+                    // Wait for all to finish
+                    const responses = await Promise.all(channelPromises);
+                    // Extract data
+                    const channelsData = responses.map(res => res.data);
+                    setUserChannels(channelsData);
+                } catch(err) {
+                    console.error("Failed to fetch channels", err);
+                }
+            }
+        };
+        fetchChannels();
+    }, [currentUser]);
 
     // Handle Click Outside
     useEffect(() => {
@@ -193,6 +217,26 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                                 <p className="text-sm font-medium dark:text-white truncate">{currentUser.username}</p>
                                                 <p className="text-sm font-medium dark:text-white truncate">{currentUser.email}</p>
                                             </div>
+                                            {userChannels.length > 0 && (
+                                                <div className="flex flex-col justify-center py-2 border-b border-[#f2f2f2] dark:border-[#333]">
+                                                    <span className="px-4 mb-1 text-xs font-semibold uppercase text-center">My Channels</span>
+                                                    {userChannels.map(channel => (
+                                                        <Link
+                                                            to={`/channel/${channel._id}`}
+                                                            key={channel._id}
+                                                            className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#333] cursor-pointer"
+                                                            onClick={() => setOpenUserMenu(false)}
+                                                        >
+                                                            <img 
+                                                                src={channel.channelAvatar || "/default_profile_pic.jpg"} 
+                                                                alt="Channel Avatar"
+                                                                className="w-6 h-6 rounded-full object-cover" 
+                                                            />
+                                                            <span>{channel.channelName}</span>
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            )}
                                             <button
                                                 onClick={handleLogout}
                                                 className="flex justify-center items-center gap-3 w-full rounded-lg py-3 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
