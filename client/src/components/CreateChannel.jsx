@@ -65,7 +65,7 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
 
     return (
         <div className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
-            <div ref={createChannelRef} className="bg-white dark:bg-[$202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
+            <div ref={createChannelRef} className="bg-white dark:bg-[#0f0f0f] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
                 {/* Close Button */}
                 <button
                     className="absolute top-3 right-3 cursor-pointer p-1 hover:bg-gray-200 dark:hover:bg-[#303030] rounded-full"

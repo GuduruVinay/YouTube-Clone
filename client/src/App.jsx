@@ -17,17 +17,23 @@ const THEME_KEY = "theme";
 const Layout = () => {
   // State: Dark Mode
   const [isDark, setIsDark] = useState(() => {
-      return localStorage.getItem(THEME_KEY) === "dark";
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    // If a theme is saved, use it
+    if(savedTheme) {
+      return savedTheme === "dark";
+    }
+    // If NO theme is saved, Default to true (Dark Mode)
+    return true;
   });
 
   // Effect: Dark Mode
   useEffect(() => {
       if(isDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem(THEME_KEY, "dark");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem(THEME_KEY, "dark");
       } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem(THEME_KEY, "light");
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem(THEME_KEY, "light");
       }
   }, [isDark]);
 

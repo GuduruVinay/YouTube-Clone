@@ -16,7 +16,7 @@ const Recommendation = ({ tags }) => {
     }, [tags]);
 
     return (
-        <div className="flex flex-col">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:px-3 mb-6 lg:grid-cols-1 gap-x-2 gap-y-6">
             {videos.map((video) => (
                 <Card type="sm" key={video._id} video={video} />
             ))}

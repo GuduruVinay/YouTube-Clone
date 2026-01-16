@@ -26,7 +26,7 @@ const Card = ({ type, video }) => {
     return (
         <Link to={`/video/${video._id}`} className="w-full">
             {/* Container: Verical bg default, Horizontal(flex) is small */}
-            <div className={`flex gap-2 px-1 cursor-pointer ${isSmall ? "flex-row mb-2" : "flex-col w-full"}`}>
+            <div className={`flex gap-2 px-1 cursor-pointer ${isSmall ? "flex-col lg:flex-row" : "flex-col"}`}>
                 {/* Thumbnail */}
                 <div className={`relative ${isSmall ? "flex-1 min-w-40 h-24" : "w-full lg:h-68"}`}>
                     <img 
@@ -36,15 +36,13 @@ const Card = ({ type, video }) => {
                     />
                 </div>
                 {/* Details */}
-                <div className={`flex gap-3 mt-1 ${isSmall ? "flex-1" : ""}`}>
+                <div className={`flex gap-3 lg:mt-1 ${isSmall ? "flex-1" : ""}`}>
                     {/* Channel Avatar */}
-                    {!isSmall && (
-                        <img 
-                            src={channel.channelAvatar || "/default_profile_pic.jpg"} 
-                            alt={channel.username + "avatar"}
-                            className="h-9 w-9 rounded-full object-cover bg-gray-500" 
-                        />
-                    )}
+                    <img 
+                        src={channel.channelAvatar || "/default_profile_pic.jpg"} 
+                        alt={channel.username + "avatar"}
+                        className={`${isSmall ? "lg:hidden" : "block"} ml-2 h-9 w-9 rounded-full object-cover bg-gray-500`} 
+                    />
                     <div className="flex flex-col">
                         {/* Video Title */}
                         <h1 className={`font-bold dark:text-white leading-tight mb-1 ${isSmall ? "text-sm" : "text-base"}`}>{video.title}</h1>

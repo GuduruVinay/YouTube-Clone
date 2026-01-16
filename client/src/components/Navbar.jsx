@@ -1,4 +1,4 @@
-import { Menu, Search, Mic, Plus, CircleUserRound, Bell, Sun, Moon, ArrowLeft, LogOut, Video, TvMinimal } from "lucide-react";
+import { Menu, Search, Plus, CircleUserRound, Sun, Moon, ArrowLeft, LogOut, Video, TvMinimal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateChannel from "./CreateChannel";
@@ -39,9 +39,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                 setOpenChannelMenu(false);
             }
         };
-
         document.addEventListener("mousedown", handler);
-
         return () => {
             document.removeEventListener("mousedown", handler);
         };
@@ -146,7 +144,6 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                         <button onClick={() => setIsDark(!isDark)} className="p-2 cursor-pointer bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-full">
                             {isDark ? <Sun /> : <Moon />}
                         </button>
-                        {/* <button className="hidden md:block p-2 cursor-pointer bg-[#f2f2f2] dark:bg-[#212121] hover:bg-[#d9d9d9] dark:hover:bg-[#3d3d3d] rounded-4xl"><Bell /></button> */}
                         {currentUser ? (
                             <div className="relative flex items-center gap-4">
                                 {/* Channel Dropdown */}

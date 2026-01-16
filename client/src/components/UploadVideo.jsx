@@ -108,7 +108,7 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
                 </button>
                 <h1 className="text-xl font-bold text-center">Upload a New Video</h1>
                 {/* Channel Selector */}
-                <label className="text-sm">Select Channel:</label>
+                <label className="text-sm">Select Channel :</label>
                 <select 
                     className="p-2 border border-gray-300 dark:border-[#373737] rounded bg-transparent dark:text-white"
                     onChange={(e) => setSelectedChannel(e.target.value)}
