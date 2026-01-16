@@ -18,23 +18,23 @@ const connect = async () => {
 };
 
 const CATEGORIES = [
-  "Web Development", "Gaming", "Sports", "Music", "React", "MongoDB", 
-  "Funny", "Cricket", "Football", "Animation", "Live", "Game Development", 
-  "Movies", "Tech", "Education", "Coding", "Vlogs", "News"
+  "web development", "gaming", "sports", "music", "react", "mongodb", 
+  "funny", "cricket", "football", "animation", "live", "game development", 
+  "movies", "tech", "education", "coding", "vlogs", "news"
 ];
 
 // Real YouTube Video IDs
 const REAL_VIDEOS = [
-  { id: "bMknfKXIFA8", title: "React Course - Beginner's Tutorial", tags: ["React", "Web Development", "Coding"] },
-  { id: "pWbMrx5rVBE", title: "MongoDB in 100 Seconds", tags: ["MongoDB", "Tech", "Education"] },
-  { id: "SqcY0GlETPk", title: "React Tutorial for Beginners", tags: ["React", "Coding", "Web Development"] },
-  { id: "AmC9SmCBUj4", title: "Game Development for Beginners", tags: ["Game Development", "Coding", "Tech"] },
-  { id: "jNQXAC9IVRw", title: "Me at the zoo", tags: ["Vlogs", "Funny"] },
-  { id: "jfKfPfyJRdk", title: "Lofi Hip Hop Radio", tags: ["Music", "Live"] },
-  { id: "60ItHLz5WEA", title: "Lionel Messi - All Goals", tags: ["Football", "Sports"] },
-  { id: "u2pOpS_C6y4", title: "IPL 2026 Highlights", tags: ["Cricket", "Sports"] },
-  { id: "9Auq9mYxFEE", title: "Sky News Live", tags: ["News", "Live"] },
-  { id: "jjl9J0S4wWk", title: "Minecraft Survival Guide", tags: ["Gaming", "Funny"] },
+  { id: "bMknfKXIFA8", title: "React Course - Beginner's Tutorial", tags: ["react", "web development", "coding"] },
+  { id: "pWbMrx5rVBE", title: "MongoDB in 100 Seconds", tags: ["mongodb", "tech", "education"] },
+  { id: "SqcY0GlETPk", title: "React Tutorial for Beginners", tags: ["react", "coding", "web development"] },
+  { id: "AmC9SmCBUj4", title: "Game Development for Beginners", tags: ["game development", "coding", "tech"] },
+  { id: "jNQXAC9IVRw", title: "Me at the zoo", tags: ["vlogs", "funny"] },
+  { id: "jfKfPfyJRdk", title: "Lofi Hip Hop Radio", tags: ["music", "live"] },
+  { id: "60ItHLz5WEA", title: "Lionel Messi - All Goals", tags: ["football", "sports"] },
+  { id: "u2pOpS_C6y4", title: "IPL 2026 Highlights", tags: ["cricket", "sports"] },
+  { id: "9Auq9mYxFEE", title: "Sky News Live", tags: ["news", "live"] },
+  { id: "jjl9J0S4wWk", title: "Minecraft Survival Guide", tags: ["gaming", "funny"] },
 ];
 
 const seedData = async () => {

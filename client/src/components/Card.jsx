@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
+import { formatNumber } from "../utils";
 
 const Card = ({ type, video }) => {
     const [channel, setChannel] = useState({});
@@ -25,13 +26,13 @@ const Card = ({ type, video }) => {
     return (
         <Link to={`/video/${video._id}`} className="w-full">
             {/* Container: Verical bg default, Horizontal(flex) is small */}
-            <div className={`flex gap-3 mb-10 cursor-pointer ${isSmall ? "flex-row mb-2" : "flex-col w-full"}`}>
+            <div className={`flex gap-2 px-1 cursor-pointer ${isSmall ? "flex-row mb-2" : "flex-col w-full"}`}>
                 {/* Thumbnail */}
-                <div className={`relative ${isSmall ? "flex-1 min-w-40 h-25" : "w-full h-50"}`}>
+                <div className={`relative ${isSmall ? "flex-1 min-w-40 h-24" : "w-full lg:h-68"}`}>
                     <img 
                         src={video.thumbnailUrl} 
                         alt={video.title + "thumbnail"}
-                        className="w-full h-full object-cover rounded-xl bg-gray-800"
+                        className="w-full h-full object-cover rounded-xl bg-white dark:bg-black hover:rounded-none transition-all duration-300"
                     />
                 </div>
                 {/* Details */}
@@ -48,10 +49,10 @@ const Card = ({ type, video }) => {
                         {/* Video Title */}
                         <h1 className={`font-bold dark:text-white leading-tight mb-1 ${isSmall ? "text-sm" : "text-base"}`}>{video.title}</h1>
                         {/* Channel Name */}
-                        <h2 className="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">{channel.username}</h2>
+                        <h2 className="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">{channel.channelName}</h2>
                         {/* Views • Date */}
                         <div className="text-xs text-gray-500">
-                            {video.views} views • {format(video.createdAt)}
+                            {formatNumber(video.views)} views • {format(video.createdAt)}
                         </div>
                     </div>
                 </div>
@@ -61,13 +62,3 @@ const Card = ({ type, video }) => {
 };
 
 export default Card;
-
-// <div className="flex flex-col cursor-pointer gap-2 px-1">
-//     <img 
-//         src={video.imgUrl} 
-//         alt={video.title}
-//         className="w-full h-48 lg:h-64 bg-[#999] rounded-xl object-cover hover:rounded-none transition-all duration-300"
-//     />
-
-//     <h1 className="text-base font-medium">{video.title}</h1>
-//     <h2 className="text-sm my-1">LM3 Games</h2>

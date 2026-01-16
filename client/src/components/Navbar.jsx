@@ -156,7 +156,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                         onClick={() => setOpenChannelMenu(!openChannelMenu)}    
                                     >
                                         <Plus />
-                                        <span className="font-medium">Create</span>
+                                        <span className="hidden md:block font-medium">Create</span>
                                     </button>
                                     {openChannelMenu && (
                                         <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-xl py-2 z-10">

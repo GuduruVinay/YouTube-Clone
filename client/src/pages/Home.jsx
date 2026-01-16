@@ -38,7 +38,7 @@ const Home = () => {
     );
 
     return (
-        <div className="flex flex-1 h-dvh overflow-y-auto dark:bg-[#0f0f0f] dark:text-white">
+        <div className="flex flex-1 h-[calc(100vh-56px)] overflow-hidden dark:bg-[#0f0f0f] dark:text-white">
             <div className="hidden md:flex flex-col gap-1 ml-1 items-center justify-start">
                 <SideMenuBtn icon={<House />} text="Home" />
                 {/* Redirect the remaining buttons to home page only for now*/}
@@ -46,24 +46,26 @@ const Home = () => {
                 <SideMenuBtn icon={<TvMinimalPlay />} text="Subscriptions" />
                 <SideMenuBtn icon={<CircleUserRound />} text="You" />
             </div>
-            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                <div className="sticky top-0 z-10">
+            <div className="flex flex-col flex-1 h-full overflow-x-hidden">
+                <div className="z-10 w-full">
                     <Filters filter={filter} setFilter={setFilter} />
                 </div>
-                {loading ? (
-                    <LoadingHandler />
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8 px-4 py-4 pb-20 w-full">
-                        {videos.map((video) => (
-                            <Card key={video._id} video={video} />
-                        ))}
-                    </div>
-                )}
-                {!loading && videos.length === 0 && (
-                    <h2 className="col-span-full text-center text-xl text-gray-500 mt-10">
-                        No videos found for "{filter}".
-                    </h2>
-                )}
+                <div className="flex-1 overflow-y-auto p-4 pb-10">
+                    {loading ? (
+                        <LoadingHandler />
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 gap-y-8">
+                            {videos.map((video) => (
+                                <Card key={video._id} video={video} />
+                            ))}
+                        </div>
+                    )}
+                    {!loading && videos.length === 0 && (
+                        <h2 className="text-center text-xl text-gray-500 mt-10 w-full">
+                            No videos found for "{filter}".
+                        </h2>
+                    )}
+                </div>
             </div>
         </div>
     );

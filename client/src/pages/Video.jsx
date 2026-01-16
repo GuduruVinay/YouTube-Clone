@@ -200,14 +200,9 @@ const Video = () => {
                 </div>
 
             </div>
+            
             {/* <hr className='mt-3 border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f]' /> */}
 
-            {/* Right : Recommendations */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-y-4 py-4 md:px-4">
-                {videos.map((video) => (
-                    <Card key={video._id} video={video} />
-                ))}
-            </div> */}
             <div className="w-full lg:w-87.5">
                 <Recommendation tags={currentVideo.tags} />
             </div>
