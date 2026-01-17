@@ -44,19 +44,28 @@ export const getChannel = async (req, res, next) => {
 // Update Channel
 export const updateChannel = async (req, res, next) => {
     try {
+        // Find the Channel
         const channel = await Channel.findById(req.params.id);
         if(!channel) return next(createError(404, "Channel not found!"));
         // Only the Owner (User) can edit this Channel
-        if(req.user.id === channel.owner.toString()) {
-            const updatedChannel = await Channel.findByIdAndUpdate(
-                req.params.id,
-                { $set: req.body },
-                { new: true }
-            );
-            return res.status(200).json(updateChannel);
-        } else {
-            return next(createError(403, "You can update only your channel!"));
+        if(channel.owner.toString() !== req.user.id) {
+            return next(createError(403, "You can only update your own channel!"));
         }
+        const { channelName, description, handle, channelAvatar, channelBanner } = req.body;
+        const updateData = {
+            ...(channelName && { channelName }),
+            ...(handle && { handle }),
+            ...(channelAvatar && { channelAvatar }),
+            ...(channelBanner && { channelBanner }),
+            ...(description && { description }),
+        }
+        // Update Data
+        const updatedChannel = await Channel.findByIdAndUpdate(
+            req.params.id,
+            { $set: updateData },
+            { new: true }
+        );
+        return res.status(200).json(updatedChannel);
     } catch(err) {
         next(err);
     }

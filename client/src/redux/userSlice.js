@@ -4,6 +4,7 @@ const initialState = {
     currentUser: null,
     loading: false,
     error: false,
+    channelUpdateTrigger: 0,
 };
 
 export const userSlice = createSlice({
@@ -46,10 +47,12 @@ export const userSlice = createSlice({
             localStorage.setItem("user", JSON.stringify(state.currentUser));
         },
         // When a user creates a new channel, add it to their list locally
-        addChannel: (state, action) => {
+        createChannel: (state, action) => {
             // action.payload is the new Channel ID
-            state.currentUser.channels.push(action.payload);
-            localStorage.setItem("user", JSON.stringify(state.currentUser));
+            if(state.currentUser) {
+                if(!state.currentUser.channels) state.currentUser.channels = [];
+                state.currentUser.channels.push(action.payload);
+            }
         },
         channelDeleted: (state, action) => {
             if(state.currentUser && state.currentUser.channels) {
@@ -58,10 +61,13 @@ export const userSlice = createSlice({
                     (id) => id !== action.payload
                 );
             }
+        },
+        channelUpdated: (state) => {
+            state.channelUpdateTrigger += 1 ;
         }
     },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, subscription, addChannel, channelDeleted } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logout, subscription, createChannel, channelDeleted, channelUpdated } = userSlice.actions;
 
 export default userSlice.reducer;

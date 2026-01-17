@@ -8,19 +8,21 @@ import { LoadingHandler } from "../components/Handler";
 import { channelDeleted, subscription } from "../redux/userSlice";
 import UploadVideo from "../components/UploadVideo";
 import { Edit2, Trash2, Upload } from "lucide-react";
+import CreateChannel from "../components/CreateChannel";
 
 const Channel = () => {
     // Get the ID from the URL (channel/:id)
     const { id } = useParams();
     const { currentUser } = useSelector((state) => state.user);
-
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    
     const token = localStorage.getItem("token");
-
+    
     const [channel, setChannel] = useState(null);
     const [videos, setVideos] = useState([]);
+    const [openEdit, setOpenEdit] = useState(false);
     const [openUpload, setOpenUpload] = useState(false);
 
     useEffect(() => {
@@ -41,20 +43,20 @@ const Channel = () => {
 
     // Handle Subsription
     const handleSub = async () => {
-        currentUser.subscribedChannels.includes(channel._id)
-            ? await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
-            : await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
-    
-        dispatch(subscription(channel._id));
-        setChannel(prev => ({
-            ...prev,
-            subscribers: currentUser.subscribedChannels.includes(channel._id) ? prev.subscribers - 1 : prev.subscribers + 1
-        }));
-    };
-
-    // Handle Update Channel
-    const handleUpdateChannel = async () => {
-
+        try {
+            if(currentUser.subscribedChannels.includes(channel._id)) {
+                await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
+            } else {
+                await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
+            }
+            dispatch(subscription(channel._id));
+            setChannel(prev => ({
+                ...prev,
+                subscribers: currentUser.subscribedChannels.includes(channel._id) ? prev.subscribers - 1 : prev.subscribers + 1
+            }));
+        } catch(err) {
+            console.log(err);
+        }
     };
 
     // Handle Delete Channel
@@ -90,7 +92,7 @@ const Channel = () => {
             {/* Channel Header Info */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-5 px-10 py-8 bg-[#f9f9f9] dark:bg-[#1e1e1e]">
                 <img 
-                    src={channel.channelBanner || "/default_profile_pic.jpg"}
+                    src={channel.channelAvatar || "/default_profile_pic.jpg"}
                     alt="Channel Icon"
                     className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-[#1e1e1e] shadow-lg -mt-12 md:mt-0" 
                 />
@@ -115,7 +117,7 @@ const Channel = () => {
                                     <Upload /> Upload Video
                                 </button>
                                 <button
-                                    onClick={handleUpdateChannel}
+                                    onClick={() => setOpenEdit(true)}
                                     className="flex items-center gap-2 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
                                 >
                                     <Edit2 /> Edit Channel
@@ -136,23 +138,10 @@ const Channel = () => {
                                     : "bg-black text-white dark:bg-white dark:text-black"
                                 }`}
                             >
-                                {currentUser.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
+                                {currentUser?.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
                             </button>
                         )}
                     </div>
-                    {/* Subscribe Button */}
-                    {/* {currentUser && (
-                        <button
-                            onClick={handleSub}
-                            className={`mt-2 px-6 py-2 rounded-full font-bold text-sm transition-colors ${
-                                currentUser.subscribedChannels.includes(channel._id)
-                                ? "bg-gray-200 text-black dark:bg-[#303030] dark:text-white"
-                                : "bg-black text-white dark:bg-white dark:text-black"
-                            }`}
-                        >
-                            {currentUser.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
-                        </button>
-                    )} */}
                 </div>
             </div>
 
@@ -173,6 +162,14 @@ const Channel = () => {
             </div>
             {openUpload && (
                 <UploadVideo openUploadVideo={openUpload} setOpenUploadVideo={setOpenUpload} />
+            )}
+            {openEdit && (
+                <CreateChannel 
+                    open={openEdit}
+                    setOpen={setOpenEdit}
+                    existingChannel={channel}
+                    setChannelData={setChannel}
+                />
             )}
         </div>
     );

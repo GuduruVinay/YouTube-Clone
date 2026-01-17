@@ -8,7 +8,7 @@ import UploadVideo from "./UploadVideo";
 import axios from "axios";
 
 const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
-    const { currentUser } = useSelector(state => state.user);
+    const { currentUser, channelUpdateTrigger } = useSelector(state => state.user);
 
     // State for search query
     const [q, setQ] = useState("");
@@ -52,7 +52,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             }
         };
         fetchChannels();
-    }, [currentUser]);
+    }, [currentUser, channelUpdateTrigger]);
 
     // Handle Click Outside
     useEffect(() => {
@@ -264,7 +264,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             </nav>
 
             {/* Render conditionally */}
-            {openCreateChannel && <CreateChannel openCreateChannel={openCreateChannel} setOpenCreateChannel={setOpenCreateChannel} />}
+            {openCreateChannel && <CreateChannel open={openCreateChannel} setOpen={setOpenCreateChannel} />}
 
             {openUploadVideo && <UploadVideo openUploadVideo={openUploadVideo} setOpenUploadVideo={setOpenUploadVideo} />}       
         </>
