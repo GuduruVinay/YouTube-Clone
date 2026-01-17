@@ -53,8 +53,10 @@ const Comments = ({ videoId }) => {
                 // Add new comment to top of list
                 setComments([res.data, ...comments]);
                 setDescription(""); // Clear input
+                toast.success("Comment posted!");
             } catch(err) {
                 console.log(err);
+                toast.error("Failed to post comment");
             }
         }
     };
@@ -120,7 +122,7 @@ const Comments = ({ videoId }) => {
                     >
                         <Comment 
                             comment={comment}
-                            onDelete={handleDeleteFromList} 
+                            onDelete={handleDeleteFromList}
                         />
                     </div>
                 ))}

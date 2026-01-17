@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
+import ConfirmPopup from "./ConfirmPopup";
 
 const Comment = ({ comment, onDelete }) => {
     const { currentUser } = useSelector((state) => state.user);
@@ -12,6 +13,7 @@ const Comment = ({ comment, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(comment.description);
     const [openCommentMenu, setOpenCommentMenu] = useState(false);
+    const [confirmPopup, setConfirmPopup] = useState(false);
 
     const commentMenuRef = useRef(null);
 
@@ -43,20 +45,27 @@ const Comment = ({ comment, onDelete }) => {
         };
     }, [openCommentMenu]);
 
-    // Handle Delete
-    const handleDelete = async () => {
+    // Handle Delete Click
+    const handleDeleteClick = () => {
+        setOpenCommentMenu(false);
+        setConfirmPopup(true);
+    }
+
+    // Confirm Delete
+    const confirmDelete = async () => {
         if(!comment._id) return toast.error("Error: Comment ID is missing!");
-
-        if(!window.confirm("Delete this comment?")) return;
-
         try {
             await axios.delete(`http://localhost:5000/api/comments/${comment._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             onDelete(comment._id);
             setOpenCommentMenu(false);
+            toast.success("Comment Deleted");
         } catch(err) {
             console.log(err);
+            toast.error('Failed to delete comment');
+        } finally {
+            setConfirmPopup(false);
         }
     };
 
@@ -70,8 +79,10 @@ const Comment = ({ comment, onDelete }) => {
             setIsEditing(false);
             setOpenCommentMenu(false);
             comment.description = editedText;
+            toast.success("Comment Updated");
         } catch(err) {
             console.log(err);
+            toast.error("Failed to update comment");
         }
     };
 
@@ -110,7 +121,7 @@ const Comment = ({ comment, onDelete }) => {
                                     </button>
                                     <button
                                         className="flex items-center gap-3 w-full rounded-lg px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white text-left transition-colors"
-                                        onClick={handleDelete}
+                                        onClick={handleDeleteClick}
                                     >
                                         <Trash2 />
                                         <span className="font-medium">Delete</span>
@@ -160,6 +171,14 @@ const Comment = ({ comment, onDelete }) => {
                     <span className="text-sm dark:text-white -mt-1 leading-relaxed">{editedText}</span>
                 )}
             </div>
+            <ConfirmPopup 
+                isOpen={confirmPopup}
+                onClose={() => setConfirmPopup(false)}
+                onConfirm={confirmDelete}
+                title="Delete Comment ?"
+                message="Are you sure you want to delete this comment? This action cannot be undone."
+                confirmText="Delete"
+            />
         </div>
     );
 };

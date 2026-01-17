@@ -10,6 +10,7 @@ import UploadVideo from "../components/UploadVideo";
 import { Edit2, Trash2, Upload } from "lucide-react";
 import CreateChannel from "../components/CreateChannel";
 import toast from "react-hot-toast";
+import ConfirmPopup from "../components/ConfirmPopup";
 
 const Channel = () => {
     // Get the ID from the URL (channel/:id)
@@ -26,6 +27,11 @@ const Channel = () => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openUpload, setOpenUpload] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
+    const [confirmPopup, setConfirmPopup] = useState({
+        isOpen: false,
+        type: null,
+        id: null
+    });
 
     useEffect(() => {
         const fetchChannelData = async () => {
@@ -61,35 +67,49 @@ const Channel = () => {
         }
     };
 
-    // Handle Delete Channel
-    const handleDeleteChannel = async () => {
-        if(!window.confirm("Are you sure you want to delete this channel? All videos will be lost.")) return;
-        try {
-            await axios.delete(`http://localhost:5000/api/channels/${channel._id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            dispatch(channelDeleted(channel._id));
-            toast.error("Channel deleted successfully");
-            navigate("/");
-        } catch(err) {
-            console.error(err);
-            toast.error("Failed to delete channel");
-        }
+    const clickDeleteChannel = () => {
+        setConfirmPopup({
+            isOpen: true,
+            type: "channel",
+            id: channel._id
+        });
     };
 
-    // Handle Delete Video
-    const handleDeleteVideo = async (videoId) => {
-        if(!window.confirm("Are you sure you want to delete this video?")) return;
-        try {
-            await axios.delete(`http://localhost:5000/api/videos/${videoId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            // Remove video from list
-            setVideos((prev => prev.filter(v => v._id !== videoId)));
-        } catch (err) {
-            console.error(err);
+    const clickDeleteVideo = (videoId) => {
+        setConfirmPopup({
+            isOpen: true,
+            type: "video",
+            id: videoId
+        });
+    };
+
+    const handleConfirmDelete = async () => {
+        if(confirmPopup.type === "channel") {
+            try {
+                await axios.delete(`http://localhost:5000/api/channels/${confirmPopup.id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                dispatch(channelDeleted(confirmPopup.id));
+                toast.success("Channel deleted successfully");
+                navigate("/");
+            } catch(err) {
+                console.error(err);
+                toast.error("Failed to delete channel");
+            }
+        } else if(confirmPopup.type === "video") {
+            try {
+                await axios.delete(`http://localhost:5000/api/videos/${confirmPopup.id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                // Remove video from list
+                setVideos((prev => prev.filter(v => v._id !== confirmPopup.id)));
+                toast.success("Video deleted successfully");
+            } catch (err) {
+                console.error(err);
+                toast.error("Failed to delete video");
+            }
         }
-    }
+    };
 
     // Handle open edit video
     const handleEditVideo = (video) => {
@@ -152,7 +172,7 @@ const Channel = () => {
                                     <Edit2 /> Edit<span className="hidden md:block">Channel</span>
                                 </button>
                                 <button
-                                    onClick={handleDeleteChannel}
+                                    onClick={clickDeleteChannel}
                                     className="flex items-center gap-1 px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition-colors"
                                 >
                                     <Trash2 /> Delete<span className="hidden md:block">Channel</span>
@@ -187,7 +207,7 @@ const Channel = () => {
                             video={video}
                             enableEdit={currentUser?._id === channel.owner}
                             onEdit={handleEditVideo}
-                            onDelete={handleDeleteVideo} 
+                            onDelete={clickDeleteVideo} 
                         />
                     ))}
                     {videos.length === 0 && (
@@ -211,6 +231,17 @@ const Channel = () => {
                     setChannelData={setChannel}
                 />
             )}
+            <ConfirmPopup 
+                isOpen={confirmPopup.isOpen}
+                onClose={() => setConfirmPopup({ ...confirmPopup, isOpen: false })}
+                onConfirm={handleConfirmDelete}
+                title={confirmPopup.type === "channel" ? "Delete Channel ?" : "Delete Video ?"}
+                message={confirmPopup.type === "channel"
+                    ? "Are you sure you want to delete this channel? All videos and subscribers will be lost permanently."
+                    : "This video will be permanently deleted. You cannot undo this action."
+                }
+                confirmText="Yes, Delete"
+            />
         </div>
     );
 };
