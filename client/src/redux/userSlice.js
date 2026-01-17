@@ -50,10 +50,18 @@ export const userSlice = createSlice({
             // action.payload is the new Channel ID
             state.currentUser.channels.push(action.payload);
             localStorage.setItem("user", JSON.stringify(state.currentUser));
+        },
+        channelDeleted: (state, action) => {
+            if(state.currentUser && state.currentUser.channels) {
+                // Filter out the deleted channel ID
+                state.currentUser.channels = state.currentUser.channels.filter(
+                    (id) => id !== action.payload
+                );
+            }
         }
     },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, subscription, addChannel } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logout, subscription, addChannel, channelDeleted } = userSlice.actions;
 
 export default userSlice.reducer;

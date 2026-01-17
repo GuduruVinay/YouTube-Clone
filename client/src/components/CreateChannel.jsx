@@ -28,7 +28,6 @@ const CreateChannel = ({ openCreateChannel, setOpenCreateChannel }) => {
             const res = await axios.post("http://localhost:5000/api/channels", inputs, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(inputs);
             // Update Redux State (Add new channel ID to user's list)
             dispatch(addChannel(res.data._id));
             // Close

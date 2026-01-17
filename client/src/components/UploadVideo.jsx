@@ -145,7 +145,7 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
                     <input
                         name="category"
                         type="text"
-                        placeholder="Category (comma , seperated)"
+                        placeholder="Category (comma , separated)"
                         onChange={handleTags}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />

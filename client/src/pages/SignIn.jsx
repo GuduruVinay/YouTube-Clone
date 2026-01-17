@@ -51,14 +51,14 @@ const SignIn = () => {
             await axios.post("http://localhost:5000/api/auth/signup", { username, email, password });
             alert("Account created! Please Sign in.");
             setCreateAccount(false);
-            handleCreateAccount();
+            toggleMode();
         } catch(err) {
             console.error(err);
             alert("Registration failed!");
         }
     }
 
-    // Handle Create Account and Change Header
+    // Handle Toggle Mode
     function toggleMode() {
         if(createAccount){
             setCreateAccount(false);

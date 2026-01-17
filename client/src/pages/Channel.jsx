@@ -1,22 +1,27 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Card from "../components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingHandler } from "../components/Handler";
-import { subscription } from "../redux/userSlice";
+import { channelDeleted, subscription } from "../redux/userSlice";
+import UploadVideo from "../components/UploadVideo";
+import { Edit2, Trash2, Upload } from "lucide-react";
 
 const Channel = () => {
     // Get the ID from the URL (channel/:id)
     const { id } = useParams();
     const { currentUser } = useSelector((state) => state.user);
+
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
 
     const [channel, setChannel] = useState(null);
     const [videos, setVideos] = useState([]);
+    const [openUpload, setOpenUpload] = useState(false);
 
     useEffect(() => {
         const fetchChannelData = async () => {
@@ -24,7 +29,6 @@ const Channel = () => {
                 // Get Channel Details
                 const channelRes = await axios.get(`http://localhost:5000/api/channels/find/${id}`);
                 setChannel(channelRes.data);
-
                 // Get Videos for this hannel
                 const videoRes = await axios.get(`http://localhost:5000/api/videos/channel/${id}`);
                 setVideos(videoRes.data);
@@ -42,11 +46,31 @@ const Channel = () => {
             : await axios.put(`http://localhost:5000/api/users/sub/${channel._id}`, {}, { headers: { Authorization: `Bearer ${token}` }})
     
         dispatch(subscription(channel._id));
-
         setChannel(prev => ({
             ...prev,
             subscribers: currentUser.subscribedChannels.includes(channel._id) ? prev.subscribers - 1 : prev.subscribers + 1
         }));
+    };
+
+    // Handle Update Channel
+    const handleUpdateChannel = async () => {
+
+    };
+
+    // Handle Delete Channel
+    const handleDeleteChannel = async () => {
+        if(!window.confirm("Are you sure you want to delete this channel? All videos will be lost.")) return;
+        try {
+            await axios.delete(`http://localhost:5000/api/channels/${channel._id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            dispatch(channelDeleted(channel._id));
+            alert("Channel deleted successfully");
+            navigate("/");
+        } catch(err) {
+            console.error(err);
+            alert("Failed to delete channel");
+        }
     };
 
     if(!channel) return <LoadingHandler />
@@ -81,9 +105,43 @@ const Channel = () => {
                     <p className="text-sm text-gray-500 max-w-150 text-center md:text-left">
                         {channel.description || "No description available."}
                     </p>
-
+                    <div className="mt-4">
+                        {currentUser?._id === channel.owner ? (
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setOpenUpload(true)}
+                                    className="flex items-center gap-2 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
+                                >
+                                    <Upload /> Upload Video
+                                </button>
+                                <button
+                                    onClick={handleUpdateChannel}
+                                    className="flex items-center gap-2 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
+                                >
+                                    <Edit2 /> Edit Channel
+                                </button>
+                                <button
+                                    onClick={handleDeleteChannel}
+                                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition-colors"
+                                >
+                                    <Trash2 /> Delete Channel
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={handleSub}
+                                className={`mt-2 px-6 py-2 rounded-full font-bold text-sm transition-colors ${
+                                    currentUser.subscribedChannels.includes(channel._id)
+                                    ? "bg-gray-200 text-black dark:bg-[#303030] dark:text-white"
+                                    : "bg-black text-white dark:bg-white dark:text-black"
+                                }`}
+                            >
+                                {currentUser.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
+                            </button>
+                        )}
+                    </div>
                     {/* Subscribe Button */}
-                    {currentUser && (
+                    {/* {currentUser && (
                         <button
                             onClick={handleSub}
                             className={`mt-2 px-6 py-2 rounded-full font-bold text-sm transition-colors ${
@@ -94,7 +152,7 @@ const Channel = () => {
                         >
                             {currentUser.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
                         </button>
-                    )}
+                    )} */}
                 </div>
             </div>
 
@@ -113,6 +171,9 @@ const Channel = () => {
                     )}
                 </div>
             </div>
+            {openUpload && (
+                <UploadVideo openUploadVideo={openUpload} setOpenUploadVideo={setOpenUpload} />
+            )}
         </div>
     );
 };

@@ -50,11 +50,11 @@ export const subscribe = async (req, res, next) => {
     try {
         // Add channelId to the current user's 'subscribedUsers'
         await User.findByIdAndUpdate(req.user.id, {
-            $push: { subscribedUsers: req.params.id }
+            $push: { subscribedChannels: req.params.id }
         });
 
         // Increase the 'subscribers' count of the channel
-        await User.findByIdAndUpdate(req.params.id, {
+        await Channel.findByIdAndUpdate(req.params.id, {
             $inc: { subscribers: 1 } 
         });
         res.status(200).json("Subscription successful.");
@@ -68,11 +68,11 @@ export const unsubscribe = async (req, res, next) => {
     try {
         // Remove channelId from the current user's list
         await User.findByIdAndUpdate(req.user.id, {
-            $pull: { subscribedUsers: req.params.id }
+            $pull: { subscribedChannels: req.params.id }
         });
 
         // Decrease the 'subscribers' count of the channel
-        await User.findByIdAndUpdate(req.params.id, {
+        await Channel.findByIdAndUpdate(req.params.id, {
             $inc: { subscribers: -1 } 
         });
         res.status(200).json("Unsubscription successful.");

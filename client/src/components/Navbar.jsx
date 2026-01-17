@@ -40,12 +40,15 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                     );
                     // Wait for all to finish
                     const responses = await Promise.all(channelPromises);
-                    // Extract data
-                    const channelsData = responses.map(res => res.data);
-                    setUserChannels(channelsData);
+                    // Filter out any null responses
+                    const validChannels = responses.filter(res => res !== null && res.data).map(res => res.data);
+                    setUserChannels(validChannels);
                 } catch(err) {
                     console.error("Failed to fetch channels", err);
                 }
+            } else {
+                // If user has no channels, reset state
+                setUserChannels([]);
             }
         };
         fetchChannels();
