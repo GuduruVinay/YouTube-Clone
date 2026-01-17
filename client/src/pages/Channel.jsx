@@ -105,7 +105,7 @@ const Channel = () => {
     if(!channel) return <LoadingHandler />
 
     return (
-        <div className="flex flex-col w-full h-full dark:text-white overflow-y-auto">
+        <div className="flex flex-col">
             {/* Channel Banner */}
             <div className="h-37.5 md:h-50 w-full bg-linear-to-r from-blue-800 to-purple-800">
                 {channel.channelBanner && (
@@ -117,43 +117,44 @@ const Channel = () => {
                 )}
             </div>
             {/* Channel Header Info */}
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-5 px-10 py-8 bg-[#f9f9f9] dark:bg-[#1e1e1e]">
+            <div className="flex flex-col md:flex-row lg:justify-center items-center md:items-start gap-2 md:gap-4 px-10 py-8 bg-[#f9f9f9] dark:bg-[#1e1e1e]">
                 <img 
                     src={channel.channelAvatar || "/default_profile_pic.jpg"}
                     alt="Channel Icon"
                     className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-[#1e1e1e] shadow-lg -mt-12 md:mt-0" 
                 />
-
-                <div className="flex flex-col items-center md:items-start flex-1 gap-2">
-                    <h1 className="text-2xl font-bold">{channel.channelName}</h1>
-                    <div className="text-gray-500 text-sm flex gap-3">
-                        <span>@{channel.handle}</span>
-                        <span> • {channel.subscribers} subscribers</span>
-                        <span> • {videos.length} videos</span>
+                <div className="flex flex-col lg:flex-row lg:gap-16 items-center md:items-start lg:items-center">
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-center md:text-start text-2xl font-bold">{channel.channelName}</h1>
+                        <div className="text-gray-500 text-sm flex gap-3">
+                            <span>@{channel.handle}</span>
+                            <span> • {channel.subscribers} subscribers</span>
+                            <span> • {videos.length} videos</span>
+                        </div>
+                        <p className="text-sm text-gray-500 max-w-150 text-center md:text-left">
+                            {channel.description || "No description available."}
+                        </p>
                     </div>
-                    <p className="text-sm text-gray-500 max-w-150 text-center md:text-left">
-                        {channel.description || "No description available."}
-                    </p>
                     <div className="mt-4">
                         {currentUser?._id === channel.owner ? (
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => handleOpenUpload()}
-                                    className="flex items-center gap-2 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
+                                    className="flex items-center gap-1 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
                                 >
-                                    <Upload /> Upload Video
+                                    <Upload /> Upload<span className="hidden md:block">Video</span>
                                 </button>
                                 <button
                                     onClick={() => setOpenEdit(true)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
+                                    className="flex items-center gap-1 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
                                 >
-                                    <Edit2 /> Edit Channel
+                                    <Edit2 /> Edit<span className="hidden md:block">Channel</span>
                                 </button>
                                 <button
                                     onClick={handleDeleteChannel}
-                                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition-colors"
+                                    className="flex items-center gap-1 px-4 py-2 bg-red-600 text-white font-bold rounded-full hover:bg-red-700 transition-colors"
                                 >
-                                    <Trash2 /> Delete Channel
+                                    <Trash2 /> Delete<span className="hidden md:block">Channel</span>
                                 </button>
                             </div>
                         ) : (
@@ -176,8 +177,8 @@ const Channel = () => {
             <div className="border-b border-gray-200 dark:border-[#373737] mb-6"></div>
 
             {/* Channel Videos*/}
-            <div className="px-10 pb-10">
-                <h2 className="text-lg font-bold mb-4">Videos</h2>
+            <div className="px-4 lg:px-10 pb-10">
+                <h2 className="pl-3 text-lg font-bold mb-4">Videos</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {videos.map((video) => (
                         <Card 

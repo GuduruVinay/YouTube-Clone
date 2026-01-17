@@ -103,7 +103,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
 
     return (
         <>
-            <nav className="sticky top-0 z-50 h-14 dark:bg-[#0f0f0f] dark:text-white">
+            <nav className="sticky top-0 z-50 h-14 bg-white dark:bg-[#0f0f0f] dark:text-white">
                 {/* Mobile Search Overlay */}
                 {showMobileSearch && (
                     <div className="absolute top-0 left-0 w-full h-full flex items-center px-2 z-60 bg-white dark:bg-[#0f0f0f]">
