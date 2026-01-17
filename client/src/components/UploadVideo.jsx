@@ -5,10 +5,11 @@ import axios from "axios";
 import { uploadStart, uploadSuccess, uploadFailure } from "../redux/videoSlice"
 import { X } from "lucide-react";
 
-const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
+const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null, setVideos }) => {
     const { currentUser } = useSelector((state) => state.user);
     const [inputs, setInputs] = useState({});
     const [tags, setTags] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [selectedChannel, setSelectedChannel] = useState("");
 
     const [userChannels, setUserChannels] = useState([]);
@@ -45,6 +46,18 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
         fetchChannelNames();
     }, [currentUser]);
 
+    useEffect(() => {
+        if(existingVideo) {
+            setInputs({
+                title: existingVideo.title,
+                description: existingVideo.description,
+                thumbnailUrl: existingVideo.thumbnailUrl,
+                videoUrl: existingVideo.videoUrl
+            });
+            setTags(existingVideo.tags || []);
+        }
+    }, [existingVideo]);
+
     const handleChange = (e) => {
         setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
@@ -53,28 +66,45 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
         setTags(e.target.value.split(","));
     };
 
-    const handleUpload = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         dispatch(uploadStart());
         try {
-            // Call API to Upload Video
-            const res = await axios.post("http://localhost:5000/api/videos", {
-                ...inputs,
-                tags,
-                channelId: selectedChannel
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            // Update Redux State
-            dispatch(uploadSuccess(res.data));
-            // Close
-            setOpenUploadVideo(false);
-            // Redirect to new channel page
-            navigate(`/video/${res.data._id}`);
+            if(existingVideo) {
+                // Update Mode
+                const res = await axios.put(`http://localhost:5000/api/videos/${existingVideo._id}`,
+                { ...inputs, tags },
+                { headers: { Authorization: `Bearer ${token}` }});
+                // Update the list
+                if(setVideos) {
+                    setVideos(prev => prev.map(v => v._id === existingVideo._id ? res.data : v));
+                }
+                // Close
+                setOpenUploadVideo(false);
+            } else {
+                // Create Mode
+                // Call API to Upload Video
+                const res = await axios.post("http://localhost:5000/api/videos", {
+                    ...inputs,
+                    tags,
+                    channelId: selectedChannel
+                }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                // Update Redux State
+                dispatch(uploadSuccess(res.data));
+                // Close
+                setOpenUploadVideo(false);
+                // Redirect to new channel page
+                navigate(`/video/${res.data._id}`);
+            }
         } catch(err) {
             console.error(err);
             dispatch(uploadFailure());
-            alert(err.response?.data?.message || "Upload failed");
+            alert("Something went wrong!");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -106,39 +136,48 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
                 >
                     <X />
                 </button>
-                <h1 className="text-xl font-bold text-center">Upload a New Video</h1>
+                <h1 className="text-xl font-bold text-center">{existingVideo ? "Edit Video" : "Upload a New Video"}</h1>
                 {/* Channel Selector */}
-                <label className="text-sm">Select Channel :</label>
-                <select 
-                    className="p-2 border border-gray-300 dark:border-[#373737] rounded bg-transparent dark:text-white"
-                    onChange={(e) => setSelectedChannel(e.target.value)}
-                    value={selectedChannel}
-                >
-                    {userChannels.map(channel => (
-                        <option key={channel._id} value={channel._id} className="text-black">
-                            {channel.channelName}
-                        </option>
-                    ))}
-                </select>
+                {!existingVideo && (
+                    <div>
+                        <label className="text-sm">Select Channel :</label>
+                        <select 
+                            className="p-2 border border-gray-300 dark:border-[#373737] rounded bg-transparent dark:text-white"
+                            onChange={(e) => setSelectedChannel(e.target.value)}
+                            value={selectedChannel}
+                        >
+                            {userChannels.map(channel => (
+                                <option key={channel._id} value={channel._id} className="text-black">
+                                    {channel.channelName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
                 <div className="flex flex-col w-full justify-center gap-3">
                     <input
                         name="title"
                         type="text"
                         placeholder="Video Title"
+                        value={inputs.title || ""}
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
-                    <input
-                        name="videoUrl"
-                        type="text"
-                        placeholder="Video URL"
-                        onChange={handleChange}
-                        className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
-                    />
+                    {!existingVideo && (
+                        <input
+                            name="videoUrl"
+                            type="text"
+                            placeholder="Video URL"
+                            value={inputs.videoUrl || ""}
+                            onChange={handleChange}
+                            className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
+                        />
+                    )}
                     <input
                         name="thumbnailUrl"
                         type="text"
                         placeholder="Thumbnail URL"
+                        value={inputs.thumbnailUrl || ""}
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
@@ -146,6 +185,7 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
                         name="category"
                         type="text"
                         placeholder="Category (comma , separated)"
+                        value={tags}
                         onChange={handleTags}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500" 
                     />
@@ -153,14 +193,15 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo }) => {
                         name="description"
                         rows={4}
                         placeholder="Tell viewers about your video..."
+                        value={inputs.description || ""}
                         onChange={handleChange}
                         className="border border-gray-300 dark:border-[#303030] p-2 rounded bg-transparent outline-none focus:border-blue-500 resize-none" 
                     />
                     <button
                         className="self-center bg-[#3ea6ff] text-white w-fit font-bold px-4 py-2 rounded hover:bg-[#3ea6ff]/90 transition-colors mt-2"
-                        onClick={handleUpload}
+                        onClick={handleSubmit}
                     >
-                        Upload Video
+                        {loading ? "Saving..." : (existingVideo ? "Update Video" : "Upload Video")}
                     </button>
                 </div>
             </div>

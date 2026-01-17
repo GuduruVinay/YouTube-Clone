@@ -35,17 +35,10 @@ const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }
                 } else {
                     console.error("API returned invalid data");
                 }
+                // Update Redux State 
+                dispatch(channelUpdated());
                 // Close
                 setOpen(false);
-                setLoading(false);
-                // Update Redux State 
-                // dispatch(channelUpdated());
-
-                try {
-                    dispatch(channelUpdated());
-                } catch (reduxErr) {
-                    console.error("Redux update failed (Navbar might not sync):", reduxErr);
-                }
             } else {
                 // Create Mode
                 const res = await axios.post("http://localhost:5000/api/channels", inputs, {
@@ -65,6 +58,8 @@ const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }
             } else {
                 alert("Failed to create channel. Please try again.");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -93,6 +88,8 @@ const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }
             document.removeEventListener("mousedown", handler);
         };
     }, [open]);
+
+    if(!open) return null;
 
     return (
         <div className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">

@@ -24,6 +24,7 @@ const Channel = () => {
     const [videos, setVideos] = useState([]);
     const [openEdit, setOpenEdit] = useState(false);
     const [openUpload, setOpenUpload] = useState(false);
+    const [selectedVideo, setSelectedVideo] = useState(null);
 
     useEffect(() => {
         const fetchChannelData = async () => {
@@ -75,6 +76,32 @@ const Channel = () => {
         }
     };
 
+    // Handle Delete Video
+    const handleDeleteVideo = async (videoId) => {
+        if(!window.confirm("Are you sure you want to delete this video?")) return;
+        try {
+            await axios.delete(`http://localhost:5000/api/videos/${videoId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            // Remove video from list
+            setVideos((prev => prev.filter(v => v._id !== videoId)));
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Handle open edit video
+    const handleEditVideo = (video) => {
+        setSelectedVideo(video);
+        setOpenUpload(true);
+    }
+
+    // Handle open video
+    const handleOpenUpload = () => {
+        setSelectedVideo(null);
+        setOpenUpload(true);
+    }
+
     if(!channel) return <LoadingHandler />
 
     return (
@@ -111,7 +138,7 @@ const Channel = () => {
                         {currentUser?._id === channel.owner ? (
                             <div className="flex gap-3">
                                 <button
-                                    onClick={() => setOpenUpload(true)}
+                                    onClick={() => handleOpenUpload()}
                                     className="flex items-center gap-2 px-4 py-2 bg-[#3ea6ff] text-white font-bold rounded-full hover:bg-[#3ea6ff]/90 transition-colors"
                                 >
                                     <Upload /> Upload Video
@@ -153,7 +180,13 @@ const Channel = () => {
                 <h2 className="text-lg font-bold mb-4">Videos</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {videos.map((video) => (
-                        <Card key={video._id} video={video} />
+                        <Card 
+                            key={video._id} 
+                            video={video}
+                            enableEdit={currentUser?._id === channel.owner}
+                            onEdit={handleEditVideo}
+                            onDelete={handleDeleteVideo} 
+                        />
                     ))}
                     {videos.length === 0 && (
                         <p className="text-gray-500">This channel has no videos yet.</p>
@@ -161,7 +194,12 @@ const Channel = () => {
                 </div>
             </div>
             {openUpload && (
-                <UploadVideo openUploadVideo={openUpload} setOpenUploadVideo={setOpenUpload} />
+                <UploadVideo 
+                    openUploadVideo={openUpload} 
+                    setOpenUploadVideo={setOpenUpload} 
+                    existingVideo={selectedVideo}
+                    setVideos={setVideos}
+                />
             )}
             {openEdit && (
                 <CreateChannel 
