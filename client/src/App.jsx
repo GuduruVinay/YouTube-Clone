@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Pages
 import Home from "./pages/Home";
@@ -42,6 +43,15 @@ const Layout = () => {
 
   return (
     <div className="flex h-screen overflow-hidden dark:bg-[#0f0f0f] dark:text-white">
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: isDark ? "#333" : "#fff",
+            color: isDark ? "#fff" : "#333",
+          },
+        }}
+      />
       {/* Sidebar */}
       <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       {/* Main Content Area */}

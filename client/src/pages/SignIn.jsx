@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { Eye, EyeClosed } from "lucide-react";
+import toast from "react-hot-toast";
 
 const SignIn = () => {
     const [username, setUsername] = useState("");
@@ -40,7 +41,7 @@ const SignIn = () => {
         } catch(err) {
             console.error(err);
             dispatch(loginFailure());
-            alert("Login failed!");
+            toast.error("Login failed!");
         }
     };
 
@@ -49,12 +50,12 @@ const SignIn = () => {
         e.preventDefault();
         try {
             await axios.post("http://localhost:5000/api/auth/signup", { username, email, password });
-            alert("Account created! Please Sign in.");
+            toast.error("Account created! Please Sign in.");
             setCreateAccount(false);
             toggleMode();
         } catch(err) {
             console.error(err);
-            alert("Registration failed!");
+            toast.error("Registration failed!");
         }
     }
 

@@ -14,6 +14,7 @@ import { like, dislike, fetchSuccess } from "../redux/videoSlice";
 import Comments from "../components/Comments";
 import Recommendation from "../components/Recommendation";
 import { LoadingHandler } from "../components/Handler";
+import toast from "react-hot-toast";
 
 const Video = () => {
     const { currentUser } = useSelector((state) => state.user);
@@ -50,7 +51,7 @@ const Video = () => {
 
     // Handle Like
     const handleLike = async () => {
-        if(!currentUser) return alert("Please sign in to like videos!");
+        if(!currentUser) return toast.error("Please sign in to like videos!");
         try {
             await axios.put(`http://localhost:5000/api/users/like/${currentVideo._id}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -63,7 +64,7 @@ const Video = () => {
 
     // Handle Dislike
     const handleDislike = async () => {
-        if(!currentUser) return alert("Please sign in to dislike videos!");
+        if(!currentUser) return toast.error("Please sign in to dislike videos!");
         try {
             await axios.put(`http://localhost:5000/api/users/dislike/${currentVideo._id}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -76,7 +77,7 @@ const Video = () => {
 
     // Handle Subsription
     const handleSub = async () => {
-        if(!currentUser) return alert("Please sign in to subscribe!");
+        if(!currentUser) return toast.error("Please sign in to subscribe!");
         try {
             if(currentUser.subscribedChannels.includes(channel._id)) {
                 await axios.put(`http://localhost:5000/api/users/unsub/${channel._id}`, {}, { 

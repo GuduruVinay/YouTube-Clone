@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 import UploadVideo from "./UploadVideo";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const { currentUser, channelUpdateTrigger } = useSelector(state => state.user);
@@ -97,8 +98,12 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
 
     // Handle Upload Video
     const handleUploadVideo = () => {
-        setOpenUploadVideo(true);
-        setOpenChannelMenu(false);
+        if(userChannels.length > 0) {
+            setOpenUploadVideo(true);
+            setOpenChannelMenu(false);
+        } else {
+            toast.error("Please create a channel first to upload videos!");
+        }
     }
 
     return (
@@ -193,7 +198,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                             </button>
                                             <button
                                                 onClick={handleUploadVideo}
-                                                className="flex items-center gap-3 w-full rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
+                                                className={`flex items-center gap-3 w-full rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333] transition-colors ${userChannels.length === 0 ? "text-gray-400 cursor-not-allowed" : "text-black dark:text-white"}`}
                                             >
                                                 <Video /> 
                                                 <span className="font-medium">Upload Video</span>

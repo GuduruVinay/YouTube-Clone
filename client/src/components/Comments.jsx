@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Comment from "./Comment";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Comments = ({ videoId }) => {
     const { currentUser } = useSelector((state) => state.user);
@@ -29,13 +30,13 @@ const Comments = ({ videoId }) => {
         if(e.key === "Enter" || e.type === "click") {
             // Check if user is logged in first
             if(!currentUser) {
-                alert("Please sign in to comment.");
+                toast.error("Please sign in to comment.");
                 return;
             }
     
             // Check if the input is empty
             if(!newComment.trim()) {
-                alert("Comment cannot be empty!");
+                toast.error("Comment cannot be empty!");
                 return;
             }
 

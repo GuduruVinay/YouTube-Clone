@@ -9,6 +9,7 @@ import { channelDeleted, subscription } from "../redux/userSlice";
 import UploadVideo from "../components/UploadVideo";
 import { Edit2, Trash2, Upload } from "lucide-react";
 import CreateChannel from "../components/CreateChannel";
+import toast from "react-hot-toast";
 
 const Channel = () => {
     // Get the ID from the URL (channel/:id)
@@ -68,11 +69,11 @@ const Channel = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             dispatch(channelDeleted(channel._id));
-            alert("Channel deleted successfully");
+            toast.error("Channel deleted successfully");
             navigate("/");
         } catch(err) {
             console.error(err);
-            alert("Failed to delete channel");
+            toast.error("Failed to delete channel");
         }
     };
 

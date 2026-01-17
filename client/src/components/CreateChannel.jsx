@@ -4,6 +4,7 @@ import { useNavigate }  from "react-router-dom";
 import axios from "axios";
 import { createChannel, channelUpdated } from "../redux/userSlice";
 import { X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }) => {
     const [inputs, setInputs] = useState({});
@@ -39,6 +40,7 @@ const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }
                 dispatch(channelUpdated());
                 // Close
                 setOpen(false);
+                toast.success("Channel updated successfully!");
             } else {
                 // Create Mode
                 const res = await axios.post("http://localhost:5000/api/channels", inputs, {
@@ -50,13 +52,14 @@ const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }
                 setOpen(false);
                 // Redirect to new channel page
                 navigate(`/channel/${res.data._id}`);
+                toast.success("Channel created successfully!");
             }
         } catch(err) {
             console.error(err);
             if(err.response?.status === 409) {
-                alert("Handle already taken! Please choose another one.");
+                toast.error("Handle already taken! Please choose another one.");
             } else {
-                alert("Failed to create channel. Please try again.");
+                toast.error("Failed to create channel. Please try again.");
             }
         } finally {
             setLoading(false);

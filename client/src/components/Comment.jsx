@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Edit2, EllipsisVertical, Trash2} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 
@@ -44,7 +45,7 @@ const Comment = ({ comment, onDelete }) => {
 
     // Handle Delete
     const handleDelete = async () => {
-        if(!comment._id) return alert("Error: Comment ID is missing!");
+        if(!comment._id) return toast.error("Error: Comment ID is missing!");
 
         if(!window.confirm("Delete this comment?")) return;
 

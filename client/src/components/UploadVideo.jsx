@@ -4,6 +4,7 @@ import { useNavigate}  from "react-router-dom";
 import axios from "axios";
 import { uploadStart, uploadSuccess, uploadFailure } from "../redux/videoSlice"
 import { X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null, setVideos }) => {
     const { currentUser } = useSelector((state) => state.user);
@@ -102,7 +103,7 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
         } catch(err) {
             console.error(err);
             dispatch(uploadFailure());
-            alert("Something went wrong!");
+            toast.error("Something went wrong!");
         } finally {
             setLoading(false);
         }
