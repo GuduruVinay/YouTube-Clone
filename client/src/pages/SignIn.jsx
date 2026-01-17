@@ -89,7 +89,7 @@ const SignIn = () => {
 
     return (
         <div className="h-dvh md:flex md:justify-center md:items-center bg-white dark:bg-[#0f0f0f] md:bg-[#1e1f20] md:dark:bg-[#1e1f20]">
-            <div className="md:w-[60%] flex flex-col lg:items-center lg:w-[50%] lg:h-[50%] lg:flex-row lg:justify-between p-8 lg:p-12 gap-4 md:rounded-4xl bg-white dark:bg-[#0f0f0f] dark:text-white shadow-xl">
+            <div className="md:w-[60%] flex flex-col lg:items-center lg:w-[50%] lg:h-[50%] lg:flex-row lg:justify-between p-8 lg:p-12 gap-4 md:rounded-4xl bg-white dark:bg-[#0f0f0f] dark:text-white">
                 <div className="flex flex-col gap-4 lg:self-start lg:w-1/2">
                     <Link to='/' className='w-full'>
                         <img src="/youtube_favicon.png" alt="YouTube Logo" width={48} />
