@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
-import { formatNumber } from "../utils";
+import { formatNumber } from "../utils/formatter";
 import { useSelector } from "react-redux";
 import { Edit2, EllipsisVertical, Trash2 } from "lucide-react";
 

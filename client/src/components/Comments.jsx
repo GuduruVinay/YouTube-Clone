@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import Comment from "./Comment";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { commentSchema } from "../utils/validation";
+import z from "zod";
 
 const Comments = ({ videoId }) => {
     const { currentUser } = useSelector((state) => state.user);
 
     const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState("");
+    const [description, setDescription] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
 
     const token = localStorage.getItem("token");
@@ -27,29 +29,30 @@ const Comments = ({ videoId }) => {
 
     // Handle Add Comment
     const handleAddComment = async (e) => {
+        e.preventDefault();
         if(e.key === "Enter" || e.type === "click") {
             // Check if user is logged in first
             if(!currentUser) {
                 toast.error("Please sign in to comment.");
                 return;
             }
-    
-            // Check if the input is empty
-            if(!newComment.trim()) {
-                toast.error("Comment cannot be empty!");
+            // Zod Validation
+            const result = commentSchema.safeParse({ description });
+            if(!result.success) {
+                // console.log(z.prettifyError(result.error));
+                toast.error(result.error.issues[0].message);
                 return;
             }
-
             try {
                 const res = await axios.post("http://localhost:5000/api/comments", {
-                    description: newComment,
+                    description: description,
                     videoId,
                 }, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 // Add new comment to top of list
                 setComments([res.data, ...comments]);
-                setNewComment(""); // Clear input
+                setDescription(""); // Clear input
             } catch(err) {
                 console.log(err);
             }
@@ -78,19 +81,19 @@ const Comments = ({ videoId }) => {
                         className="w-full resize-none border-b border-gray-500 outline-none p-1.5 overflow-hidden" 
                         placeholder="Add a comment..."
                         rows={1}
-                        value={newComment}
+                        value={description}
                         onChange={(e) => {
-                            setNewComment(e.target.value);
+                            setDescription(e.target.value);
                             e.target.style.height = 'auto';
                             e.target.style.height = e.target.scrollHeight + 'px';
                         }} 
                     />
                 </div>
                 <div className="self-end">
-                    {newComment && (
+                    {description && (
                         <div className="flex gap-2 mt-2">
                             <button 
-                                onClick={() => setNewComment("")} 
+                                onClick={() => setDescription("")} 
                                 className="shrink-0 rounded-full px-4 py-2 text-black dark:text-white font-bold text-sm cursor-pointer mt-0.5"
                             >
                                 Cancel

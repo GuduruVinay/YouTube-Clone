@@ -33,7 +33,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     // Fetch Channel Details
     useEffect(() => {
         const fetchChannels = async () => {
-            if(currentUser?.channels && currentUser.channels.length > 0) {
+            if(currentUser && currentUser?.channels && currentUser.channels.length > 0) {
                 try {
                     // Create an array of API calls for each channel ID
                     const channelPromises = currentUser.channels.map(id => 

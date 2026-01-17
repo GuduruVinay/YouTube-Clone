@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { Eye, EyeClosed } from "lucide-react";
 import toast from "react-hot-toast";
+import { signInSchema, signUpSchema } from "../utils/validation";
+import z from "zod";
 
 const SignIn = () => {
     const [username, setUsername] = useState("");
@@ -25,6 +27,13 @@ const SignIn = () => {
     // Handle Sign In (Existing User)
     const handleSignin = async (e) => {
         e.preventDefault();
+        // Validate Sign In Data
+        const result = signInSchema.safeParse({ username, password });
+        if(!result.success) {
+            // console.log(z.prettifyError(result.error));
+            toast.error(result.error.issues[0].message);
+            return;
+        }
         dispatch(loginStart());
         try {
             const res = await axios.post("http://localhost:5000/api/auth/signin", { username, password });
@@ -38,24 +47,32 @@ const SignIn = () => {
             // Redirect to Home
             // replace: true prevents the Back button from returning to the SignIn page
             navigate(from, { replace: true });
+            toast.success("Welcome back!");
         } catch(err) {
             console.error(err);
             dispatch(loginFailure());
-            toast.error("Login failed!");
+            toast.error("Login failed! Check credentials.");
         }
     };
 
     // Handle Sign Up (New User)
     const handleSignup = async (e) => {
         e.preventDefault();
+        // Validate Sign Up Data
+        const result = signUpSchema.safeParse({ username, email, password });
+        if(!result.success) {
+            // console.log(z.prettifyError(result.error));
+            toast.error(result.error.issues[0].message);
+            return;
+        }
         try {
             await axios.post("http://localhost:5000/api/auth/signup", { username, email, password });
-            toast.error("Account created! Please Sign in.");
+            toast.success("Account created! Please Sign in.");
             setCreateAccount(false);
             toggleMode();
         } catch(err) {
             console.error(err);
-            toast.error("Registration failed!");
+            toast.error("Registration failed! Email or Username might be taken.");
         }
     }
 

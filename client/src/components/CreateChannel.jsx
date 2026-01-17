@@ -5,6 +5,8 @@ import axios from "axios";
 import { createChannel, channelUpdated } from "../redux/userSlice";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { channelSchema } from "../utils/validation";
+import z from "zod";
 
 const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }) => {
     const [inputs, setInputs] = useState({});
@@ -23,6 +25,14 @@ const CreateChannel = ({ open, setOpen, existingChannel = null, setChannelData }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Zod Validation
+        const result = channelSchema.safeParse(inputs);
+        if(!result.success) {
+            // Get the first error message and show it
+            // console.log(z.prettifyError(result.error));
+            toast.error(result.error.issues[0].message);
+            return;
+        }
         setLoading(true);
         try {
             if(existingChannel) {

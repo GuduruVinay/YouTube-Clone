@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ThumbsUp, ThumbsDown, Share2, ArrowDownToLine, Bookmark, Flag } from 'lucide-react';
 import { format } from "timeago.js";
 import { useDispatch, useSelector } from "react-redux";
-import { formatNumber } from "../utils";
+import { formatNumber } from "../utils/formatter";
 
 // Redux Actions
 import { subscription } from "../redux/userSlice";
@@ -165,7 +165,7 @@ const Video = () => {
                                             ? "bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] dark:text-white"
                                             : "bg-[#ff0033] hover:bg-[#bc0007] text-white dark:bg-[#f2f2f2] dark:hover:bg-[#d9d9d9] dark:text-black"
                                             }`}>
-                                        {currentUser.subscribedChannels.includes(channel._id) ? "Subscribed" : "Subscribe"}
+                                        {currentUser?.subscribedChannels?.includes(channel._id) ? "Subscribed" : "Subscribe"}
                                     </button>     
                                 )}
                             </div>

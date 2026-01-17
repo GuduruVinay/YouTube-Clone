@@ -5,6 +5,8 @@ import axios from "axios";
 import { uploadStart, uploadSuccess, uploadFailure } from "../redux/videoSlice"
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { videoSchema } from "../utils/validation";
+import z from "zod";
 
 const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null, setVideos }) => {
     const { currentUser } = useSelector((state) => state.user);
@@ -69,6 +71,24 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const dataToValidate = {
+            ...inputs,
+            tags: Array.isArray(tags) ? tags : (typeof tags === "string" ? tags.split(",") : []),
+            videoUrl: inputs.videoUrl || ""
+        }
+        // Zod Validation
+        const result = videoSchema.safeParse(dataToValidate);
+        if(!result.success) {
+            // Get the first error message and show it
+            // console.log(z.prettifyError(result.error));
+            toast.error(result.error.issues[0].message);
+            return;
+        }
+        // Video URL is mandatory for New uploads
+        if(!existingVideo && !inputs.videoUrl) {
+            toast.error("Video URL is required for new uploads");
+            return;
+        }
         setLoading(true);
         dispatch(uploadStart());
         try {
