@@ -58,9 +58,11 @@ const UpdateUser = ({ open, setOpen, user }) => {
         }
     };
 
+    if(!open) return null;
+
     return (
         <div onClick={() => setOpen(false)} className="fixed inset-0 w-full h-full bg-black/70 flex items-center justify-center z-50">
-            <div className="w-125 bg-white dark:bg-[#202020] p-4 rounded-xl flex flex-col gap-4 relative dark:text-white shadow-2xl border border-gray-200 dark:border-[#333]">
+            <div onClick={(e) => e.stopPropagation()} className="w-125 bg-white dark:bg-[#202020] p-4 rounded-xl flex flex-col gap-4 relative dark:text-white shadow-2xl border border-gray-200 dark:border-[#333]">
                 <button
                     className="absolute top-4 right-4 p-2 hover:bg-gray-200 dark:hover:bg-[#333] rounded-full transition-colors"
                     onClick={() => setOpen(false)}

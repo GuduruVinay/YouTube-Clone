@@ -91,10 +91,10 @@ const Comment = ({ comment, onDelete }) => {
             <img 
                 src={channel?.avatar || "/default_profile_pic.jpg"} 
                 alt="User Avatar"
-                className="w-10 h-10 mt-3 rounded-full object-cover shrink-0"
+                className="w-10 h-10 rounded-full object-cover shrink-0"
             />
-            <div className="flex flex-col w-full">
-                <div className="flex justify-between items-center">
+            <div className="flex flex-col w-full gap-1 min-w-0">
+                <div className="flex justify-between items-start h-6">
                     {!isEditing && (
                         <span className="text-xs font-bold dark:text-white flex items-center">
                             {channel?.username || "Unknown User"} 
@@ -105,10 +105,10 @@ const Comment = ({ comment, onDelete }) => {
                     {currentUser?._id === comment.userId && !isEditing && (
                         <div className="relative" ref={commentMenuRef}>
                             <button 
-                                className="mt-2 cursor-pointer flex items-center justify-center w-10 h-10 hover:bg-[#d9d9d9] dark:hover:bg-[#3d3d3d] rounded-full transition-colors"
+                                className="cursor-pointer flex items-center justify-center w-8 h-8 hover:bg-[#d9d9d9] dark:hover:bg-[#3d3d3d] rounded-full transition-colors"
                                 onClick={() => setOpenCommentMenu(!openCommentMenu)}    
                             >
-                                <EllipsisVertical />
+                                <EllipsisVertical size={16} />
                             </button>
                             {openCommentMenu && (
                                 <div className="absolute right-0 top-full mt-1 w-32 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-lg py-2 z-20 flex flex-col overflow-hidden">
@@ -168,7 +168,7 @@ const Comment = ({ comment, onDelete }) => {
                         </div>
                     </div>
                 ) : (
-                    <span className="text-sm dark:text-white -mt-1 leading-relaxed">{editedText}</span>
+                    <span className="text-sm dark:text-white leading-relaxed whitespace-pre-wrap wrap-break-word">{editedText}</span>
                 )}
             </div>
             <ConfirmPopup 

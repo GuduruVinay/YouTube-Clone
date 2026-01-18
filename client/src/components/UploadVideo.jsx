@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { videoSchema } from "../utils/validation";
 import z from "zod";
 
-const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null, setVideos }) => {
+const UploadVideo = ({ open, setOpen, existingVideo = null, setVideos }) => {
     const { currentUser } = useSelector((state) => state.user);
     const [inputs, setInputs] = useState({});
     const [tags, setTags] = useState([]);
@@ -100,7 +100,7 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
                     setVideos(prev => prev.map(v => v._id === existingVideo._id ? res.data : v));
                 }
                 // Close
-                setOpenUploadVideo(false);
+                setOpen(false);
             } else {
                 // Create Mode
                 // Call API to Upload Video
@@ -114,7 +114,7 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
                 // Update Redux State
                 dispatch(uploadSuccess(res.data));
                 // Close
-                setOpenUploadVideo(false);
+                setOpen(false);
                 // Redirect to new channel page
                 navigate(`/video/${res.data._id}`);
             }
@@ -127,15 +127,15 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
         }
     };
 
-    if(!openUploadVideo) return null;
+    if(!open) return null;
 
     return (
-        <div onClick={() => setOpenUploadVideo(false)} className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-[#202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
+        <div onClick={() => setOpen(false)} className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+            <div onClick={(e) => e.stopPropagation()} className="bg-white dark:bg-[#202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
                 {/* Close Button */}
                 <button
                     className="absolute top-3 right-3 cursor-pointer p-1 hover:bg-gray-200 dark:hover:bg-[#303030] rounded-full"
-                    onClick={() => setOpenUploadVideo(false)}
+                    onClick={() => setOpen(false)}
                 >
                     <X />
                 </button>

@@ -9,7 +9,7 @@ const ConfirmPopup = ({ isOpen, onClose, onConfirm, title, message, confirmText 
 
     return (
         <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div className="bg-white dark:bg-[#1f1f1f] w-[90%] max-w-md rounded-xl p-6 shadow-2xl transform transition-all scale-100 dark:text-white border border-gray-200 dark:border-[#333]">
+            <div onClick={(e) => e.stopPropagation()} className="bg-white dark:bg-[#1f1f1f] w-[90%] max-w-md rounded-xl p-6 shadow-2xl transform transition-all scale-100 dark:text-white border border-gray-200 dark:border-[#333]">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30">

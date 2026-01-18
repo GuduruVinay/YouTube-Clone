@@ -18,18 +18,22 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
 
     // State for Mobile Search Overlay
     const [showMobileSearch, setShowMobileSearch] = useState(false);
+    
+    // Dropdowns
     const [openUserMenu, setOpenUserMenu] = useState(false);
-    const [openChannelMenu, setOpenChannelMenu] = useState(false);
+    const [openCreateMenu, setOpenCreateMenu] = useState(false);
+    
+    // Modals
     const [openCreateChannel, setOpenCreateChannel] = useState(false);
     const [openUploadVideo, setOpenUploadVideo] = useState(false);
-    const [userChannels, setUserChannels] = useState([]);
-    const [open, setOpen] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const [userChannels, setUserChannels] = useState([]);
+
     // Refs for Click Outside
     const userMenuRef = useRef(null);
-    const channelMenuRef = useRef(null);
+    const createMenuRef = useRef(null);
 
     const token = localStorage.getItem("token");
 
@@ -69,16 +73,16 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             if(openUserMenu && userMenuRef.current && !userMenuRef.current.contains(e.target)) {
                 setOpenUserMenu(false);
             }
-            // Check Channel Menu 
-            if(openChannelMenu && channelMenuRef.current && !channelMenuRef.current.contains(e.target)) {
-                setOpenChannelMenu(false);
+            // Check Create Menu 
+            if(openCreateMenu && createMenuRef.current && !createMenuRef.current.contains(e.target)) {
+                setOpenCreateMenu(false);
             }
         };
         document.addEventListener("mousedown", handler);
         return () => {
             document.removeEventListener("mousedown", handler);
         };
-    }, [openUserMenu, openChannelMenu]);
+    }, [openUserMenu, openCreateMenu]);
 
     // Handle Logout
     const handleLogout = () => {
@@ -101,14 +105,14 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     // Handle Create Channel
     const handleCreateChannel = () => {
         setOpenCreateChannel(true);
-        setOpenChannelMenu(false);
+        setOpenCreateMenu(false);
     }
 
     // Handle Upload Video
     const handleUploadVideo = () => {
         if(userChannels.length > 0) {
             setOpenUploadVideo(true);
-            setOpenChannelMenu(false);
+            setOpenCreateMenu(false);
         } else {
             toast.error("Please create a channel first to upload videos!");
         }
@@ -124,7 +128,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             navigate("/");
             toast.success("Account deleted successfully");
         } catch(err) {
-            copnsole.error(err);
+            console.error(err);
             toast.error("Failed to delete account");
         }
     };
@@ -201,16 +205,16 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                         </button>
                         {currentUser ? (
                             <div className="relative flex items-center gap-4">
-                                {/* Channel Dropdown */}
-                                <div ref={channelMenuRef}>
+                                {/* Create Dropdown */}
+                                <div ref={createMenuRef}>
                                     <button 
                                         className="cursor-pointer flex w-fit items-center gap-1 py-2 px-2 lg:px-4 bg-[#f2f2f2] hover:bg-[#d9d9d9] dark:bg-[#212121] dark:hover:bg-[#3d3d3d] rounded-4xl"
-                                        onClick={() => setOpenChannelMenu(!openChannelMenu)}    
+                                        onClick={() => setOpenCreateMenu(!openCreateMenu)}    
                                     >
                                         <Plus />
                                         <span className="hidden md:block font-medium">Create</span>
                                     </button>
-                                    {openChannelMenu && (
+                                    {openCreateMenu && (
                                         <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-xl py-2 z-10">
                                             <button
                                                 onClick={handleCreateChannel}
@@ -269,7 +273,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                                 </div>
                                             )}
                                             <button
-                                                onClick={() => { setOpenUpdate(true); setOpen(false); }}
+                                                onClick={() => { setOpenUpdate(true); setOpenUserMenu(false); }}
                                                 className="flex justify-center items-center gap-3 w-full rounded-lg py-3 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
                                             >
                                                <Edit2 /> 
@@ -285,7 +289,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                             <div className="border-t border-gray-200 dark:border-[#333] mt-1 pt-1">
                                                 <button
                                                     className="flex items-center justify-center gap-3 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm text-red-600 w-full text-left transition-colors"
-                                                    onClick={() => {setOpenDelete(true); setOpen(false); }}
+                                                    onClick={() => {setOpenDelete(true); setOpenUserMenu(false); }}
                                                 >
                                                     <Trash2 />
                                                     <span>Delete Account</span>
@@ -310,9 +314,9 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             {/* Render conditionally */}
             {openCreateChannel && <CreateChannel open={openCreateChannel} setOpen={setOpenCreateChannel} />}
 
-            {openUploadVideo && <UploadVideo openUploadVideo={openUploadVideo} setOpenUploadVideo={setOpenUploadVideo} />}       
+            {openUploadVideo && <UploadVideo open={openUploadVideo} setOpen={setOpenUploadVideo} />}       
         
-            {openUpdate && <UpdateUser open={open} setOpen={setOpenUpdate} user={currentUser} />}
+            {openUpdate && <UpdateUser open={openUpdate} setOpen={setOpenUpdate} user={currentUser} />}
 
             <ConfirmPopup 
                 isOpen={openDelete}
