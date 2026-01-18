@@ -1,4 +1,4 @@
-import { Menu, Search, Plus, CircleUserRound, Sun, Moon, ArrowLeft, LogOut, Video, TvMinimal } from "lucide-react";
+import { Menu, Search, Plus, CircleUserRound, Sun, Moon, ArrowLeft, LogOut, Video, TvMinimal, Trash2, Edit2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateChannel from "./CreateChannel";
@@ -7,6 +7,8 @@ import { logout } from "../redux/userSlice";
 import UploadVideo from "./UploadVideo";
 import axios from "axios";
 import toast from "react-hot-toast";
+import UpdateUser from "./UpdateUser";
+import ConfirmPopup from "./ConfirmPopup";
 
 const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const { currentUser, channelUpdateTrigger } = useSelector(state => state.user);
@@ -21,10 +23,15 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     const [openCreateChannel, setOpenCreateChannel] = useState(false);
     const [openUploadVideo, setOpenUploadVideo] = useState(false);
     const [userChannels, setUserChannels] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
 
     // Refs for Click Outside
     const userMenuRef = useRef(null);
     const channelMenuRef = useRef(null);
+
+    const token = localStorage.getItem("token");
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -76,8 +83,9 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
     // Handle Logout
     const handleLogout = () => {
         dispatch(logout());
-        setOpenUserMenu(false);
         navigate("/");
+        setOpenUserMenu(false);
+        toast.success("Logged out successfully");
     };
 
     // Handle Search
@@ -105,6 +113,21 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             toast.error("Please create a channel first to upload videos!");
         }
     }
+
+    // Handle Delete Account
+    const handleDeleteAccount = async () => {
+        try {
+            await axios.delete(`http://localhost:5000/api/users/${currentUser._id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            dispatch(logout());
+            navigate("/");
+            toast.success("Account deleted successfully");
+        } catch(err) {
+            copnsole.error(err);
+            toast.error("Failed to delete account");
+        }
+    };
 
     return (
         <>
@@ -226,13 +249,13 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                                 <p className="text-sm font-medium dark:text-white truncate">{currentUser.email}</p>
                                             </div>
                                             {userChannels.length > 0 && (
-                                                <div className="flex flex-col justify-center py-2 border-b border-[#f2f2f2] dark:border-[#333]">
+                                                <div className="flex flex-col justify-center items-center py-2 border-b border-[#f2f2f2] dark:border-[#333]">
                                                     <span className="px-4 mb-1 text-xs font-semibold uppercase text-center">My Channels</span>
                                                     {userChannels.map(channel => (
                                                         <Link
                                                             to={`/channel/${channel._id}`}
                                                             key={channel._id}
-                                                            className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#333] cursor-pointer"
+                                                            className="flex items-center w-full gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#333] cursor-pointer"
                                                             onClick={() => setOpenUserMenu(false)}
                                                         >
                                                             <img 
@@ -246,12 +269,28 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                                 </div>
                                             )}
                                             <button
+                                                onClick={() => { setOpenUpdate(true); setOpen(false); }}
+                                                className="flex justify-center items-center gap-3 w-full rounded-lg py-3 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
+                                            >
+                                               <Edit2 /> 
+                                               <span className="text-sm font-medium">Edit Profile</span>
+                                            </button>
+                                            <button
                                                 onClick={handleLogout}
                                                 className="flex justify-center items-center gap-3 w-full rounded-lg py-3 hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white transition-colors"
                                             >
                                                <LogOut /> 
                                                <span className="text-sm font-medium">Sign out</span>
                                             </button>
+                                            <div className="border-t border-gray-200 dark:border-[#333] mt-1 pt-1">
+                                                <button
+                                                    className="flex items-center justify-center gap-3 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm text-red-600 w-full text-left transition-colors"
+                                                    onClick={() => {setOpenDelete(true); setOpen(false); }}
+                                                >
+                                                    <Trash2 />
+                                                    <span>Delete Account</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -272,6 +311,17 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
             {openCreateChannel && <CreateChannel open={openCreateChannel} setOpen={setOpenCreateChannel} />}
 
             {openUploadVideo && <UploadVideo openUploadVideo={openUploadVideo} setOpenUploadVideo={setOpenUploadVideo} />}       
+        
+            {openUpdate && <UpdateUser open={open} setOpen={setOpenUpdate} user={currentUser} />}
+
+            <ConfirmPopup 
+                isOpen={openDelete}
+                onClose={() => setOpenDelete(false)}
+                onConfirm={handleDeleteAccount}
+                title="Delete Account ?"
+                message="Are you sure you want to delete your account permanently? This action cannot be undone and you will lose all your videos and channels."
+                confirmText="Delete My Account"
+            />
         </>
     );
 };

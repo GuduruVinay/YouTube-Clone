@@ -5,25 +5,11 @@ import { AlertTriangle, X } from "lucide-react";
 const ConfirmPopup = ({ isOpen, onClose, onConfirm, title, message, confirmText = "Delete"}) => {
     const confirmRef = useRef();
 
-    // Close on clic outside
-    useEffect(() => {
-        const handler = (e) => {
-            if(isOpen && confirmRef.current && !confirmRef.current.contains(e.target)) {
-                onClose();
-            }
-        };
-        document.addEventListener("mousedown", handler);
-        return () => document.removeEventListener("mousedown", handler);
-    }, [isOpen, onClose]);
-
     if(!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div
-                ref={confirmRef}
-                className="bg-white dark:bg-[#1f1f1f] w-[90%] max-w-md rounded-xl p-6 shadow-2xl transform transition-all scale-100 dark:text-white border border-gray-200 dark:border-[#333]"
-            >
+        <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-white dark:bg-[#1f1f1f] w-[90%] max-w-md rounded-xl p-6 shadow-2xl transform transition-all scale-100 dark:text-white border border-gray-200 dark:border-[#333]">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30">
@@ -51,11 +37,7 @@ const ConfirmPopup = ({ isOpen, onClose, onConfirm, title, message, confirmText 
                     </button>
                     <button
                         onClick={() => { onConfirm(); onClose(); }}
-                        className={`px-5 py-2.5 rounded-lg font-medium text-white shadow-lg transition-colors ${
-                            isDangerous
-                            ? "bg-red-600 hover:bg-red-700 shadow-red-500/20"
-                            : "bg-blue-600 hover:bg-blue-700"
-                        }`}
+                        className="px-5 py-2.5 rounded-lg font-medium text-white shadow-lg transition-colors bg-red-600 hover:bg-red-700 shadow-red-500/20"
                     >
                         {confirmText}
                     </button>

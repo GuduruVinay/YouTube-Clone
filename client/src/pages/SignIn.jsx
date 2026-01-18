@@ -48,7 +48,7 @@ const SignIn = () => {
             // Redirect to Home
             // replace: true prevents the Back button from returning to the SignIn page
             navigate(from, { replace: true });
-            toast.success("Welcome back!");
+            toast.success("Welcome Back!");
         } catch(err) {
             console.error(err);
             dispatch(loginFailure());

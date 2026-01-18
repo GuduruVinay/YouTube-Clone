@@ -18,8 +18,6 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
     const [userChannels, setUserChannels] = useState([]);
 
     const token = localStorage.getItem("token");
-    
-    const uploadVideoRef = useRef();
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -129,27 +127,11 @@ const UploadVideo = ({ openUploadVideo, setOpenUploadVideo, existingVideo = null
         }
     };
 
-    // Handle Click Outside
-    useEffect(() => {
-        const handler = (e) => {
-            // Check Upload Video
-            if(openUploadVideo && uploadVideoRef.current && !uploadVideoRef.current.contains(e.target)) {
-                setOpenUploadVideo(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handler);
-
-        return () => {
-            document.removeEventListener("mousedown", handler);
-        };
-    }, [openUploadVideo]);
-
     if(!openUploadVideo) return null;
 
     return (
-        <div className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
-            <div ref={uploadVideoRef} className="bg-white dark:bg-[#202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
+        <div onClick={() => setOpenUploadVideo(false)} className="fixed top-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-[#202020] w-100 h-auto p-5 rounded-xl relative flex flex-col gap-4 dark:text-white">
                 {/* Close Button */}
                 <button
                     className="absolute top-3 right-3 cursor-pointer p-1 hover:bg-gray-200 dark:hover:bg-[#303030] rounded-full"
