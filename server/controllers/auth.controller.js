@@ -6,7 +6,7 @@ import { createError } from "../utils/error.js";
 // Sign Up
 export const signup = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, avatar } = req.body;
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if(existingUser) return res.status(400).json({ message: "User already exists" });
@@ -17,7 +17,8 @@ export const signup = async (req, res, next) => {
         const newUser = new User({
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            avatar
         });
         const savedUser = await newUser.save();
         // Respond (Exclude password from response)

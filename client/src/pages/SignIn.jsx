@@ -13,6 +13,7 @@ const SignIn = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [avatar, setAvatar] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [createAccount, setCreateAccount] = useState(false);
     const [header, setHeader] = useState("Sign in");
@@ -59,14 +60,14 @@ const SignIn = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         // Validate Sign Up Data
-        const result = signUpSchema.safeParse({ username, email, password });
+        const result = signUpSchema.safeParse({ username, email, password, avatar });
         if(!result.success) {
             // console.log(z.prettifyError(result.error));
             toast.error(result.error.issues[0].message);
             return;
         }
         try {
-            await axios.post("http://localhost:5000/api/auth/signup", { username, email, password });
+            await axios.post("http://localhost:5000/api/auth/signup", { username, email, password, avatar });
             toast.success("Account created! Please Sign in.");
             setCreateAccount(false);
             toggleMode();
@@ -89,7 +90,7 @@ const SignIn = () => {
 
     return (
         <div className="h-dvh md:flex md:justify-center md:items-center bg-white dark:bg-[#0f0f0f] md:bg-[#1e1f20] md:dark:bg-[#1e1f20]">
-            <div className="md:w-[60%] flex flex-col lg:items-center lg:w-[50%] lg:h-[50%] lg:flex-row lg:justify-between p-8 lg:p-12 gap-4 md:rounded-4xl bg-white dark:bg-[#0f0f0f] dark:text-white">
+            <div className="md:w-[60%] flex flex-col lg:items-center lg:w-[55%] lg:h-[60%] lg:flex-row lg:justify-between p-8 lg:p-12 gap-4 md:rounded-4xl bg-white dark:bg-[#0f0f0f] dark:text-white">
                 <div className="flex flex-col gap-4 lg:self-start lg:w-1/2">
                     <Link to='/' className='w-full'>
                         <img src="/youtube_favicon.png" alt="YouTube Logo" width={48} />
@@ -129,6 +130,14 @@ const SignIn = () => {
                             {showPassword ? (<Eye />) : (<EyeClosed />)}
                         </button>
                     </div>
+                    {createAccount && (    
+                        <input
+                            className="border border-gray-400 rounded bg-transparent p-2 mb-4 w-full focus:outline-none"
+                            placeholder="Avatar Url (Optional)"
+                            value={avatar}
+                            onChange={e => setAvatar(e.target.value)}
+                        />                        
+                    )}
                     <div className="flex justify-between items-center">
                         <button onClick={toggleMode} className="cursor-pointer text-[#065fd4] dark:text-[#3ea6ff]">
                             {createAccount ? "Already have an account" : "Create account"}

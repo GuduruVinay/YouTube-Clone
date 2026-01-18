@@ -3,8 +3,9 @@ import { z } from "zod";
 // User Sign Up Schema
 export const signUpSchema = z.object({
     username: z.string().min(3, "Username must be at least 3 characters"),
-    email: z.email({ message: "Invalid email address" }),
+    email: z.email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
+    avatar: z.url("Invalid Avatar URL").optional().or(z.literal("")),
 });
 
 // User Sign Up Schema
@@ -12,6 +13,13 @@ export const signInSchema = z.object({
     username: z.string().min(1, "Username is required"),
     password: z.string().min(1, "Password is required"),
 });
+
+// User Update Schema
+export const userUpdateSchema = z.object({
+    username: z.string().min(3, "Username must be at least 3 characters"),
+    email: z.email("Invalid email address"),
+    avatar: z.url("Invalid Avatar URL").optional().or(z.literal("")),
+})
 
 // Channel Schema
 export const channelSchema = z.object({

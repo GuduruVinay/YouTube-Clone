@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
+        default: ""
     },
     channels: [{
         type: mongoose.Schema.Types.ObjectId,

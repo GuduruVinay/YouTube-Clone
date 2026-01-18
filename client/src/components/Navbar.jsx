@@ -209,7 +209,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                 {/* Avatar Dropdown */}
                                 <div ref={userMenuRef}>
                                     <img 
-                                        src={currentUser.avatar || "/default_profile_pic.jpg"} 
+                                        src={currentUser?.avatar || "/default_profile_pic.jpg"} 
                                         alt="User Avatar"
                                         onClick={() => setOpenUserMenu(!openUserMenu)}
                                         className="w-8 h-8 rounded-full cursor-pointer" 
@@ -218,7 +218,7 @@ const Navbar = ({ isDark, setIsDark, setIsMenuOpen }) => {
                                         <div className="absolute justify-center right-0 top-full mt-2 w-50 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-xl pt-2 z-10">
                                             <div className="flex flex-col gap-2 items-center justify-center px-4 pt-2 pb-3 border-b border-[#f2f2f2] dark:border-[#333]">
                                                 <img 
-                                                    src={currentUser.avatar || "/default_profile_pic.jpg"} 
+                                                    src={currentUser?.avatar || "/default_profile_pic.jpg"} 
                                                     alt="User Avatar"
                                                     className="w-16 h-16 rounded-full"
                                                 />
