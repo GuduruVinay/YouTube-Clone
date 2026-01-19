@@ -217,8 +217,8 @@ const Channel = () => {
             </div>
             {openUpload && (
                 <UploadVideo 
-                    openUploadVideo={openUpload} 
-                    setOpenUploadVideo={setOpenUpload} 
+                    open={openUpload} 
+                    setOpen={setOpenUpload} 
                     existingVideo={selectedVideo}
                     setVideos={setVideos}
                 />
