@@ -130,8 +130,8 @@ https://github.com/GuduruVinay/YouTube-Clone
 
 ## Mock Data
 
-Avatar URL : https://api.dicebear.com/7.x/avataaars/svg?seed=testuser
-Banner URL : https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1500&h=400&fit=crop
+* **Avatar URL:** https://api.dicebear.com/7.x/avataaars/svg?seed=testuser
+* **Banner URL:** https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1500&h=400&fit=crop
 
-Video URL : https://www.youtube.com/watch?v=S8lMTwSRoRg
-Thumbnail URL : https://i.ytimg.com/vi/n_Dv4JMiwK8/hqdefault.jpg
+* **Video URL:** https://www.youtube.com/watch?v=S8lMTwSRoRg
+* **Thumbnail URL:** https://i.ytimg.com/vi/n_Dv4JMiwK8/hqdefault.jpg
