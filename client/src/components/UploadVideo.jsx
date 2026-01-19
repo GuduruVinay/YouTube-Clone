@@ -143,7 +143,7 @@ const UploadVideo = ({ open, setOpen, existingVideo = null, setVideos }) => {
                 {/* Channel Selector */}
                 {!existingVideo && (
                     <div>
-                        <label className="text-sm">Select Channel :</label>
+                        <label className="text-sm mr-2">Select Channel :</label>
                         <select 
                             className="p-2 border border-gray-300 dark:border-[#373737] rounded bg-transparent dark:text-white"
                             onChange={(e) => setSelectedChannel(e.target.value)}

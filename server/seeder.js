@@ -92,61 +92,61 @@ const CHANNEL_DATA = [
     name: "CodeMaster", 
     handle: "codemaster_dev", 
     description: "Master web development with React, JavaScript, and modern frameworks. New tutorials every week!",
-    bannerTheme: "coding,technology,blue"
+    banner: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1500&h=400&fit=crop"
   },
   { 
     name: "Pro Gamer", 
     handle: "pro_gamer", 
     description: "Epic gaming content, walkthroughs, and entertaining gameplay. Join the community!",
-    bannerTheme: "gaming,esports,neon"
+    banner: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1500&h=400&fit=crop"
   },
   { 
     name: "Sports World", 
     handle: "sports_world", 
     description: "Best sports highlights from football, cricket, and more. Never miss the action!",
-    bannerTheme: "sports,stadium,action"
+    banner: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1500&h=400&fit=crop"
   },
   { 
     name: "Tech Guru", 
     handle: "tech_guru", 
     description: "Latest tech news, tutorials, and reviews. Stay updated with technology!",
-    bannerTheme: "technology,gadgets,modern"
+    banner: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1500&h=400&fit=crop"
   },
   { 
     name: "Lofi Beats", 
     handle: "lofi_beats", 
     description: "24/7 lofi music for studying, working, and relaxing. Subscribe for daily uploads!",
-    bannerTheme: "music,aesthetic,purple"
+    banner: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1500&h=400&fit=crop"
   },
   { 
     name: "Daily Vlogger", 
     handle: "daily_vlogger", 
     description: "Follow my daily adventures! Lifestyle, tech, and everything in between.",
-    bannerTheme: "lifestyle,travel,vibrant"
+    banner: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1500&h=400&fit=crop"
   },
   { 
     name: "Learn Coding", 
     handle: "learn_coding", 
     description: "Learn programming from scratch! Beginner-friendly tutorials and coding challenges.",
-    bannerTheme: "education,programming,green"
+    banner: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1500&h=400&fit=crop"
   },
   { 
     name: "Animation Studio", 
     handle: "animation_studio", 
     description: "Behind the scenes of animation and movie making. Tips and tutorials for animators!",
-    bannerTheme: "animation,creative,colorful"
+    banner: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1500&h=400&fit=crop"
   },
   { 
     name: "Science Explorer", 
     handle: "science_explorer", 
     description: "Exploring the wonders of science and the universe. Educational content for curious minds!",
-    bannerTheme: "space,science,cosmos"
+    banner: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1500&h=400&fit=crop"
   },
   { 
     name: "News Today", 
     handle: "news_today", 
     description: "Your daily source for breaking news and live coverage from around the world.",
-    bannerTheme: "news,professional,red"
+    banner: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1500&h=400&fit=crop"
   }
 ];
 
@@ -253,7 +253,7 @@ const seedData = async () => {
         channelName: channelInfo.name,
         description: channelInfo.description,
         channelAvatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${channelInfo.handle}`,
-        channelBanner: `https://source.unsplash.com/1500x400/?${channelInfo.bannerTheme}`,
+        channelBanner: channelInfo.banner,
         subscribers: getRandomInt(1000, 150000),
         videos: [],
         createdAt: channelCreatedAt,
