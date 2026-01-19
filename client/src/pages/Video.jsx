@@ -115,13 +115,14 @@ const Video = () => {
         <div className="flex flex-col lg:flex-row lg:pl-8 lg:py-4 gap-6 lg:gap-0 justify-center">
             {/* Left Section: Video Player & Details */}
             <div className="flex-1 lg:max-w-5xl">
-                {/* Video Player Wrapper */}
+                {/* Video Player */}
                 <div className="sticky top-14 md:static z-40 w-full bg-black aspect-video shadow-lg">
                     <iframe 
                         width="100%" 
                         height="100%" 
                         src={getYouTubeEmbedUrl(currentVideo.videoUrl)}
                         title="YouTube video player"
+                        allow="autoplay;"
                         allowFullScreen
                         className="w-full h-full object-cover"
                     />
@@ -203,7 +204,7 @@ const Video = () => {
             
             <hr className='border-[0.1] border-[#e5e5e5] dark:border-[#3f3f3f] lg:hidden' />
 
-            <div>
+            <div className="lg:max-w-lg">
                 <Recommendation tags={currentVideo.tags} />
             </div>
         </div>
