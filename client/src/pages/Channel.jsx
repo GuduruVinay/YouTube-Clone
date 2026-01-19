@@ -128,11 +128,11 @@ const Channel = () => {
     return (
         <div className="flex flex-col">
             {/* Channel Banner */}
-            <div className="h-37.5 md:h-50 w-full bg-linear-to-r from-blue-800 to-purple-800">
-                {channel.channelBanner && (
+            <div className="h-32 md:h-52 w-full bg-linear-to-r from-blue-800 to-purple-800">
+                {channel?.channelBanner && (
                     <img 
-                        src={channel.channelBanner} 
-                        alt="Channel Banner" 
+                        src={channel?.channelBanner} 
+                        alt="" 
                         className="w-full h-full object-cover"
                     />
                 )}
@@ -140,7 +140,7 @@ const Channel = () => {
             {/* Channel Header Info */}
             <div className="flex flex-col md:flex-row lg:justify-center items-center md:items-start gap-2 md:gap-4 px-10 py-8 bg-[#f9f9f9] dark:bg-[#1e1e1e]">
                 <img 
-                    src={channel.channelAvatar || "/default_profile_pic.jpg"}
+                    src={channel?.channelAvatar || "/default_profile_pic.jpg"}
                     alt="Channel Icon"
                     className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-[#1e1e1e] shadow-lg -mt-12 md:mt-0" 
                 />
@@ -182,7 +182,7 @@ const Channel = () => {
                             <button
                                 onClick={handleSub}
                                 className={`mt-2 px-6 py-2 rounded-full font-bold text-sm transition-colors ${
-                                    currentUser.subscribedChannels.includes(channel._id)
+                                    currentUser?.subscribedChannels.includes(channel._id)
                                     ? "bg-gray-200 text-black dark:bg-[#303030] dark:text-white"
                                     : "bg-black text-white dark:bg-white dark:text-black"
                                 }`}

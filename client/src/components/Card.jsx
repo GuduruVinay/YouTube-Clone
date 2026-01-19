@@ -9,7 +9,6 @@ import { Edit2, EllipsisVertical, Trash2 } from "lucide-react";
 const Card = ({ type, video, enableEdit = false, onEdit, onDelete }) => {
     const { currentUser } = useSelector(state => state.user);
 
-    // const [isEditing, setIsEditing] = useState(false);
     const [openCardMenu, setOpenCardMenu] = useState(false);
 
     const cardMenuRef = useRef(null);
@@ -59,22 +58,36 @@ const Card = ({ type, video, enableEdit = false, onEdit, onDelete }) => {
                 >
                     <button 
                         className="mt-2 cursor-pointer flex items-center justify-center w-10 h-10 hover:bg-[#d9d9d9] dark:hover:bg-[#3d3d3d] rounded-full transition-colors"
-                        onClick={() => setOpenCardMenu(!openCardMenu)}    
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setOpenCardMenu(!openCardMenu)
+                        }}    
                     >
-                        <EllipsisVertical />
+                        <EllipsisVertical size={18} />
                     </button>
                     {openCardMenu && (
                         <div className="absolute right-1 top-full w-32 bg-white dark:bg-[#222] border border-[#f2f2f2] dark:border-[#333] rounded-xl shadow-lg py-2 z-20 flex flex-col overflow-hidden">
                             <button
                                 className="flex items-center gap-3 w-full rounded-lg px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white text-left transition-colors"
-                                onClick={(e) => { e.preventDefault(); onEdit(video); }}
+                                onClick={(e) => { 
+                                    e.preventDefault(); 
+                                    e.stopPropagation();
+                                    setOpenCardMenu(false); 
+                                    onEdit(video); 
+                                }}
                             >
                                 <Edit2 />
                                 <span className="font-medium">Edit</span>
                             </button>
                             <button
                                 className="flex items-center gap-3 w-full rounded-lg px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#333] dark:text-white text-left transition-colors"
-                                onClick={(e) => { e.preventDefault(); onDelete(video._id); }}
+                                onClick={(e) => { 
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setOpenCardMenu(false);  
+                                    onDelete(video._id); 
+                                }}
                             >
                                 <Trash2 />
                                 <span className="font-medium">Delete</span>
@@ -87,7 +100,7 @@ const Card = ({ type, video, enableEdit = false, onEdit, onDelete }) => {
                 {/* Container: Verical bg default, Horizontal(flex) is small */}
                 <div className={`flex gap-2 px-1 cursor-pointer ${isSmall ? "flex-col lg:flex-row" : "flex-col"}`}>
                     {/* Thumbnail */}
-                    <div className={`relative ${isSmall ? "flex-1 min-w-40 h-24" : "w-full lg:h-68"}`}>
+                    <div className={`relative ${isSmall ? "flex-1 min-w-40 h-24 lg:h-36" : "w-full lg:h-64"}`}>
                         <img 
                             src={video.thumbnailUrl} 
                             alt={video.title + "thumbnail"}

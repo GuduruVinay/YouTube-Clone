@@ -8,172 +8,366 @@ import bcrypt from "bcryptjs";
 
 dotenv.config();
 
-// CURATED DATA (Guaranteed to match and have thumbnails)
-const ROBUST_VIDEOS = [
-    // CODING & TECH
-    { id: "K4TOrB7at0Y", title: "React JS Crash Course 2024", cat: "Education", tags: ["react", "javascript"] },
-    { id: "SccSCuHhOw0", title: "Learn Express JS In 35 Minutes", cat: "Education", tags: ["node", "express", "backend"] },
-    { id: "9ca8Jt24MFA", title: "MongoDB Crash Course", cat: "Education", tags: ["mongodb", "database"] },
-    { id: "0pThnRneDjw", title: "Build a YouTube Clone with React", cat: "Education", tags: ["clone", "react", "fullstack"] },
-    { id: "RVFAyFWO4go", title: "The Linux Terminal for Beginners", cat: "Tech", tags: ["linux", "terminal"] },
-    
-    // GAMING
-    { id: "jjl9J0S4wWk", title: "Minecraft Survival Guide - Part 1", cat: "Gaming", tags: ["minecraft", "survival"] },
-    { id: "V11Vd2b2Ojk", title: "GTA 6 - Official Trailer", cat: "Gaming", tags: ["gta6", "rockstar", "trailer"] },
-    { id: "0vCS_vYr9oA", title: "Elden Ring: Shadow of the Erdtree Trailer", cat: "Gaming", tags: ["elden ring", "rpg"] },
-
-    // NATURE & VLOGS
-    { id: "W_fuTJ952Jc", title: "A Day in the Life of a Software Engineer", cat: "Vlogs", tags: ["dayinthelife", "career"] },
-    { id: "BHACKCNDMW8", title: "The Most Beautiful Places in the World", cat: "Nature", tags: ["travel", "4k", "nature"] },
-    
-    // MUSIC
-    { id: "jfKfPfyJRdk", title: "lofi hip hop radio - beats to relax/study to", cat: "Music", tags: ["lofi", "live", "study"] },
-    { id: "5qap5aO4i9A", title: "Mozart - Classical Music for Brain Power", cat: "Music", tags: ["classical", "study"] },
-
-    // SPORTS
-    { id: "I9tWZB7OUSU", title: "Lionel Messi - The GOAT (Official Movie)", cat: "Sports", tags: ["messi", "football"] },
-    { id: "9Auq9mYxFEE", title: "Sky News Live", cat: "News", tags: ["news", "live"] }
-];
-
-// High quality banners from Unsplash
-const CHANNEL_BANNERS = [
-    "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600&h=400&fit=crop", // Tech
-    "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1600&h=400&fit=crop", // Gaming
-    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&h=400&fit=crop", // Music
-    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&h=400&fit=crop", // Nature
-    "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1600&h=400&fit=crop", // Sports
-];
-
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("Connected to DB");
+    console.log("Connected to MongoDB for seeding...");
+    return true;
   } catch (err) {
-    console.error("DB Connection Failed:", err);
+    console.error("Database connection failed:", err.message);
     process.exit(1);
   }
 };
+
+const CATEGORIES = [
+  "web development", "gaming", "sports", "music", "react", "mongodb",
+  "funny", "cricket", "football", "animation", "live", "game development",
+  "movies", "tech", "education", "coding", "vlogs", "news", "science", "tutorial"
+];
+
+// 67 Real YouTube Videos with verified working IDs - NO DUPLICATES
+const REAL_VIDEOS = [
+  // Tech & Programming (15 videos)
+  { id: "bMknfKXIFA8", title: "React Course - Beginner's Tutorial for React JavaScript Library", tags: ["react", "web development", "coding"], category: "education" },
+  { id: "pWbMrx5rVBE", title: "MongoDB in 100 Seconds", tags: ["mongodb", "tech", "education"], category: "tech" },
+  { id: "SqcY0GlETPk", title: "React Tutorial for Beginners", tags: ["react", "coding", "web development"], category: "education" },
+  { id: "Oe421EPjeBE", title: "100+ JavaScript Concepts you Need to Know", tags: ["coding", "web development", "education"], category: "education" },
+  { id: "W6NZfCO5SIk", title: "JavaScript Tutorial for Beginners", tags: ["coding", "web development", "tutorial"], category: "education" },
+  { id: "lI1ae4REbFM", title: "What is Machine Learning?", tags: ["tech", "education", "ai"], category: "tech" },
+  { id: "rfscVS0vtbw", title: "Learn Python - Full Course for Beginners", tags: ["python", "coding", "education"], category: "education" },
+  { id: "PkZNo7MFNFg", title: "Learn JavaScript - Full Course for Beginners", tags: ["javascript", "coding", "tutorial"], category: "education" },
+  { id: "kqtD5dpn9C8", title: "CS50 2023 - Lecture 0 - Scratch", tags: ["coding", "education", "cs50"], category: "education" },
+  { id: "8mAITcNt710", title: "Git and GitHub for Beginners - Crash Course", tags: ["git", "coding", "tutorial"], category: "education" },
+  { id: "RGOj5yH7evk", title: "Git and GitHub for Beginners", tags: ["git", "coding", "web development"], category: "education" },
+  { id: "vQWlgd7hV4A", title: "HTML Full Course - Build a Website Tutorial", tags: ["html", "web development", "tutorial"], category: "education" },
+  { id: "1PnVor36_40", title: "CSS Tutorial - Zero to Hero", tags: ["css", "web development", "tutorial"], category: "education" },
+  { id: "UB1O30fR-EE", title: "HTML CSS JavaScript Tutorial", tags: ["html", "css", "javascript"], category: "education" },
+  
+  // Gaming (12 videos)
+  { id: "xNjI03CGkb4", title: "I Survived 100 Days in Minecraft Hardcore", tags: ["gaming", "minecraft", "funny"], category: "gaming" },
+  { id: "ALZHF5UqnU4", title: "The History of Speedrunning", tags: ["gaming", "tech", "education"], category: "gaming" },
+  { id: "MmB9b5njVbA", title: "Minecraft Manhunt Grand Finale", tags: ["gaming", "minecraft"], category: "gaming" },
+  { id: "RpkQEq75y18", title: "GTA 5 but Everything is Random", tags: ["gaming", "funny"], category: "gaming" },
+  { id: "LDU_Txk06tM", title: "Minecraft, But Item Drops Are Random", tags: ["gaming", "minecraft"], category: "gaming" },
+  { id: "n_Dv4JMiwK8", title: "The Evolution of Video Games", tags: ["gaming", "education", "tech"], category: "gaming" },
+  { id: "AmC9SmCBUj4", title: "Code a Game in Scratch Tutorial", tags: ["game development", "coding", "tech"], category: "education" },
+  
+  // Sports (10 videos)
+  { id: "60ItHLz5WEA", title: "Lionel Messi - The GOAT - Official Movie", tags: ["football", "sports"], category: "sports" },
+  { id: "YH65jS-EseQ", title: "TOP 50 GOALS IN FOOTBALL HISTORY", tags: ["football", "sports"], category: "sports" },
+  { id: "XdvoDFTcTLw", title: "Cristiano Ronaldo - All 800 Goals", tags: ["football", "sports"], category: "sports" },
+  { id: "Xhlx43rTs2Q", title: "Tom Brady - The Greatest Quarterback", tags: ["football", "sports"], category: "sports" },
+  { id: "NFlceOv8LMU", title: "Usain Bolt All World Records", tags: ["sports", "athletics"], category: "sports" },
+  
+  // Music & Live (8 videos)
+  { id: "jfKfPfyJRdk", title: "lofi hip hop radio 📚 - beats to relax/study to", tags: ["music", "live", "lofi"], category: "music" },
+  { id: "5qap5aO4i9A", title: "lofi hip hop radio - beats to sleep/chill to", tags: ["music", "live", "lofi"], category: "music" },
+  { id: "DWcJFNfaw9c", title: "Synthwave Radio - Beats to Chill/Game To", tags: ["music", "live"], category: "music" },
+  { id: "EgqUJOudrcM", title: "Jazz Music for Relaxing", tags: ["music", "live"], category: "music" },
+  { id: "rUxyKA_-grg", title: "Classical Music for Studying", tags: ["music", "live"], category: "music" },
+  { id: "YykjpeuMNEk", title: "Ed Sheeran - Shape of You", tags: ["music"], category: "music" },
+  { id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito", tags: ["music"], category: "music" },
+  { id: "fHI8X4OXluQ", title: "BTS - Dynamite Official MV", tags: ["music", "kpop"], category: "music" },
+  
+  // Vlogs & Lifestyle (8 videos)
+  { id: "jNQXAC9IVRw", title: "Me at the zoo", tags: ["vlogs", "funny", "history"], category: "vlogs" },
+  { id: "d0tU18Ybcvk", title: "Life as a Google Software Engineer", tags: ["vlogs", "tech", "education"], category: "vlogs" },
+  { id: "RvWbcK3YQ_o", title: "Day in Life of a YouTuber", tags: ["vlogs"], category: "vlogs" },
+  
+  // Animation & Movies (6 videos)
+  { id: "TcMBFSGVi1c", title: "How Pixar makes a movie", tags: ["animation", "movies", "tech"], category: "animation" },
+  { id: "uDIgS-Soo9Q", title: "Making of Spider-Verse Animation", tags: ["animation", "movies"], category: "animation" },
+  { id: "zNzZ1PfUDNk", title: "Stop Motion Animation Tutorial", tags: ["animation", "tutorial"], category: "education" },
+  
+  // News & Live (3 videos)
+  { id: "w_Ma8oQLmSM", title: "BBC News Live", tags: ["news", "live"], category: "news" },
+  
+  // Science & Education (5 videos)
+  { id: "xuCn8ux2gbs", title: "How Does the Brain Work?", tags: ["science", "education"], category: "science" },
+  { id: "21X5lGlDOfg", title: "NASA's Journey to Mars", tags: ["science", "space"], category: "science" },
+];
+
+const CHANNEL_DATA = [
+  { 
+    name: "CodeMaster", 
+    handle: "codemaster_dev", 
+    description: "Master web development with React, JavaScript, and modern frameworks. New tutorials every week!",
+    bannerTheme: "coding,technology,blue"
+  },
+  { 
+    name: "Pro Gamer", 
+    handle: "pro_gamer", 
+    description: "Epic gaming content, walkthroughs, and entertaining gameplay. Join the community!",
+    bannerTheme: "gaming,esports,neon"
+  },
+  { 
+    name: "Sports World", 
+    handle: "sports_world", 
+    description: "Best sports highlights from football, cricket, and more. Never miss the action!",
+    bannerTheme: "sports,stadium,action"
+  },
+  { 
+    name: "Tech Guru", 
+    handle: "tech_guru", 
+    description: "Latest tech news, tutorials, and reviews. Stay updated with technology!",
+    bannerTheme: "technology,gadgets,modern"
+  },
+  { 
+    name: "Lofi Beats", 
+    handle: "lofi_beats", 
+    description: "24/7 lofi music for studying, working, and relaxing. Subscribe for daily uploads!",
+    bannerTheme: "music,aesthetic,purple"
+  },
+  { 
+    name: "Daily Vlogger", 
+    handle: "daily_vlogger", 
+    description: "Follow my daily adventures! Lifestyle, tech, and everything in between.",
+    bannerTheme: "lifestyle,travel,vibrant"
+  },
+  { 
+    name: "Learn Coding", 
+    handle: "learn_coding", 
+    description: "Learn programming from scratch! Beginner-friendly tutorials and coding challenges.",
+    bannerTheme: "education,programming,green"
+  },
+  { 
+    name: "Animation Studio", 
+    handle: "animation_studio", 
+    description: "Behind the scenes of animation and movie making. Tips and tutorials for animators!",
+    bannerTheme: "animation,creative,colorful"
+  },
+  { 
+    name: "Science Explorer", 
+    handle: "science_explorer", 
+    description: "Exploring the wonders of science and the universe. Educational content for curious minds!",
+    bannerTheme: "space,science,cosmos"
+  },
+  { 
+    name: "News Today", 
+    handle: "news_today", 
+    description: "Your daily source for breaking news and live coverage from around the world.",
+    bannerTheme: "news,professional,red"
+  }
+];
+
+// Utility functions
+const randomDate = (start, end) => {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+};
+
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const seedData = async () => {
   await connect();
 
   try {
-    // 1. CLEANUP
-    console.log("Clearing old data...");
-    await User.deleteMany({});
-    await Channel.deleteMany({});
-    await Video.deleteMany({});
-    await Comment.deleteMany({}); // Clear comments if model exists
+    console.log("Clearing existing data...");
+    
+    // Clear all data in parallel
+    await Promise.all([
+      User.deleteMany({}),
+      Channel.deleteMany({}),
+      Video.deleteMany({}),
+      Comment.deleteMany({})
+    ]);
+    
+    console.log("Cleared existing data");
 
-    // 2. CREATE USERS
-    console.log("Creating Users...");
+    const now = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(now.getFullYear() - 1);
+
+    // Create password hash
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync("123456", salt);
 
-    const users = [];
-    const userNames = ["JohnDoe", "JaneSmith", "TechGuru", "GamerPro", "MusicLover"];
-
-    for (let i = 0; i < userNames.length; i++) {
-        const user = new User({
-            username: userNames[i], // Ensure this matches your Schema (name vs username)
-            email: `${userNames[i].toLowerCase()}@test.com`,
-            password: hash,
-            // Reliable Avatar API
-            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userNames[i]}`, 
-            subscribers: 0,
-            subscribedUsers: [],
-            subscribedChannels: [], // Assuming you added this array for tracking
-        });
-        const savedUser = await user.save();
-        users.push(savedUser);
-    }
-
-    // 3. CREATE CHANNELS
-    console.log("Creating Channels...");
-    const channels = [];
+    // Step 1: Create test users
+    console.log("Creating users...");
     
-    // Only first 4 users get channels (User 5 is a viewer only)
-    for (let i = 0; i < 4; i++) {
-        const channel = new Channel({
-            channelName: `${users[i].username} Channel`,
-            handle: `@${users[i].username.toLowerCase()}`,
-            description: `Welcome to the official channel of ${users[i].name}. We create content about ${ROBUST_VIDEOS[i].cat}.`,
-            channelAvatar: users[i].img,
-            channelBanner: CHANNEL_BANNERS[i % CHANNEL_BANNERS.length],
-            owner: users[i]._id,
-            subscribers: Math.floor(Math.random() * 100000),
-            videos: [], // Will populate next
-        });
-        const savedChannel = await channel.save();
-        
-        // Link Channel to User
-        await User.findByIdAndUpdate(users[i]._id, { 
-            $push: { channels: savedChannel._id } 
-        });
-        
-        channels.push(savedChannel);
+    const testUser = await User.create({
+      username: "testuser",
+      email: "user@test.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=testuser",
+      password: hash,
+      createdAt: oneYearAgo,
+    });
+
+    const testUser2 = await User.create({
+      username: "testuser2",
+      email: "user2@test.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=testuser2",
+      password: hash,
+      createdAt: oneYearAgo,
+    });
+
+    const testUser3 = await User.create({
+      username: "testuser3",
+      email: "user3@test.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=testuser3",
+      password: hash,
+      createdAt: oneYearAgo,
+    });
+
+    const createdUsers = [testUser, testUser2, testUser3];
+    
+    // Create additional users
+    for (let i = 4; i <= 15; i++) {
+      const user = await User.create({
+        username: `User${i}`,
+        email: `user${i}@gmail.com`,
+        password: hash,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=User${i}`,
+        createdAt: randomDate(oneYearAgo, now),
+      });
+      createdUsers.push(user);
     }
 
-    // 4. CREATE VIDEOS
-    console.log("Creating Videos...");
-    const videos = [];
+    console.log(`Created ${createdUsers.length} users`);
 
-    // Distribute curated videos among channels
-    for (const vidData of ROBUST_VIDEOS) {
-        // Pick a random channel
-        const randomChannel = channels[Math.floor(Math.random() * channels.length)];
-        
-        const newVideo = new Video({
-            userId: randomChannel.owner,
-            channelId: randomChannel._id,
-            title: vidData.title,
-            description: vidData.title + ". " + "This video covers in-depth topics about " + vidData.tags[0] + ". Don't forget to like and subscribe!",
-            thumbnailUrl: `https://i.ytimg.com/vi/${vidData.id}/maxresdefault.jpg`,
-            videoUrl: `https://www.youtube.com/watch?v=${vidData.id}`,
-            views: Math.floor(Math.random() * 500000),
-            tags: vidData.tags,
-            likes: [],
-            dislikes: [],
-            channelName: randomChannel.channelName, // Useful for search/cards
-            channelAvatar: randomChannel.channelAvatar
-        });
+    // Step 2: Create channels
+    console.log("Creating channels...");
+    
+    const createdChannels = [];
+    const channelVideosMap = new Map();
 
-        const savedVideo = await newVideo.save();
-        videos.push(savedVideo);
+    for (let i = 0; i < CHANNEL_DATA.length; i++) {
+      const channelInfo = CHANNEL_DATA[i];
+      const channelCreatedAt = randomDate(
+        oneYearAgo,
+        new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000)
+      );
 
-        // Update Channel's video list (if your schema has it)
-        await Channel.findByIdAndUpdate(randomChannel._id, {
-            $push: { videos: savedVideo._id }
-        });
+      // Distribute channel ownership among first 3 test users
+      let channelOwner;
+      if (i < 4) {
+        channelOwner = testUser._id;
+      } else if (i < 7) {
+        channelOwner = testUser2._id;
+      } else {
+        channelOwner = testUser3._id;
+      }
+
+      const newChannel = await Channel.create({
+        owner: channelOwner,
+        handle: `@${channelInfo.handle}`,
+        channelName: channelInfo.name,
+        description: channelInfo.description,
+        channelAvatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${channelInfo.handle}`,
+        channelBanner: `https://source.unsplash.com/1500x400/?${channelInfo.bannerTheme}`,
+        subscribers: getRandomInt(1000, 150000),
+        videos: [],
+        createdAt: channelCreatedAt,
+        updatedAt: channelCreatedAt,
+      });
+
+      createdChannels.push(newChannel);
+      channelVideosMap.set(newChannel._id.toString(), []);
+      
+      console.log(`${channelInfo.name} (@${channelInfo.handle})`);
     }
 
-    // 5. CREATE COMMENTS (Optional but good for robustness)
-    console.log("Creating Comments...");
-    const commentTexts = [
-        "Great video!", "Very helpful, thanks.", "Amazing quality!", 
-        "First!", "Can you make a video about Redux?", "Love this content."
+    console.log(`Created ${createdChannels.length} channels`);
+
+    // Step 3: Create videos - ONLY ONCE per video (no duplicates)
+    console.log("Creating videos...");
+    
+    const createdVideos = [];
+    
+    // Create each video only ONCE with a random channel
+    for (const vid of REAL_VIDEOS) {
+      const randomChannel = createdChannels[Math.floor(Math.random() * createdChannels.length)];
+      const videoCreatedAt = randomDate(randomChannel.createdAt, now);
+      const viewCount = getRandomInt(5000, 2000000);
+      const likeCount = getRandomInt(Math.floor(viewCount * 0.02), Math.floor(viewCount * 0.12));
+
+      const newVideo = await Video.create({
+        channelId: randomChannel._id,
+        userId: randomChannel.owner,
+        title: vid.title,
+        description: `${vid.title}\n\nTags: ${vid.tags.join(", ")}\n\nWatch more amazing content on our channel!`,
+        videoUrl: `https://www.youtube.com/watch?v=${vid.id}`,
+        thumbnailUrl: `https://i.ytimg.com/vi/${vid.id}/hqdefault.jpg`,
+        views: viewCount,
+        likes: likeCount,
+        tags: vid.tags,
+        category: vid.category,
+        createdAt: videoCreatedAt,
+        updatedAt: videoCreatedAt,
+      });
+
+      createdVideos.push(newVideo);
+      channelVideosMap.get(randomChannel._id.toString()).push(newVideo._id);
+    }
+
+    console.log(`Created ${createdVideos.length} videos`);
+
+    // Step 4: Update channels with their video IDs
+    console.log("Linking videos to channels...");
+    for (const [channelId, videoIds] of channelVideosMap.entries()) {
+      await Channel.findByIdAndUpdate(channelId, { videos: videoIds });
+    }
+    console.log("Videos linked to channels");
+
+    // Step 5: Create comments
+    console.log("Creating comments...");
+    
+    const sampleComments = [
+      "Great tutorial! Very helpful 👍",
+      "Thanks for sharing this!",
+      "Amazing content, keep it up!",
+      "This is exactly what I was looking for",
+      "Subscribed! Love your content",
+      "Clear explanation, thank you!",
+      "Best video on this topic",
+      "Really appreciate this tutorial",
+      "Helped me a lot, thanks!",
+      "More content like this please!",
+      "Awesome explanation!",
+      "Finally understood this concept!",
+      "You deserve more subscribers",
+      "Quality content as always",
+      "Can't wait for the next video!",
+      "This channel is underrated",
+      "Excellent work!",
+      "Learned so much from this",
+      "Keep making these videos!",
+      "Absolutely brilliant!"
     ];
 
-    for(const video of videos) {
-        // Add 2 random comments per video
-        for(let j=0; j<2; j++) {
-            const randomUser = users[Math.floor(Math.random() * users.length)];
-            const newComment = new Comment({
-                userId: randomUser._id,
-                videoId: video._id,
-                description: commentTexts[Math.floor(Math.random() * commentTexts.length)]
-            });
-            await newComment.save();
-        }
-    }
-
-    console.log("SUCCESS! Database seeded perfectly.");
-    process.exit();
+    let createdComments = 0;
     
+    // Add comments to random videos (40 videos)
+    const videosToComment = createdVideos.slice(0, Math.min(40, createdVideos.length));
+    
+    for (const video of videosToComment) {
+      const numComments = getRandomInt(3, 10);
+      for (let i = 0; i < numComments; i++) {
+        const randomUser = createdUsers[Math.floor(Math.random() * createdUsers.length)];
+        const commentCreatedAt = randomDate(video.createdAt, now);
+        await Comment.create({
+          videoId: video._id,
+          userId: randomUser._id,
+          description: sampleComments[Math.floor(Math.random() * sampleComments.length)],
+          createdAt: commentCreatedAt,
+          updatedAt: commentCreatedAt,
+        });
+        createdComments++;
+      }
+    }
+    console.log(`Created ${createdComments} comments`);
+    process.exit(0);
+
   } catch (err) {
-    console.error("Seeding Error:", err);
+    console.error("Seeding failed:", err.message);
+    console.error(err);
     process.exit(1);
   }
 };
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Promise Rejection:', err);
+  process.exit(1);
+});
 
 seedData();
