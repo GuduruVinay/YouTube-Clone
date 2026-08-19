@@ -28,7 +28,7 @@ A Full-Stack video sharing platform built with the MERN stack (MongoDB, Express,
 * **Comments:** Post, edit, and delete comments on videos.
 * **Views:** Automatic view counting.
 
-### UT / UX
+### UI / UX
 
 * **Responsive Design:** Mobile-first approach using Tailwind CSS.
 * **Dark / Light Mode:** Full theme support with local storage persistence.
